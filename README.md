@@ -21,4 +21,6 @@ Copy `.env.example` to `.env.local` when a new Supabase project is ready. Do not
 
 Target Vercel project: https://vercel.com/7skycastles-projects/k-speak
 
+Production URL: https://k-speak.vercel.app
+
 The app is configured as a Vite static build with `npm run build` and `dist`.

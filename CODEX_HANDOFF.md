@@ -32,7 +32,7 @@ npm run build
 
 ## 6. 배포 방식
 
-배포 대상은 `https://vercel.com/7skycastles-projects/k-speak`다. Vite 정적 빌드 결과물은 `dist/`에 생성된다. `vercel.json`에 `npm run build`와 `dist`를 명시했다.
+배포 대상은 `https://vercel.com/7skycastles-projects/k-speak`다. Production URL은 `https://k-speak.vercel.app`이다. Vite 정적 빌드 결과물은 `dist/`에 생성된다. `vercel.json`에 `npm run build`와 `dist`를 명시했고, `.vercel/project.json`은 `k-speak` 프로젝트에 연결되어 있다.
 
 ## 7. 환경 변수 목록
 
@@ -129,4 +129,4 @@ SQL 초안은 `docs/supabase/schema.sql`, `docs/supabase/rls.sql`에 있다. 주
 
 ## 21. 최종 검증 결과
 
-`npm audit`, typecheck, lint, unit test, production build, dev server 응답, Playwright 주요 viewport 렌더링, 온보딩→Day 1 완료→복습 생성→이메일 병합 흐름이 통과했다. 자세한 결과는 `TEST_REPORT.md`에 있다.
+`npm audit`, typecheck, lint, unit test, production build, dev server 응답, Playwright 주요 viewport 렌더링, 온보딩→Day 1 완료→Day 2 시작→복습 생성 흐름이 통과했다. Vercel production URL `https://k-speak.vercel.app`도 HTTP 200과 모바일 렌더링을 확인했다. 자세한 결과는 `TEST_REPORT.md`에 있다.

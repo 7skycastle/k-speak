@@ -27,6 +27,7 @@
 - Vitest: 4개 파일, 9개 테스트 통과
 - production build: 통과
 - dev server HTTP 응답: 200
+- Vercel production URL `https://k-speak.vercel.app`: HTTP 200
 
 ## 화면별 검수 결과
 
@@ -77,6 +78,8 @@ Day 2~14 확장 후 다음도 확인했다.
 - 모든 튜터와 수업 조합에 TTS fallback 음성 메타데이터 존재
 
 브라우저 흐름에서 Day 1 완료 후 학습 탭 진입 시 Day 2가 `situation` 단계에서 시작되는 것도 확인했다.
+
+Vercel production URL `https://k-speak.vercel.app`에서 390px 모바일 렌더링, 문서 제목, 가로 스크롤 없음도 확인했다.
 
 ## 독립 검토에서 수정한 문제
 
