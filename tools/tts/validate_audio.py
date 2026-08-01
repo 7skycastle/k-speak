@@ -94,6 +94,44 @@ def validate_manifest(path, expected_jobs, errors, warnings):
     return len(entries)
 
 
+def validate_candidate_models(licenses, errors, warnings):
+    allowed_decisions = {"pending_review", "not_approved", "approved_for_audition", "approved_for_production"}
+    required_fields = (
+        "modelId",
+        "name",
+        "sourceUrl",
+        "modelCardUrl",
+        "reviewDecision",
+        "codeLicense",
+        "weightLicense",
+        "trainingDataLicense",
+        "outputTerms",
+        "commercialUse"
+    )
+    for candidate in licenses.get("candidateModels", []):
+        model_id = candidate.get("modelId", "<missing-model-id>")
+        for field in required_fields:
+            if field not in candidate:
+                errors.append(f"Candidate model {model_id} is missing {field}.")
+
+        decision = candidate.get("reviewDecision")
+        if decision not in allowed_decisions:
+            errors.append(f"Candidate model {model_id} has unsupported reviewDecision: {decision}")
+
+        has_pending_layer = any(
+            candidate.get(field) in (None, "", "pending_review", "pending_primary_source")
+            for field in ("codeLicense", "weightLicense", "trainingDataLicense", "outputTerms", "modelCardUrl")
+        )
+        if has_pending_layer and candidate.get("reviewDecision") == "approved_for_production":
+            errors.append(f"Candidate model {model_id} cannot be production-approved with pending license layers.")
+
+        if candidate.get("commercialUse") is True and candidate.get("reviewDecision") != "approved_for_production":
+            errors.append(f"Candidate model {model_id} cannot be commercialUse=true before production approval.")
+
+        if candidate.get("reviewDecision") == "pending_review":
+            warnings.append(f"Candidate model {model_id} still needs primary-source license review.")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Validate static Korean TTS metadata and generated WAV files.")
     parser.add_argument("--manifest", default=str(DEFAULT_MANIFEST), help="Generated manifest path to validate.")
@@ -108,21 +146,47 @@ def main():
     if licenses["policy"].get("paidTtsAllowed") is not False:
         errors.append("paidTtsAllowed must be false.")
 
+    validate_candidate_models(licenses, errors, warnings)
+
     for provider in licenses.get("blockedProviders", []):
         lowered = provider.lower()
         if not any(pattern in lowered for pattern in PAID_PATTERNS):
             warnings.append(f"Blocked provider is not recognized by validator pattern list: {provider}")
 
     voice_ids = set()
+    sentence_ids = set()
     for voice in voices:
         voice_ids.add(voice["characterId"])
         if voice.get("commercialUse") is True and "approved" not in voice.get("reviewStatus", ""):
             errors.append(f"Voice {voice['characterId']} cannot be commercialUse=true before approval.")
         if voice.get("modelId") == "pending_model_selection":
             warnings.append(f"Voice {voice['characterId']} still needs model selection.")
+        else:
+            selected_model = next(
+                (
+                    candidate
+                    for candidate in licenses.get("candidateModels", [])
+                    if candidate.get("modelId") == voice.get("modelId")
+                ),
+                None
+            )
+            if not selected_model:
+                errors.append(f"Voice {voice['characterId']} references unknown model {voice.get('modelId')}.")
+            elif selected_model.get("reviewDecision") != "approved_for_production":
+                errors.append(
+                    f"Voice {voice['characterId']} cannot use model {voice.get('modelId')} "
+                    f"with reviewDecision={selected_model.get('reviewDecision')}."
+                )
 
     expected_jobs = []
     for sentence in sentences:
+        if sentence["sentenceId"] in sentence_ids:
+            errors.append(f"Duplicate sentenceId: {sentence['sentenceId']}")
+        sentence_ids.add(sentence["sentenceId"])
+        if sentence.get("licenseUse") != "pending_review_audition_only":
+            errors.append(f"Sentence {sentence['sentenceId']} must stay pending_review_audition_only before audio approval.")
+        if not sentence.get("auditionTags"):
+            errors.append(f"Sentence {sentence['sentenceId']} must include auditionTags.")
         sentence_paths_by_hash = {}
         for character_id in sentence["characterIds"]:
             if character_id not in voice_ids:

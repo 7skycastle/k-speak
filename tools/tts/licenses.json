@@ -19,21 +19,46 @@
       "modelId": "qwen3-tts-candidate",
       "name": "Qwen3-TTS candidate",
       "sourceUrl": "https://github.com/QwenLM/Qwen3-TTS",
-      "codeLicense": "pending_review",
-      "weightLicense": "pending_review",
+      "modelCardUrl": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+      "reviewDecision": "pending_review",
+      "codeLicense": "Apache-2.0",
+      "weightLicense": "Apache-2.0",
       "trainingDataLicense": "pending_review",
+      "outputTerms": "pending_review",
       "commercialUse": false,
-      "notes": "Evaluate Korean naturalness and all license layers before generating production assets."
+      "reviewedAt": "2026-08-02",
+      "reviewedBy": "Codex primary-source review",
+      "notes": "Korean is supported and code/weights are permissive, but reviewed primary sources do not disclose enough training-data rights or generated-output commercial terms for production approval."
     },
     {
       "modelId": "melotts-korean-candidate",
       "name": "MeloTTS Korean candidate",
       "sourceUrl": "https://github.com/myshell-ai/MeloTTS",
-      "codeLicense": "pending_review",
-      "weightLicense": "pending_review",
+      "modelCardUrl": "https://huggingface.co/myshell-ai/MeloTTS-Korean",
+      "reviewDecision": "pending_review",
+      "codeLicense": "MIT",
+      "weightLicense": "MIT",
       "trainingDataLicense": "pending_review",
+      "outputTerms": "pending_review",
       "commercialUse": false,
-      "notes": "Do not approve if model or training data has non-commercial restrictions."
+      "reviewedAt": "2026-08-02",
+      "reviewedBy": "Codex primary-source review",
+      "notes": "Korean is supported and local CPU/Docker use is feasible, but reviewed primary sources do not disclose enough pretrained Korean training-data rights or generated-output commercial terms for production approval."
+    },
+    {
+      "modelId": "piper-onnx-kss-korean",
+      "name": "Piper ONNX KSS Korean community model",
+      "sourceUrl": "https://github.com/rhasspy/piper",
+      "modelCardUrl": "https://huggingface.co/neurlang/piper-onnx-kss-korean",
+      "reviewDecision": "not_approved",
+      "codeLicense": "MIT",
+      "weightLicense": "CC-BY-NC-SA-4.0",
+      "trainingDataLicense": "CC-BY-NC-SA-4.0",
+      "outputTerms": "blocked_by_non_commercial_model_and_data_license",
+      "commercialUse": false,
+      "reviewedAt": "2026-08-02",
+      "reviewedBy": "Codex primary-source review",
+      "notes": "Do not use for commercial/static app audio. The Korean community model and KSS data lineage are non-commercial."
     }
   ]
 }

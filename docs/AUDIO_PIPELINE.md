@@ -71,5 +71,6 @@ MP3 conversion can be added after WAV review. Keep original WAVs and compressed 
 
 - Browser fallback works.
 - Static production audio files are not approved yet.
-- `tools/tts` currently contains audition metadata and dry-run planning only.
+- `tools/tts` currently contains audition metadata, dry-run planning, manifest generation, and validation only.
+- The audition pack currently plans 48 slots: 6 Korean test sentences, 4 characters, and 2 speeds.
 - Candidate model licenses remain `pending_review`.

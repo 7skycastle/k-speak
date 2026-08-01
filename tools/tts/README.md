@@ -66,4 +66,17 @@ public/audio/day-1/haneul/hello-nice-meet-you-natural.wav
 public/audio/day-1/haneul/hello-nice-meet-you-slow.wav
 ```
 
+## Audition Pack
+
+`sentences.json` includes a pending-review audition pack that checks:
+
+- plain, tense, and aspirated consonants
+- batchim and linking
+- numbers and price
+- question intonation
+- polite requests and honorific speech
+- short conversational reactions
+
+These sentences are for local model comparison only. They must not be treated as production-approved audio until `licenses.json`, the generated manifest, and listening review are all updated.
+
 After files pass license and listening review, update `src/data/audioCatalog.ts` with `naturalUrl`, `slowUrl`, and verified metadata.

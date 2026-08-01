@@ -40,10 +40,13 @@ If any layer is unclear, keep:
 
 The following candidates are listed only for audition/research. They are not approved production sources.
 
-- Qwen3-TTS candidate: Korean voice quality and all license layers need review.
-- MeloTTS Korean candidate: Korean voice quality and all license layers need review.
+- Qwen3-TTS candidate: Korean is supported and the reviewed code/model license labels are Apache-2.0, but training-data rights and generated-output commercial terms are not clear enough in the reviewed primary sources. Keep as `pending_review`.
+- MeloTTS Korean candidate: Korean is supported and the reviewed code/model license labels are MIT, but pretrained Korean training-data rights and generated-output commercial terms are not clear enough in the reviewed primary sources. Keep as `pending_review`.
+- Piper ONNX KSS Korean community model: not approved because the model/data lineage is non-commercial (`CC-BY-NC-SA-4.0`).
 
 KSS-like datasets with non-commercial clauses such as CC BY-NC-SA must not be used for commercial/public production audio.
+
+See `docs/TTS_LICENSE_RESEARCH_2026-08-02.md` for the primary-source review.
 
 ## Approval Checklist
 
