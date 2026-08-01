@@ -97,7 +97,7 @@ export const mergeGuestIntoAccount = (state: UserState, email: string): UserStat
   const normalizedEmail = normalizeEmail(email);
   const cloudKey = `${CLOUD_PREFIX}${normalizedEmail}`;
   const cloudState = loadCloudState(cloudKey);
-  const merged = mergeStates(cloudState ?? createInitialState(), state, normalizedEmail);
+  const merged = mergeUserStates(cloudState ?? createInitialState(), state, normalizedEmail);
   localStorage.setItem(cloudKey, JSON.stringify(merged));
   return saveState({
     ...merged,
@@ -133,7 +133,7 @@ const loadCloudState = (key: string): UserState | undefined => {
   }
 };
 
-const mergeStates = (account: UserState, guest: UserState, email: string): UserState => {
+export const mergeUserStates = (account: UserState, guest: UserState, email?: string): UserState => {
   const lessonProgress = { ...account.lessonProgress };
 
   for (const [lessonId, guestProgress] of Object.entries(guest.lessonProgress)) {
@@ -172,7 +172,7 @@ const mergeStates = (account: UserState, guest: UserState, email: string): UserS
   return {
     ...account,
     anonymousId: guest.anonymousId,
-    accountEmail: email,
+    accountEmail: email ?? guest.accountEmail ?? account.accountEmail,
     onboarding: guest.onboarding ?? account.onboarding,
     lessonProgress,
     reviewItems: Array.from(reviewItems.values()),

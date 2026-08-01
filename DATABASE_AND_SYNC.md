@@ -4,6 +4,8 @@
 
 이번 구현은 기존 `K_study` 프로젝트 및 프로젝트 ID `bcpoowcqvqynpciiqoav`와 무관하게 설계했다. 새 Supabase 프로젝트를 만든 뒤 `.env.local`에 URL과 anon key를 넣는다.
 
+2026-08-01에 Supabase MCP로 새 프로젝트 생성을 시도했지만 `INVALID_ARGUMENT`가 반환되어 실제 프로젝트는 생성되지 않았다. 비용 확인 결과는 조직 `vjhliyconufnhitdcunc` 기준 월 $0였다. 실제 프로젝트가 생성되면 아래 SQL과 환경 변수를 적용한다.
+
 ## 필요한 환경 변수 목록
 
 - `VITE_SUPABASE_URL`
@@ -38,6 +40,8 @@
 ## 로그인 후 클라우드 병합 방식
 
 완료 수업은 잃지 않고, 더 많이 진행한 단계가 `currentStepId`가 된다. 복습 항목은 ID 기준으로 중복 생성을 막는다.
+
+앱 코드에서는 Supabase 환경 변수가 있으면 이메일 링크 인증을 요청하고, 세션이 감지되면 `profiles`, `lesson_progress`, `review_items`, `analytics_events`를 클라우드와 병합한다.
 
 ## 네트워크 오류 시 재동기화 방식
 

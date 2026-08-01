@@ -26,4 +26,4 @@
 
 ## Day 추가 방법
 
-`src/data/lessons.ts`에 `Lesson` 객체를 추가하고, 필요한 음성 슬롯을 `src/data/audioCatalog.ts`에 추가한다. 화면 컴포넌트 복사는 필요 없다.
+현재 Day 1~14가 `src/data/lessons.ts`에 같은 스키마로 들어 있다. 새 Day는 `Lesson` 객체를 추가하고, 필요한 음성 슬롯을 `src/data/audioCatalog.ts`에 추가한다. 화면 컴포넌트 복사는 필요 없다.

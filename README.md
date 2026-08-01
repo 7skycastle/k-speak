@@ -16,3 +16,9 @@ npm run test
 ## Environment
 
 Copy `.env.example` to `.env.local` when a new Supabase project is ready. Do not use the previous `K_study` project or project ID `bcpoowcqvqynpciiqoav`.
+
+## Vercel
+
+Target Vercel project: https://vercel.com/7skycastles-projects/k-speak
+
+The app is configured as a Vite static build with `npm run build` and `dist`.

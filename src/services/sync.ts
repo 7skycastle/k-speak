@@ -1,8 +1,9 @@
 import type { UserState } from "../types";
 import { isSupabaseConfigured } from "./supabaseClient";
+import { syncWithSupabase } from "./cloudSync";
 import { saveState } from "./storage";
 
-export const markSyncAttempt = (state: UserState): UserState => {
+export const markSyncAttempt = async (state: UserState): Promise<UserState> => {
   if (!isSupabaseConfigured()) {
     return saveState({
       ...state,
@@ -14,13 +15,5 @@ export const markSyncAttempt = (state: UserState): UserState => {
     });
   }
 
-  return saveState({
-    ...state,
-    sync: {
-      mode: "supabase-ready",
-      pending: true,
-      lastSyncedAt: new Date().toISOString(),
-      message: "Supabase 연결 정보가 준비되었습니다. 테이블 생성 후 업로드 함수를 연결하세요."
-    }
-  });
+  return syncWithSupabase(state);
 };

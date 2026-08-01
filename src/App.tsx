@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { getCharacter, tutorCharacters } from "./data/characters";
 import { countryPacks, getCountryPack } from "./data/countryPacks";
-import { getLesson } from "./data/lessons";
+import { getLesson, getNextLesson } from "./data/lessons";
 import { findAudioSlot } from "./data/audioCatalog";
 import { buildReviewItems, getDueReviewItems } from "./engine/reviewEngine";
 import {
@@ -39,6 +39,12 @@ import {
 } from "./services/storage";
 import { describeSupabaseStatus } from "./services/supabaseClient";
 import { markSyncAttempt } from "./services/sync";
+import {
+  requestEmailSignIn,
+  signOutFromSupabase,
+  subscribeToSupabaseAuth,
+  syncWithSupabase
+} from "./services/cloudSync";
 import { speakKorean } from "./utils/speech";
 import type {
   CharacterId,
@@ -93,8 +99,8 @@ export const App = () => {
   const onboarding = state.onboarding;
   const countryPack = getCountryPack(onboarding?.countryPackId);
   const character = getCharacter(onboarding?.characterId);
-  const lesson = getLesson("day-1");
-  const progress = state.lessonProgress[lesson.id];
+  const currentLesson = getNextLesson(state.lessonProgress);
+  const progress = state.lessonProgress[currentLesson.id];
   const dueReviews = getDueReviewItems(state.reviewItems);
 
   useEffect(() => {
@@ -106,12 +112,40 @@ export const App = () => {
     setState((current) => trackEvent(current, { name: "app_first_open" }));
   }, []);
 
+  useEffect(() => {
+    let mounted = true;
+    syncWithSupabase(loadState())
+      .then((next) => {
+        if (mounted) setState(next);
+      })
+      .catch((syncError) => {
+        if (mounted) setError(syncError instanceof Error ? syncError.message : "Supabase 동기화 중 오류가 발생했습니다.");
+      });
+
+    const unsubscribe = subscribeToSupabaseAuth((session) => {
+      setState((current) => {
+        syncWithSupabase(current, session)
+          .then((next) => setState(next))
+          .catch((syncError) =>
+            setError(syncError instanceof Error ? syncError.message : "Supabase 인증 상태 처리 중 오류가 발생했습니다.")
+          );
+        return current;
+      });
+    });
+
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
+  }, []);
+
   const startLesson = () => {
     setState((current) => {
+      const lesson = getNextLesson(current.lessonProgress);
       const existing = current.lessonProgress[lesson.id];
       const nextProgress = existing ?? createLessonProgress(lesson.id);
       const saved = upsertLessonProgress(current, lesson.id, nextProgress);
-      return trackEvent(saved, { name: existing ? "lesson_resume" : "day_1_start", lessonId: lesson.id });
+      return trackEvent(saved, { name: existing ? "lesson_resume" : "lesson_start", lessonId: lesson.id });
     });
     setTab("lesson");
   };
@@ -153,6 +187,7 @@ export const App = () => {
               state={state}
               countryLabel={countryPack.label}
               characterName={character.name}
+              lesson={currentLesson}
               progress={progress}
               reviewCount={dueReviews.length}
               onStartLesson={startLesson}
@@ -163,6 +198,7 @@ export const App = () => {
           {tab === "lesson" && (
             <LessonScreen
               state={state}
+              lessonId={currentLesson.id}
               progress={progress}
               onPersist={updateState}
               onError={setError}
@@ -355,6 +391,7 @@ const HomeScreen = ({
   state,
   countryLabel,
   characterName,
+  lesson,
   progress,
   reviewCount,
   onStartLesson,
@@ -364,6 +401,7 @@ const HomeScreen = ({
   state: UserState;
   countryLabel: string;
   characterName: string;
+  lesson: ReturnType<typeof getLesson>;
   progress?: LessonProgress;
   reviewCount: number;
   onStartLesson: () => void;
@@ -379,7 +417,7 @@ const HomeScreen = ({
         <p>{state.accountEmail ? `${state.accountEmail} 계정으로 저장 중` : "로그인 전에도 진도가 이 기기에 저장됩니다."}</p>
       </header>
       <div className="home-grid">
-        <Metric label="오늘 수업" value={progress?.status === "completed" ? "Day 1 완료" : "Day 1"} />
+        <Metric label="오늘 수업" value={progress?.status === "completed" ? `Day ${lesson.day} 완료` : `Day ${lesson.day}`} />
         <Metric label="복습 문장" value={`${reviewCount}개`} />
         <Metric label="튜터" value={characterName} />
         <Metric label="국가팩" value={countryLabel} />
@@ -387,14 +425,16 @@ const HomeScreen = ({
       <Panel title={progress?.status === "completed" ? "다음은 짧은 복습이에요" : "이어 할 수업"}>
         <div className="lesson-preview">
           <div>
-            <strong>Day 1. 처음 만났을 때 인사하기</strong>
+            <strong>
+              Day {lesson.day}. {lesson.title}
+            </strong>
             <p className="muted">진행률 {percent}% · 목표 {state.onboarding?.dailyGoalMinutes}분</p>
           </div>
           <button className="primary-action inline" onClick={onStartLesson}>
             {progress ? "이어하기" : "시작"}
           </button>
         </div>
-        <div className="progress-track" aria-label={`Day 1 진행률 ${percent}%`}>
+        <div className="progress-track" aria-label={`Day ${lesson.day} 진행률 ${percent}%`}>
           <span style={{ width: `${percent}%` }} />
         </div>
       </Panel>
@@ -407,7 +447,7 @@ const HomeScreen = ({
         <StatePanel
           icon={<Sparkles />}
           title="아직 복습할 문장이 없어요"
-          body="Day 1을 마치면 어려웠던 표현을 바탕으로 짧은 복습이 만들어집니다."
+          body="수업을 마치면 어려웠던 표현을 바탕으로 짧은 복습이 만들어집니다."
         />
       )}
       {!state.accountEmail && (
@@ -422,6 +462,7 @@ const HomeScreen = ({
 
 const LessonScreen = ({
   state,
+  lessonId,
   progress,
   onPersist,
   onError,
@@ -429,13 +470,14 @@ const LessonScreen = ({
   onComplete
 }: {
   state: UserState;
+  lessonId: string;
   progress?: LessonProgress;
   onPersist: (state: UserState) => void;
   onError: (message: string) => void;
   onPause: () => void;
   onComplete: () => void;
 }) => {
-  const lesson = getLesson("day-1");
+  const lesson = getLesson(lessonId);
   const activeProgress = progress ?? createLessonProgress(lesson.id);
   const step = getCurrentStep(activeProgress);
   const character = getCharacter(state.onboarding?.characterId);
@@ -876,7 +918,7 @@ const SettingsScreen = ({
           </label>
         </div>
         <p className="culture-note">
-          현재 {pack.label} 국가팩과 {character.name} 튜터가 홈, Day 1, 복습 안내에 반영됩니다.
+          현재 {pack.label} 국가팩과 {character.name} 튜터가 홈, 수업, 복습 안내에 반영됩니다.
         </p>
       </Panel>
       <Panel title="계정 연결">
@@ -887,20 +929,48 @@ const SettingsScreen = ({
         <div className="button-row">
           <button
             className="primary-action inline"
-            onClick={() => {
+            onClick={async () => {
               const normalizedEmail = email.trim().toLowerCase();
               if (!normalizedEmail.includes("@")) {
                 onError("이메일 주소를 확인해 주세요.");
                 return;
               }
-              const merged = mergeGuestIntoAccount(state, normalizedEmail);
-              onPersist(trackEvent(merged, { name: "signup_or_login", success: true }));
+              try {
+                const authResult = await requestEmailSignIn(normalizedEmail);
+                const merged = mergeGuestIntoAccount(state, normalizedEmail);
+                onPersist(
+                  trackEvent(
+                    {
+                      ...merged,
+                      sync: {
+                        ...merged.sync,
+                        mode: authResult.sent ? "supabase-ready" : merged.sync.mode,
+                        pending: authResult.sent,
+                        message: authResult.message
+                      }
+                    },
+                    { name: "signup_or_login", success: true }
+                  )
+                );
+              } catch (loginError) {
+                onError(loginError instanceof Error ? loginError.message : "로그인 링크 전송에 실패했습니다.");
+              }
             }}
           >
             <LogIn />
             로그인·병합
           </button>
-          <button className="secondary-action inline" onClick={() => onPersist(logoutLocalAccount(state))}>
+          <button
+            className="secondary-action inline"
+            onClick={async () => {
+              try {
+                await signOutFromSupabase();
+                onPersist(logoutLocalAccount(state));
+              } catch (logoutError) {
+                onError(logoutError instanceof Error ? logoutError.message : "로그아웃 중 오류가 발생했습니다.");
+              }
+            }}
+          >
             <LogOut />
             로그아웃
           </button>
@@ -908,7 +978,16 @@ const SettingsScreen = ({
       </Panel>
       <Panel title="동기화 상태">
         <p>{state.sync.message}</p>
-        <button className="secondary-action inline" onClick={() => onPersist(markSyncAttempt(state))}>
+        <button
+          className="secondary-action inline"
+          onClick={async () => {
+            try {
+              onPersist(await markSyncAttempt(state));
+            } catch (syncError) {
+              onError(syncError instanceof Error ? syncError.message : "동기화 중 오류가 발생했습니다.");
+            }
+          }}
+        >
           연결 상태 확인
         </button>
       </Panel>

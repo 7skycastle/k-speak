@@ -44,4 +44,13 @@ export const audioCatalog: AudioSlot[] = [
 ];
 
 export const findAudioSlot = (lessonId: string, characterId: string) =>
-  audioCatalog.find((slot) => slot.lessonId === lessonId && slot.characterId === characterId);
+  audioCatalog.find((slot) => slot.lessonId === lessonId && slot.characterId === characterId) ?? {
+    id: `${lessonId}-${characterId}-fallback`,
+    characterId: characterId as AudioSlot["characterId"],
+    lessonId,
+    sentenceId: "lesson-phrase",
+    version: "tts-fallback-v1",
+    rights: "Recorded Korean voice file is not attached yet. Use only licensed voice assets.",
+    replacementNote: `Add recorded natural and slow files for ${lessonId}/${characterId}, then replace this fallback slot.`,
+    usesTtsFallback: true
+  };

@@ -6,22 +6,40 @@ alter table public.guest_merge_requests enable row level security;
 alter table public.country_pack_snapshots enable row level security;
 
 create policy "profiles_select_own" on public.profiles
-  for select using (auth.uid() = id);
+  for select to authenticated using ((select auth.uid()) = id);
 
-create policy "profiles_upsert_own" on public.profiles
-  for all using (auth.uid() = id) with check (auth.uid() = id);
+create policy "profiles_insert_own" on public.profiles
+  for insert to authenticated with check ((select auth.uid()) = id);
+
+create policy "profiles_update_own" on public.profiles
+  for update to authenticated using ((select auth.uid()) = id) with check ((select auth.uid()) = id);
 
 create policy "lesson_progress_own" on public.lesson_progress
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+  for select to authenticated using ((select auth.uid()) = user_id);
 
-create policy "review_items_own" on public.review_items
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "lesson_progress_insert_own" on public.lesson_progress
+  for insert to authenticated with check ((select auth.uid()) = user_id);
+
+create policy "lesson_progress_update_own" on public.lesson_progress
+  for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+
+create policy "review_items_select_own" on public.review_items
+  for select to authenticated using ((select auth.uid()) = user_id);
+
+create policy "review_items_insert_own" on public.review_items
+  for insert to authenticated with check ((select auth.uid()) = user_id);
+
+create policy "review_items_update_own" on public.review_items
+  for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 
 create policy "analytics_insert_own_or_guest" on public.analytics_events
-  for insert with check (auth.uid() = user_id or user_id is null);
+  for insert to authenticated with check ((select auth.uid()) = user_id);
 
-create policy "guest_merge_own" on public.guest_merge_requests
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+create policy "analytics_update_own" on public.analytics_events
+  for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+
+create policy "guest_merge_insert_own" on public.guest_merge_requests
+  for insert to authenticated with check ((select auth.uid()) = user_id);
 
 create policy "country_pack_read" on public.country_pack_snapshots
-  for select using (true);
+  for select to anon, authenticated using (true);

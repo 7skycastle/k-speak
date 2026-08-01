@@ -1,4 +1,4 @@
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   country_pack_id text not null,
   native_language text not null,
@@ -7,11 +7,12 @@ create table public.profiles (
   daily_goal_minutes integer not null,
   character_id text not null,
   reminder_time text,
+  completed_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
-create table public.lesson_progress (
+create table if not exists public.lesson_progress (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   lesson_id text not null,
@@ -25,7 +26,7 @@ create table public.lesson_progress (
   unique (user_id, lesson_id)
 );
 
-create table public.review_items (
+create table if not exists public.review_items (
   id text not null,
   user_id uuid not null references auth.users(id) on delete cascade,
   lesson_id text not null,
@@ -40,8 +41,8 @@ create table public.review_items (
   primary key (id, user_id)
 );
 
-create table public.analytics_events (
-  id uuid primary key default gen_random_uuid(),
+create table if not exists public.analytics_events (
+  id text primary key,
   user_id uuid references auth.users(id) on delete set null,
   anonymous_id text,
   name text not null,
@@ -49,7 +50,7 @@ create table public.analytics_events (
   occurred_at timestamptz not null default now()
 );
 
-create table public.guest_merge_requests (
+create table if not exists public.guest_merge_requests (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   anonymous_id text not null,
@@ -57,9 +58,16 @@ create table public.guest_merge_requests (
   created_at timestamptz not null default now()
 );
 
-create table public.country_pack_snapshots (
+create table if not exists public.country_pack_snapshots (
   id text primary key,
   version text not null,
   payload jsonb not null,
   created_at timestamptz not null default now()
 );
+
+grant select, insert, update on public.profiles to authenticated;
+grant select, insert, update on public.lesson_progress to authenticated;
+grant select, insert, update on public.review_items to authenticated;
+grant insert, update on public.analytics_events to authenticated;
+grant insert on public.guest_merge_requests to authenticated;
+grant select on public.country_pack_snapshots to anon, authenticated;

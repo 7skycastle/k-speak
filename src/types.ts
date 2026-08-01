@@ -174,6 +174,7 @@ export interface AnalyticsEvent {
 
 export interface SyncState {
   mode: "local-only" | "supabase-ready";
+  cloudUserId?: string;
   lastSyncedAt?: string;
   pending: boolean;
   message: string;

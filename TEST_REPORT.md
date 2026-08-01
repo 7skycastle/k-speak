@@ -24,7 +24,7 @@
 - npm audit: 취약점 0건
 - TypeScript typecheck: 통과
 - lint 스크립트: 통과
-- Vitest: 3개 파일, 6개 테스트 통과
+- Vitest: 4개 파일, 9개 테스트 통과
 - production build: 통과
 - dev server HTTP 응답: 200
 
@@ -68,6 +68,15 @@ Playwright로 다음 흐름을 자동 확인했다.
 5. `nativeLanguage`가 `中文`, 하루 목표가 10분으로 갱신됨
 6. 잘못된 이메일 입력 시 오류 배너 표시
 7. 공백과 대문자가 포함된 이메일이 `learner@example.com`으로 정규화되어 병합됨
+
+Day 2~14 확장 후 다음도 확인했다.
+
+- Day 1~14가 연속 day 번호로 존재
+- 모든 수업이 듣기, 녹음, 비교 단계를 포함
+- 모든 국가팩에 의미 번역 존재
+- 모든 튜터와 수업 조합에 TTS fallback 음성 메타데이터 존재
+
+브라우저 흐름에서 Day 1 완료 후 학습 탭 진입 시 Day 2가 `situation` 단계에서 시작되는 것도 확인했다.
 
 ## 독립 검토에서 수정한 문제
 

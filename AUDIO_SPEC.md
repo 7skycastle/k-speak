@@ -6,7 +6,7 @@
 
 ## 음원 파일 규칙
 
-Day 1 음성 슬롯은 `src/data/audioCatalog.ts`에 정의되어 있다. 실제 파일을 추가할 때는 `public/audio/day-1/{character}/natural.mp3`, `slow.mp3`, 필요한 경우 chunk 파일을 배치하고 슬롯 URL을 갱신한다.
+Day 1 음성 슬롯은 `src/data/audioCatalog.ts`에 정의되어 있다. 실제 파일을 추가할 때는 `public/audio/day-1/{character}/natural.mp3`, `slow.mp3`, 필요한 경우 chunk 파일을 배치하고 슬롯 URL을 갱신한다. Day 2~14는 명시적인 TTS fallback 슬롯을 반환하므로 실제 음원 적용 시 같은 방식으로 슬롯을 추가한다.
 
 ## 자연·느린 발음 구조
 

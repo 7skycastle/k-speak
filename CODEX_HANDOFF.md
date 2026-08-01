@@ -32,7 +32,7 @@ npm run build
 
 ## 6. 배포 방식
 
-이번 단계에서는 공개 배포를 진행하지 않았다. Vite 정적 빌드 결과물은 `dist/`에 생성된다.
+배포 대상은 `https://vercel.com/7skycastles-projects/k-speak`다. Vite 정적 빌드 결과물은 `dist/`에 생성된다. `vercel.json`에 `npm run build`와 `dist`를 명시했다.
 
 ## 7. 환경 변수 목록
 
@@ -42,7 +42,9 @@ npm run build
 
 ## 8. 새 Supabase 연결 방식
 
-새 Supabase 프로젝트를 만든 뒤 `.env.local`에 환경 변수를 넣는다. 기존 `K_study` 프로젝트와 프로젝트 ID `bcpoowcqvqynpciiqoav`는 사용하지 않는다.
+새 Supabase 프로젝트를 만든 뒤 `.env.local`과 Vercel 환경 변수에 URL과 anon key를 넣는다. 기존 `K_study` 프로젝트와 프로젝트 ID `bcpoowcqvqynpciiqoav`는 사용하지 않는다.
+
+2026-08-01에 Supabase MCP로 조직 `vjhliyconufnhitdcunc`에 새 프로젝트 생성을 시도했지만 `INVALID_ARGUMENT`가 반환되어 생성되지 않았다. 비용 확인 결과는 월 $0였다. 수동 생성 시 리전은 `ap-northeast-2`, 이름은 `Korean First Talk` 또는 `korean-first-talk`를 권장한다.
 
 ## 9. 필요한 테이블과 RLS 정책
 
@@ -60,7 +62,7 @@ SQL 초안은 `docs/supabase/schema.sql`, `docs/supabase/rls.sql`에 있다. 주
 ## 11. 핵심 파일과 역할
 
 - `src/types.ts`: 제품 도메인 타입
-- `src/data/lessons.ts`: Day 1 수업 데이터
+- `src/data/lessons.ts`: Day 1~14 수업 데이터
 - `src/engine/lessonEngine.ts`: 공통 수업 상태 엔진
 - `src/engine/reviewEngine.ts`: 규칙 기반 복습 생성
 - `src/services/storage.ts`: 로컬 저장과 비회원·계정 병합
@@ -71,26 +73,27 @@ SQL 초안은 `docs/supabase/schema.sql`, `docs/supabase/rls.sql`에 있다. 주
 - 비회원 온보딩
 - 5개 국가팩 샘플
 - 4명 한국인 튜터 데이터
-- Day 1 학습 플로우
+- Day 1~14 학습 데이터와 다음 미완료 Day 진행
 - 자연·느린 기기 음성 재생
 - 브라우저 녹음과 내 목소리 재생
 - 녹음 거절·미지원 안내
 - 복습 항목 생성과 완료 처리
 - 이메일 기반 로컬 계정 병합
+- Supabase 이메일 링크 인증 요청과 세션 감지
+- Supabase 프로필, 수업 진도, 복습 항목, 이벤트 업서트 동기화 함수
 - 분석 이벤트 로컬 기록
 - 모바일 우선 하단 메뉴
 
 ## 13. 아직 샘플 상태인 기능
 
 - 실제 한국인 녹음 음원
-- 실제 Supabase 인증과 클라우드 동기화
+- 실제 Supabase 프로젝트 생성과 환경 변수 입력
 - 실제 분석 서비스 전송
-- Day 2~14 콘텐츠
 - 푸시 알림 발송
 
 ## 14. 실제 한국인 음성 적용 방법
 
-`public/audio/day-1/{character}/`에 실제 녹음 파일을 넣고 `src/data/audioCatalog.ts`의 `naturalUrl`, `slowUrl`, `chunkUrls`, `rights`, `usesTtsFallback`을 갱신한다. 허가 정보와 버전을 반드시 남긴다.
+`public/audio/day-1/{character}/`에 실제 녹음 파일을 넣고 `src/data/audioCatalog.ts`의 `naturalUrl`, `slowUrl`, `chunkUrls`, `rights`, `usesTtsFallback`을 갱신한다. 허가 정보와 버전을 반드시 남긴다. Day 2~14는 명시적인 TTS fallback 슬롯을 반환하므로 같은 방식으로 실제 음성 슬롯을 추가한다.
 
 ## 15. 새 수업 추가 방법
 
@@ -117,14 +120,12 @@ SQL 초안은 `docs/supabase/schema.sql`, `docs/supabase/rls.sql`에 있다. 주
 
 ## 20. 다음 개발 우선순위
 
-1. 새 Supabase 프로젝트 생성 및 `.env.local` 설정
+1. 새 Supabase 프로젝트 생성 및 `.env.local`/Vercel 환경 변수 설정
 2. `schema.sql`, `rls.sql` 적용
-3. 실제 인증, 업로드, 다운로드 동기화 함수 연결
-4. Day 2~14 수업 데이터 추가
-5. 실제 한국인 음원 녹음과 슬롯 교체
-6. 국가팩 번역과 문화 설명 품질 개선
-7. 분석 이벤트 외부 서비스 연결
-8. 접근성, 성능, 보안 최종 점검
+3. 실제 한국인 음원 녹음과 슬롯 교체
+4. 국가팩 번역과 문화 설명 품질 개선
+5. 분석 이벤트 외부 서비스 연결
+6. 접근성, 성능, 보안 최종 점검
 
 ## 21. 최종 검증 결과
 
