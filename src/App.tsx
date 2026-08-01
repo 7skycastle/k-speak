@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   BookOpen,
   Check,
-  CircleUserRound,
   Home,
   LoaderCircle,
   LogIn,
@@ -34,7 +33,6 @@ import {
   loadState,
   logoutLocalAccount,
   mergeGuestIntoAccount,
-  saveState,
   updateOnboarding,
   upsertLessonProgress,
   upsertReviewItems
@@ -168,6 +166,7 @@ export const App = () => {
               progress={progress}
               onPersist={updateState}
               onError={setError}
+              onPause={() => setTab("home")}
               onComplete={() => setTab("home")}
             />
           )}
@@ -178,7 +177,8 @@ export const App = () => {
             <SettingsScreen
               state={state}
               onPersist={updateState}
-              onOnboardingChange={(profile) => setState(updateOnboarding(state, profile))}
+              onError={setError}
+              onOnboardingChange={(profile) => setState((current) => updateOnboarding(current, profile))}
             />
           )}
         </>
@@ -425,12 +425,14 @@ const LessonScreen = ({
   progress,
   onPersist,
   onError,
+  onPause,
   onComplete
 }: {
   state: UserState;
   progress?: LessonProgress;
   onPersist: (state: UserState) => void;
   onError: (message: string) => void;
+  onPause: () => void;
   onComplete: () => void;
 }) => {
   const lesson = getLesson("day-1");
@@ -510,13 +512,19 @@ const LessonScreen = ({
 
   const stopRecording = () => {
     recorderRef.current?.stop();
+    saveProgress(updateStepMetrics(activeProgress, step.id, {}), "recording_finished");
+  };
+
+  const retryRecording = () => {
     const currentMetric = activeProgress.metrics[step.id];
     saveProgress(
       updateStepMetrics(activeProgress, step.id, {
-        recordingRetries: (currentMetric?.recordingRetries ?? 0) + (recordedUrl ? 1 : 0)
+        recordingRetries: (currentMetric?.recordingRetries ?? 0) + 1
       }),
-      "recording_finished"
+      "rerecording_requested"
     );
+    setRecordedUrl("");
+    setRecorderState("idle");
   };
 
   const advance = () => {
@@ -577,10 +585,7 @@ const LessonScreen = ({
             recordedUrl={recordedUrl}
             onStart={startRecording}
             onStop={stopRecording}
-            onRetry={() => {
-              setRecordedUrl("");
-              setRecorderState("idle");
-            }}
+            onRetry={retryRecording}
           />
         )}
         {step.kind === "quiz" && step.hint && (
@@ -593,14 +598,17 @@ const LessonScreen = ({
         <button
           className="secondary-action"
           onClick={() =>
-            saveProgress(
+            {
+              saveProgress(
               {
                 ...activeProgress,
                 currentStepId: step.id,
                 status: "in-progress"
               },
               "lesson_paused"
-            )
+              );
+              onPause();
+            }
           }
         >
           나중에 이어하기
@@ -806,10 +814,12 @@ const ReviewScreen = ({
 const SettingsScreen = ({
   state,
   onPersist,
+  onError,
   onOnboardingChange
 }: {
   state: UserState;
   onPersist: (state: UserState) => void;
+  onError: (message: string) => void;
   onOnboardingChange: (profile: OnboardingProfile) => void;
 }) => {
   const [email, setEmail] = useState(state.accountEmail ?? "");
@@ -817,7 +827,15 @@ const SettingsScreen = ({
   const character = getCharacter(profile.characterId);
   const pack = getCountryPack(profile.countryPackId);
 
-  const updateProfile = (patch: Partial<OnboardingProfile>) => onOnboardingChange({ ...profile, ...patch });
+  const updateProfile = (patch: Partial<OnboardingProfile>) => {
+    const next = { ...profile, ...patch };
+    if (patch.countryPackId) {
+      const selectedPack = getCountryPack(patch.countryPackId);
+      next.nativeLanguage = selectedPack.nativeLabel;
+      next.dailyGoalMinutes = selectedPack.defaultDailyGoal;
+    }
+    onOnboardingChange(next);
+  };
 
   return (
     <section className="flow">
@@ -870,8 +888,12 @@ const SettingsScreen = ({
           <button
             className="primary-action inline"
             onClick={() => {
-              if (!email.includes("@")) return;
-              const merged = mergeGuestIntoAccount(state, email);
+              const normalizedEmail = email.trim().toLowerCase();
+              if (!normalizedEmail.includes("@")) {
+                onError("이메일 주소를 확인해 주세요.");
+                return;
+              }
+              const merged = mergeGuestIntoAccount(state, normalizedEmail);
               onPersist(trackEvent(merged, { name: "signup_or_login", success: true }));
             }}
           >

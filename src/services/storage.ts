@@ -7,6 +7,8 @@ const now = () => new Date().toISOString();
 
 const createId = (prefix: string) => `${prefix}-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
 
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
 export const createInitialState = (): UserState => ({
   anonymousId: createId("guest"),
   lessonProgress: {},
@@ -92,13 +94,14 @@ export const completeReviewItem = (state: UserState, reviewItemId: string, resul
   });
 
 export const mergeGuestIntoAccount = (state: UserState, email: string): UserState => {
-  const cloudKey = `${CLOUD_PREFIX}${email.toLowerCase()}`;
+  const normalizedEmail = normalizeEmail(email);
+  const cloudKey = `${CLOUD_PREFIX}${normalizedEmail}`;
   const cloudState = loadCloudState(cloudKey);
-  const merged = mergeStates(cloudState ?? createInitialState(), state, email);
+  const merged = mergeStates(cloudState ?? createInitialState(), state, normalizedEmail);
   localStorage.setItem(cloudKey, JSON.stringify(merged));
   return saveState({
     ...merged,
-    accountEmail: email,
+    accountEmail: normalizedEmail,
     anonymousId: state.anonymousId,
     sync: {
       ...merged.sync,
