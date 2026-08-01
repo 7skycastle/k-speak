@@ -21,6 +21,7 @@ npm run dev -- --port 5173
 npm audit --audit-level=moderate
 npm run audio:validate
 npm run audio:manifest
+npm run supabase:validate
 npm run lint
 npm run test
 npm run build
@@ -81,6 +82,17 @@ SQL drafts:
 - `docs/supabase/schema.sql`
 - `docs/supabase/rls.sql`
 
+Setup guide:
+
+- `docs/SUPABASE_SETUP.md`
+
+Validation and bundle commands:
+
+```bash
+npm run supabase:validate
+npm run --silent supabase:bundle
+```
+
 Supabase project creation was previously attempted through MCP but returned `INVALID_ARGUMENT`. The existing `K_study` project was not modified.
 
 ## Important Files
@@ -90,6 +102,7 @@ Supabase project creation was previously attempted through MCP but returned `INV
 - `src/data/audioCatalog.ts`: audio slots and browser fallback metadata.
 - `src/utils/audioPlayback.ts`: static-first audio playback and browser fallback.
 - `scripts/audio/`: free TTS/audio manifest and validation tools.
+- `scripts/supabase/`: Supabase SQL contract validation and bundle output.
 - `AUDIO_SPEC.md`: audio policy details.
 - `TEST_REPORT.md`: latest verification notes.
 
@@ -98,4 +111,5 @@ Supabase project creation was previously attempted through MCP but returned `INV
 - Add real free/static Korean audio files and update `src/data/audioCatalog.ts`.
 - Create/configure the dedicated Supabase project and add env vars in Vercel.
 - Apply `docs/supabase/schema.sql` and `docs/supabase/rls.sql`.
+- Run an end-to-end Supabase OTP/progress merge check after env vars are configured.
 - Connect real analytics delivery if needed.

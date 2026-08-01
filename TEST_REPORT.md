@@ -10,6 +10,8 @@ Passed:
 - `npm run audio:validate`
 - `npm run audio:manifest`
 - paid-provider blocking check with `ALLOW_PAID_TTS=true AUDIO_PROVIDER=openai npm run audio:manifest`
+- `npm run supabase:validate`
+- `npm run supabase:bundle`
 - `npm run lint`
 - `npm run test`
 - `npm run build`
@@ -18,8 +20,8 @@ Passed:
 
 Current unit test result:
 
-- 7 test files passed
-- 19 tests passed
+- 8 test files passed
+- 23 tests passed
 
 Build result:
 
@@ -31,6 +33,12 @@ Audio validation result:
 - 56 lesson/character audio slots checked
 - 0 validation errors
 - 52 generated browser-TTS fallback slot warnings
+
+Supabase SQL validation result:
+
+- `docs/supabase/schema.sql` and `docs/supabase/rls.sql` match the app cloud sync contract.
+- Required upsert constraints for `lesson_progress` and `review_items` are present.
+- SQL bundle generation succeeds.
 
 ## Previously Verified
 

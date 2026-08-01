@@ -12,7 +12,9 @@
     "audio:manifest": "tsx scripts/audio/generate-audio-manifest.ts",
     "audio:validate": "tsx scripts/audio/validate-audio-assets.ts",
     "audio:placeholder": "tsx scripts/audio/generate-placeholder-audio.ts",
-    "audio:voices": "tsx scripts/audio/list-browser-tts-voices.ts"
+    "audio:voices": "tsx scripts/audio/list-browser-tts-voices.ts",
+    "supabase:validate": "tsx scripts/supabase/validate-sql.ts",
+    "supabase:bundle": "tsx scripts/supabase/bundle-sql.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
