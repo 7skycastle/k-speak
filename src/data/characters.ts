@@ -11,6 +11,16 @@ export const tutorCharacters: TutorCharacter[] = [
     voiceId: "voice-haneul-01",
     hasRecordedVoice: false,
     usesTtsFallback: true,
+    voiceProfile: {
+      provider: "browser_speech_synthesis",
+      sourceType: "browser_speech_synthesis",
+      voiceId: "ko-KR-browser-soft-female",
+      displayName: "Browser Korean voice, soft female profile",
+      licenseStatus: "browser_runtime",
+      commercialUse: "browser_runtime",
+      rateNatural: 1,
+      rateSlow: 0.72
+    },
     countryGreetings: {
       "us-en": "Let's keep it light and useful.",
       "jp-ja": "ゆっくり一緒に練習しましょう。",
@@ -29,6 +39,16 @@ export const tutorCharacters: TutorCharacter[] = [
     voiceId: "voice-jun-01",
     hasRecordedVoice: false,
     usesTtsFallback: true,
+    voiceProfile: {
+      provider: "browser_speech_synthesis",
+      sourceType: "browser_speech_synthesis",
+      voiceId: "ko-KR-browser-clear-male",
+      displayName: "Browser Korean voice, clear male profile",
+      licenseStatus: "browser_runtime",
+      commercialUse: "browser_runtime",
+      rateNatural: 1,
+      rateSlow: 0.72
+    },
     countryGreetings: {
       "us-en": "One phrase, real use. Ready?",
       "jp-ja": "すぐ使える一言から始めます。",
@@ -47,6 +67,16 @@ export const tutorCharacters: TutorCharacter[] = [
     voiceId: "voice-mina-01",
     hasRecordedVoice: false,
     usesTtsFallback: true,
+    voiceProfile: {
+      provider: "browser_speech_synthesis",
+      sourceType: "browser_speech_synthesis",
+      voiceId: "ko-KR-browser-warm-female",
+      displayName: "Browser Korean voice, warm female profile",
+      licenseStatus: "browser_runtime",
+      commercialUse: "browser_runtime",
+      rateNatural: 1,
+      rateSlow: 0.72
+    },
     countryGreetings: {
       "us-en": "You do not need perfect Korean to start.",
       "jp-ja": "完璧でなくても大丈夫です。",
@@ -65,6 +95,16 @@ export const tutorCharacters: TutorCharacter[] = [
     voiceId: "voice-taeho-01",
     hasRecordedVoice: false,
     usesTtsFallback: true,
+    voiceProfile: {
+      provider: "browser_speech_synthesis",
+      sourceType: "browser_speech_synthesis",
+      voiceId: "ko-KR-browser-coach-male",
+      displayName: "Browser Korean voice, coach male profile",
+      licenseStatus: "browser_runtime",
+      commercialUse: "browser_runtime",
+      rateNatural: 1,
+      rateSlow: 0.72
+    },
     countryGreetings: {
       "us-en": "Listen once, then make it yours.",
       "jp-ja": "聞いて、自分の声で試しましょう。",

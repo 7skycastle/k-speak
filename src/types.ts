@@ -42,7 +42,29 @@ export interface TutorCharacter {
   voiceId: string;
   hasRecordedVoice: boolean;
   usesTtsFallback: boolean;
+  voiceProfile: VoiceProfile;
   countryGreetings: Record<CountryPackId, string>;
+}
+
+export type AudioProvider = "browser_speech_synthesis" | "local_tts" | "manual_import" | "placeholder";
+export type AudioSourceType = "free_tts" | "browser_speech_synthesis" | "manual_import" | "placeholder";
+export type AudioLicenseStatus =
+  | "browser_runtime"
+  | "open_source_license_confirmed"
+  | "manual_import_to_be_confirmed"
+  | "internal_testing_only"
+  | "to_be_confirmed";
+export type AudioCommercialUse = "allowed" | "browser_runtime" | "unknown" | "not_allowed";
+
+export interface VoiceProfile {
+  provider: AudioProvider;
+  sourceType: AudioSourceType;
+  voiceId: string;
+  displayName: string;
+  licenseStatus: AudioLicenseStatus;
+  commercialUse: AudioCommercialUse;
+  rateNatural: number;
+  rateSlow: number;
 }
 
 export interface AudioSlot {
@@ -57,6 +79,22 @@ export interface AudioSlot {
   rights: string;
   replacementNote: string;
   usesTtsFallback: boolean;
+  sourceType: AudioSourceType;
+  provider: AudioProvider;
+  voiceId: string;
+  licenseStatus: AudioLicenseStatus;
+  commercialUse: AudioCommercialUse;
+  generatedAt?: string;
+  generatedBy: string;
+  replaceBeforeProduction: boolean;
+  rateNatural: number;
+  rateSlow: number;
+  fallback: {
+    type: "browser_speech_synthesis";
+    lang: "ko-KR";
+    rateNatural: number;
+    rateSlow: number;
+  };
 }
 
 export interface OnboardingProfile {

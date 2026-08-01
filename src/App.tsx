@@ -45,6 +45,7 @@ import {
   subscribeToSupabaseAuth,
   syncWithSupabase
 } from "./services/cloudSync";
+import { playLessonAudio, type AudioPlaybackResult } from "./utils/audioPlayback";
 import { speakKorean } from "./utils/speech";
 import type {
   CharacterId,
@@ -489,6 +490,7 @@ const LessonScreen = ({
   const [startMs, setStartMs] = useState(Date.now());
   const [recorderState, setRecorderState] = useState<RecorderState>("idle");
   const [recordedUrl, setRecordedUrl] = useState("");
+  const [audioStatus, setAudioStatus] = useState<AudioPlaybackResult | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
@@ -501,6 +503,7 @@ const LessonScreen = ({
   useEffect(() => {
     setSelectedChoice("");
     setHintVisible(false);
+    setAudioStatus(null);
     setStartMs(Date.now());
   }, [step.id]);
 
@@ -510,17 +513,34 @@ const LessonScreen = ({
     onPersist(nextState);
   };
 
-  const playOriginal = (rate: number) => {
-    const played = speakKorean(lesson.korean, rate);
+  const playOriginal = async (rate: number) => {
+    const result = await playLessonAudio(audioSlot, lesson.korean, rate < 1 ? "slow" : "natural");
+    setAudioStatus(result);
     const metricKey = rate < 1 ? "slowPlayCount" : "naturalPlayCount";
     const currentMetric = activeProgress.metrics[step.id];
-    saveProgress(
+    let nextState = upsertLessonProgress(
+      state,
+      lesson.id,
       updateStepMetrics(activeProgress, step.id, {
         [metricKey]: (currentMetric?.[metricKey] ?? 0) + 1
-      }),
-      rate < 1 ? "slow_audio_played" : "first_audio_played"
+      })
     );
-    if (!played) onError("이 브라우저에서는 기기 음성 재생을 사용할 수 없습니다.");
+    nextState = trackEvent(nextState, {
+      name: rate < 1 ? "slow_audio_played" : "first_audio_played",
+      lessonId: lesson.id,
+      stepId: step.id,
+      success: result.ok
+    });
+    if (result.usedFallback) {
+      nextState = trackEvent(nextState, {
+        name: "audio_fallback_used",
+        lessonId: lesson.id,
+        stepId: step.id,
+        errorCode: result.errorCode
+      });
+    }
+    onPersist(nextState);
+    if (!result.ok) onError(result.message);
   };
 
   const startRecording = async () => {
@@ -621,6 +641,7 @@ const LessonScreen = ({
             </button>
           </div>
         )}
+        {audioStatus && <p className="audio-status">{audioStatus.message}</p>}
         {(step.kind === "record" || step.kind === "compare") && (
           <RecorderControls
             recorderState={recorderState}
@@ -714,7 +735,7 @@ const LessonStepBody = ({
         ))}
       </div>
     )}
-    {audioIsTts && <p className="source-note">현재는 실제 녹음 슬롯이 비어 있어 기기 음성 샘플로 재생합니다.</p>}
+    {audioIsTts && <p className="source-note">무료 정적 음원이 없으면 브라우저 TTS로 재생합니다.</p>}
   </div>
 );
 
