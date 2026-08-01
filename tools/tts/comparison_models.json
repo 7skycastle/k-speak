@@ -1,0 +1,38 @@
+{
+  "version": "2026-08-02",
+  "models": [
+    {
+      "modelId": "melotts-korean-candidate",
+      "provider": "melotts",
+      "label": "MeloTTS-Korean",
+      "priority": "primary",
+      "modelVersion": "myshell-ai/MeloTTS-Korean",
+      "downloadUrl": "https://huggingface.co/myshell-ai/MeloTTS-Korean",
+      "license": "MIT",
+      "voiceId": "KR",
+      "language": "KR",
+      "normalRate": 1.0,
+      "slowRate": 0.86,
+      "outputSlug": "melotts-korean",
+      "realPersonClone": false,
+      "notes": "Recommended first-pass local audition model. Uses the official Korean speaker id KR."
+    },
+    {
+      "modelId": "qwen3-tts-12hz-0.6b-customvoice-sohee",
+      "provider": "qwen3_custom_voice",
+      "label": "Qwen3-TTS 0.6B CustomVoice Sohee",
+      "priority": "comparison",
+      "modelVersion": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+      "downloadUrl": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+      "license": "Apache-2.0",
+      "voiceId": "Sohee",
+      "language": "Korean",
+      "normalRate": 1.0,
+      "slowRate": 0.86,
+      "slowInstruction": "Speak clearly and slightly slowly for a first-time Korean learner. Do not imitate a real person.",
+      "outputSlug": "qwen3-sohee",
+      "realPersonClone": false,
+      "notes": "Quality comparison candidate. Uses the built-in Sohee Korean speaker, not a cloned real-person voice."
+    }
+  ]
+}

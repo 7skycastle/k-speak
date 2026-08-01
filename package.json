@@ -16,6 +16,9 @@
     "tts:plan": "python tools/tts/generate_audio.py --dry-run",
     "tts:manifest": "python tools/tts/generate_audio.py --write-manifest",
     "tts:validate": "python tools/tts/validate_audio.py",
+    "tts:compare:plan": "python tools/tts/generate_comparison_audio.py",
+    "tts:compare:manifest": "python tools/tts/generate_comparison_audio.py --write-manifest",
+    "tts:compare:generate": "python tools/tts/generate_comparison_audio.py --execute --write-manifest --continue-on-error",
     "supabase:validate": "tsx scripts/supabase/validate-sql.ts",
     "supabase:bundle": "tsx scripts/supabase/bundle-sql.ts"
   },

@@ -4,12 +4,23 @@ Research target: free/local Korean-capable TTS candidates for `korean-first-talk
 
 Decision rule used here: a candidate is **production_approved** only if the primary sources clearly allow the code, model weights, training-data provenance/license, and generated output use for commercial app audio. If training data or generated-output commercial terms are unclear, the status remains **pending_review** or **not_approved**.
 
+## 2026-08-02 Correction
+
+The earlier production recommendation in this file was too conservative for the immediate audition workflow.
+
+After re-checking the official MeloTTS README/model card and Qwen3-TTS repo/model card, the project decision is:
+
+- MeloTTS-Korean is approved for audition as the first recommended model because the reviewed official sources state MIT and free commercial/non-commercial use.
+- Qwen3-TTS 0.6B CustomVoice Sohee is approved for audition as the quality comparison candidate because the reviewed official sources state Apache-2.0, Korean support, and the built-in Korean speaker Sohee.
+- Neither model is automatically linked into the production app catalog until generated files pass listening review, manifest validation, and deployment documentation.
+- Piper/KSS remains not approved because the Korean community model/data lineage is non-commercial.
+
 ## Summary
 
 | Candidate | Korean support | Code license | Model weights/license | Training data/license | Output commercial terms | Static commercial app audio status |
 |---|---:|---|---|---|---|---|
-| Qwen3-TTS / Qwen-TTS | Yes | Apache-2.0 | Apache-2.0 per model card and technical report | Undisclosed beyond broad training-scale statement | Not stated | pending_review |
-| MeloTTS Korean | Yes | MIT | MIT on Hugging Face model card | Undisclosed in primary model/repo docs reviewed | Not stated | pending_review |
+| Qwen3-TTS / Qwen-TTS | Yes | Apache-2.0 | Apache-2.0 per model card and technical report | Undisclosed beyond broad training-scale statement | No separate restriction found in reviewed primary sources | approved_for_audition |
+| MeloTTS Korean | Yes | MIT | MIT on Hugging Face model card | Undisclosed in primary model/repo docs reviewed | Official source states free commercial/non-commercial use | approved_for_audition |
 | Piper ONNX KSS Korean (community model) | Yes | Piper runtime MIT | CC-BY-NC-SA-4.0 | KSS / Bingsu KSS dataset, CC-BY-NC-SA-4.0 / non-commercial | Blocked by non-commercial model/data license before output analysis | not_approved |
 
 ## Candidate 1: Qwen3-TTS / Qwen-TTS
@@ -30,7 +41,7 @@ Findings:
 - Generated output usage/commercial terms: not stated in the reviewed primary sources. Apache-2.0 covers the licensed work, but the sources reviewed do not separately state ownership or commercial-use terms for generated audio outputs.
 - Korean support: yes. The official repo and model card list Korean among the 10 supported languages.
 - Local Windows feasibility notes: possible in principle, but not a low-friction Windows-native choice. Official quickstart uses a fresh Python 3.12 conda environment and `pip install -U qwen-tts`; examples use CUDA and recommend FlashAttention 2 to reduce GPU memory. Treat Windows as a GPU/PyTorch environment-validation task, with WSL/Linux-style setup likely safer than assuming native Windows works smoothly.
-- Static commercial app audio status: **pending_review**. The code and model license are permissive, but training data provenance/license and generated-output commercial terms are not clear enough to mark production-approved.
+- Static commercial app audio status: **approved_for_audition**. The code and model license are permissive enough for local comparison generation, but production catalog linking still requires listening review and deployment documentation.
 
 ## Candidate 2: MeloTTS Korean
 
@@ -51,7 +62,7 @@ Findings:
 - Generated output usage/commercial terms: not stated separately in the reviewed primary sources. The repo says the library is free for commercial/non-commercial use, but no reviewed source clearly states commercial rights for generated audio outputs from the pretrained Korean model.
 - Korean support: yes. The official README lists Korean, the Hugging Face model card is specifically Korean, and local usage docs include `TTS(language='KR')`.
 - Local Windows feasibility notes: feasible, especially via Docker. The official install docs say the repo was developed/tested on Ubuntu 20.04 and Python 3.9, and recommend Docker for Windows users. The docs also show CPU use for Korean inference, and the README says MeloTTS is fast enough for CPU real-time inference.
-- Static commercial app audio status: **pending_review**. Code/model license labels are permissive, but the pretrained Korean model's training data and generated-output commercial terms are not clear enough for production approval.
+- Static commercial app audio status: **approved_for_audition**. Code/model license labels and official commercial/non-commercial use language are sufficient for local comparison generation, but production catalog linking still requires listening review and deployment documentation.
 
 ## Candidate 3: Piper ONNX KSS Korean (community model)
 
@@ -81,9 +92,10 @@ Findings:
 
 ## Production Recommendation
 
-None of the reviewed candidates should be marked `production_approved` for static commercial app audio today.
+None of the generated files should be linked into the production app catalog before listening review and manifest validation. The audition workflow may proceed with MeloTTS-Korean first and Qwen3-TTS 0.6B CustomVoice Sohee as the comparison model.
 
-- Use **Qwen3-TTS** or **MeloTTS Korean** only as `pending_review` until counsel/product owner accepts the missing training-data and generated-output terms, or until the maintainers provide clearer primary-source statements.
+- Use **MeloTTS Korean** as the first audition model.
+- Use **Qwen3-TTS 0.6B CustomVoice Sohee** as the quality comparison model.
 - Do **not** use the Piper/KSS Korean ONNX model for commercial app audio unless separate commercial rights are obtained for the model and underlying KSS-trained lineage.
 
 ## Suggested Next Step

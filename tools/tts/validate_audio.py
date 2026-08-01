@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TOOL_DIR = Path(__file__).resolve().parent
 DEFAULT_MANIFEST = TOOL_DIR / "generated_manifest.json"
+DEFAULT_COMPARISON_MANIFEST = TOOL_DIR / "comparison_manifest.json"
 PAID_PATTERNS = ("elevenlabs", "openai", "google cloud", "azure", "clova", "polly", "typecast")
 
 
@@ -125,16 +126,72 @@ def validate_candidate_models(licenses, errors, warnings):
         if has_pending_layer and candidate.get("reviewDecision") == "approved_for_production":
             errors.append(f"Candidate model {model_id} cannot be production-approved with pending license layers.")
 
-        if candidate.get("commercialUse") is True and candidate.get("reviewDecision") != "approved_for_production":
-            errors.append(f"Candidate model {model_id} cannot be commercialUse=true before production approval.")
+        if candidate.get("commercialUse") is True and candidate.get("reviewDecision") not in (
+            "approved_for_audition",
+            "approved_for_production"
+        ):
+            errors.append(f"Candidate model {model_id} cannot be commercialUse=true before approval.")
 
         if candidate.get("reviewDecision") == "pending_review":
             warnings.append(f"Candidate model {model_id} still needs primary-source license review.")
 
 
+def validate_comparison_models(errors):
+    models_path = TOOL_DIR / "comparison_models.json"
+    if not models_path.exists():
+        return []
+    models = read_json("comparison_models.json")["models"]
+    model_ids = set()
+    for model in models:
+        model_id = model.get("modelId", "<missing-model-id>")
+        if model_id in model_ids:
+            errors.append(f"Duplicate comparison modelId: {model_id}")
+        model_ids.add(model_id)
+        if model.get("realPersonClone") is not False:
+            errors.append(f"Comparison model {model_id} must not clone a real person.")
+        if model.get("provider") not in ("melotts", "qwen3_custom_voice"):
+            errors.append(f"Unsupported comparison provider for {model_id}: {model.get('provider')}")
+        for field in ("downloadUrl", "license", "voiceId", "normalRate", "slowRate", "outputSlug"):
+            if field not in model:
+                errors.append(f"Comparison model {model_id} is missing {field}.")
+    return models
+
+
+def validate_comparison_manifest(path, errors, warnings):
+    if not path.exists():
+        warnings.append(f"TTS comparison manifest does not exist yet: {path}")
+        return 0
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    entries = manifest.get("entries", [])
+    audio_ids = set()
+    for entry in entries:
+        audio_id = entry.get("audioId")
+        if audio_id in audio_ids:
+            errors.append(f"Duplicate comparison audioId: {audio_id}")
+        audio_ids.add(audio_id)
+        if entry.get("realPersonClone") is not False:
+            errors.append(f"Comparison entry {audio_id} must not clone a real person.")
+        wav_path = entry.get("wavPath", "")
+        if not (wav_path.endswith("/normal.wav") or wav_path.endswith("/slow.wav")):
+            errors.append(f"Comparison entry {audio_id} must end with normal.wav or slow.wav.")
+        path_on_disk = ROOT / wav_path
+        if path_on_disk.exists():
+            validate_wave(path_on_disk, errors)
+        elif entry.get("wavExists") is True:
+            errors.append(f"Comparison manifest says WAV exists but file is missing: {wav_path}")
+    if entries and len(entries) < 80:
+        warnings.append(f"Comparison manifest has {len(entries)} entries; expected 80 for 20 sentences x 2 models x 2 speeds.")
+    return len(entries)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Validate static Korean TTS metadata and generated WAV files.")
     parser.add_argument("--manifest", default=str(DEFAULT_MANIFEST), help="Generated manifest path to validate.")
+    parser.add_argument(
+        "--comparison-manifest",
+        default=str(DEFAULT_COMPARISON_MANIFEST),
+        help="MeloTTS/Qwen comparison manifest path to validate."
+    )
     args = parser.parse_args()
 
     errors = []
@@ -147,6 +204,7 @@ def main():
         errors.append("paidTtsAllowed must be false.")
 
     validate_candidate_models(licenses, errors, warnings)
+    validate_comparison_models(errors)
 
     for provider in licenses.get("blockedProviders", []):
         lowered = provider.lower()
@@ -213,6 +271,7 @@ def main():
                 warnings.append(f"Duplicate sentence content planned for multiple paths: {content_key}")
 
     manifest_entry_count = validate_manifest(Path(args.manifest), expected_jobs, errors, warnings)
+    comparison_entry_count = validate_comparison_manifest(Path(args.comparison_manifest), errors, warnings)
 
     for warning in warnings:
         print(f"WARN {warning}")
@@ -222,7 +281,8 @@ def main():
         raise SystemExit(1)
     print(
         f"TTS metadata validation passed: {len(sentences)} sentence(s), "
-        f"{len(voices)} voice profile(s), {manifest_entry_count} manifest entry(s)."
+        f"{len(voices)} voice profile(s), {manifest_entry_count} manifest entry(s), "
+        f"{comparison_entry_count} comparison entry(s)."
     )
 
 

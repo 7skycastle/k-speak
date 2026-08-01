@@ -6,8 +6,8 @@ The safe default is review-only:
 
 - no paid TTS API
 - no model weights committed to git
-- no generated audio committed as approved until licenses are verified
-- `commercialUse` remains `false` until code, weight, and training-data licenses are confirmed
+- no generated audio linked as production-approved until licenses and listening review are complete
+- audition candidates can be generated only when `licenses.json` records the model/license decision
 
 ## Files
 
@@ -38,6 +38,13 @@ npm run tts:manifest -- --lesson-id day-1
 python tools/tts/validate_audio.py
 ```
 
+Plan the 20-sentence MeloTTS/Qwen3 comparison pack:
+
+```powershell
+npm run tts:compare:plan
+npm run tts:compare:manifest
+```
+
 ## Optional Local TTS Command
 
 When a license-approved local TTS command is selected, set:
@@ -59,6 +66,38 @@ Do not use ElevenLabs, OpenAI TTS, Google Cloud TTS, Azure TTS, Naver Clova, AWS
 
 The generator skips an existing WAV when the manifest already has the same text hash, model, voice, and rate. Use `--force` only when intentionally replacing an audition file. Failed executions are reported in the `failures` array; use `--continue-on-error` to keep running the remaining jobs.
 
+## MeloTTS/Qwen3 Comparison
+
+`generate_comparison_audio.py` creates a separate model-comparison manifest and output layout:
+
+```text
+public/audio/audition/melotts-korean/<phrase-id>/normal.wav
+public/audio/audition/melotts-korean/<phrase-id>/slow.wav
+public/audio/audition/qwen3-sohee/<phrase-id>/normal.wav
+public/audio/audition/qwen3-sohee/<phrase-id>/slow.wav
+```
+
+Commands:
+
+```powershell
+npm run tts:compare:generate -- --model-id melotts-korean-candidate
+npm run tts:compare:generate -- --model-id qwen3-tts-12hz-0.6b-customvoice-sohee
+```
+
+Provider adapters:
+
+- `providers/melotts_generate.py`: uses `melo.api.TTS(language="KR")`.
+- `providers/melotts_batch_generate.py`: loads MeloTTS once and writes many comparison WAV files.
+- `providers/qwen3_generate.py`: uses Qwen3 CustomVoice with speaker `Sohee`.
+- `providers/qwen3_batch_generate.py`: loads Qwen3-TTS once and writes many comparison WAV files.
+
+Do not use real-person voice cloning for this project.
+
+The current comparison pack has 80 generated audition files:
+
+- 40 MeloTTS-Korean files
+- 40 Qwen3-TTS 0.6B CustomVoice Sohee files
+
 ## Output Layout
 
 ```text
@@ -68,7 +107,7 @@ public/audio/day-1/haneul/hello-nice-meet-you-slow.wav
 
 ## Audition Pack
 
-`sentences.json` includes a pending-review audition pack that checks:
+`sentences.json` includes a 20-sentence pending-review audition pack that checks:
 
 - plain, tense, and aspirated consonants
 - batchim and linking

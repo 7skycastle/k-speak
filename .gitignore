@@ -5,5 +5,8 @@ dist/
 .env.*.local
 npm-debug.log*
 *.tsbuildinfo
+.venv-tts-*/
+__pycache__/
+*.pyc
 
 .vercel

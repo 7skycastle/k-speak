@@ -38,15 +38,17 @@ If any layer is unclear, keep:
 
 ## Current Candidate Notes
 
-The following candidates are listed only for audition/research. They are not approved production sources.
+The following candidates are listed for audition/research. They are not linked from the production app audio catalog until generated files pass listening review and manifest checks.
 
-- Qwen3-TTS candidate: Korean is supported and the reviewed code/model license labels are Apache-2.0, but training-data rights and generated-output commercial terms are not clear enough in the reviewed primary sources. Keep as `pending_review`.
-- MeloTTS Korean candidate: Korean is supported and the reviewed code/model license labels are MIT, but pretrained Korean training-data rights and generated-output commercial terms are not clear enough in the reviewed primary sources. Keep as `pending_review`.
+- MeloTTS Korean candidate: first recommended audition model. The reviewed official README/model card state MIT and free commercial/non-commercial use.
+- Qwen3-TTS 0.6B CustomVoice Sohee: quality comparison candidate. The reviewed official repo/model card state Apache-2.0, Korean support, and built-in speaker `Sohee`.
 - Piper ONNX KSS Korean community model: not approved because the model/data lineage is non-commercial (`CC-BY-NC-SA-4.0`).
 
 KSS-like datasets with non-commercial clauses such as CC BY-NC-SA must not be used for commercial/public production audio.
 
 See `docs/TTS_LICENSE_RESEARCH_2026-08-02.md` for the primary-source review.
+
+Primary-source copies are stored under `licenses/tts/`.
 
 ## Approval Checklist
 

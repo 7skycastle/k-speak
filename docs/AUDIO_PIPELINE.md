@@ -20,7 +20,7 @@ Approval needs:
 - commercial-use status recorded
 - listening review completed for natural and slow speed
 
-Until then, assets stay out of the production catalog and `commercialUse` remains `false`.
+Until then, assets stay out of the production catalog and listening `reviewStatus` remains `not_reviewed`.
 
 ## Tooling
 
@@ -38,6 +38,15 @@ npm run tts:plan
 npm run tts:plan -- --lesson-id day-1 --character-id haneul
 npm run tts:manifest -- --lesson-id day-1
 npm run tts:validate
+```
+
+MeloTTS/Qwen3 comparison preparation:
+
+```bash
+npm run tts:compare:plan
+npm run tts:compare:manifest
+npm run tts:compare:generate -- --model-id melotts-korean-candidate
+npm run tts:compare:generate -- --model-id qwen3-tts-12hz-0.6b-customvoice-sohee
 ```
 
 Windows wrapper:
@@ -65,12 +74,31 @@ public/audio/day-1/haneul/hello-nice-meet-you-natural.wav
 public/audio/day-1/haneul/hello-nice-meet-you-slow.wav
 ```
 
+Comparison audition files use a model-based layout:
+
+```text
+public/audio/audition/melotts-korean/hello-nice-meet-you/normal.wav
+public/audio/audition/melotts-korean/hello-nice-meet-you/slow.wav
+public/audio/audition/qwen3-sohee/hello-nice-meet-you/normal.wav
+public/audio/audition/qwen3-sohee/hello-nice-meet-you/slow.wav
+```
+
+`tools/tts/comparison_manifest.json` records model name, model version, download URL, license, voice id, text hash, speed, output path, review status, generation speed, and runtime notes.
+
+## Local Runtime Notes
+
+MeloTTS official docs say the project was developed/tested on Ubuntu 20.04 and Python 3.9 and suggest Docker for Windows users. Docker is not currently available in this workspace, so Windows generation should use a dedicated virtual environment or WSL rather than the app runtime. In this workspace, MeloTTS-Korean generated the 20-sentence comparison pack successfully from a dedicated Python 3.11 virtual environment after installing `eunjeon`.
+
+Qwen3-TTS official docs recommend a fresh Python 3.12 environment and commonly use CUDA-oriented examples. The comparison script targets the built-in `Sohee` speaker and does not use voice cloning. In this workspace, Qwen3-TTS generated the 20-sentence comparison pack successfully from a dedicated Python 3.12 virtual environment on CPU. It emitted non-fatal `flash-attn` and SoX PATH warnings.
+
 MP3 conversion can be added after WAV review. Keep original WAVs and compressed distribution files conceptually separate.
 
 ## Current Status
 
 - Browser fallback works.
 - Static production audio files are not approved yet.
-- `tools/tts` currently contains audition metadata, dry-run planning, manifest generation, and validation only.
-- The audition pack currently plans 48 slots: 6 Korean test sentences, 4 characters, and 2 speeds.
-- Candidate model licenses remain `pending_review`.
+- `tools/tts` currently contains audition metadata, dry-run planning, comparison manifest generation, provider adapters, and validation.
+- The lesson/character audition pack plans 160 slots: 20 Korean test sentences, 4 characters, and 2 speeds.
+- The MeloTTS/Qwen3 comparison pack generated 80 audition WAV files: 20 Korean test sentences, 2 models, and 2 speeds.
+- MeloTTS-Korean is the first recommended audition model.
+- Qwen3-TTS 0.6B CustomVoice `Sohee` is the quality comparison model.
