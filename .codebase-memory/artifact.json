@@ -1,0 +1,11 @@
+{
+    "schema_version": 2,
+    "commit": "HEAD",
+    "indexed_at": "2026-08-01T08:04:04Z",
+    "project": "k-speak",
+    "nodes": 265,
+    "edges": 448,
+    "original_size": 1572864,
+    "compressed_size": 189923,
+    "compression_level": 9
+}
