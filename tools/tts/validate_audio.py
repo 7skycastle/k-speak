@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 TOOL_DIR = Path(__file__).resolve().parent
 DEFAULT_MANIFEST = TOOL_DIR / "generated_manifest.json"
 DEFAULT_COMPARISON_MANIFEST = TOOL_DIR / "comparison_manifest.json"
+DEFAULT_REVIEW_DATA = ROOT / "public" / "audio" / "audition" / "review-data.json"
 PAID_PATTERNS = ("elevenlabs", "openai", "google cloud", "azure", "clova", "polly", "typecast")
 
 
@@ -184,6 +185,44 @@ def validate_comparison_manifest(path, errors, warnings):
     return len(entries)
 
 
+def validate_review_data(path, errors, warnings):
+    if not path.exists():
+        warnings.append(f"TTS listening review data does not exist yet: {path}")
+        return 0
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    items = payload.get("items", [])
+    audio_count = 0
+    if payload.get("sentenceCount") != len(items):
+        errors.append("Review data sentenceCount does not match items length.")
+    for item in items:
+        if not item.get("koreanText"):
+            errors.append(f"Review item {item.get('sentenceId')} is missing koreanText.")
+        models = item.get("models", {})
+        if len(models) != 2:
+            errors.append(f"Review item {item.get('sentenceId')} must include two comparison models.")
+        for model_id, model in models.items():
+            if model.get("realPersonClone") is not False:
+                errors.append(f"Review model {model_id} must not clone a real person.")
+            audio = model.get("audio", {})
+            for speed in ("normal", "slow"):
+                entry = audio.get(speed)
+                if not entry:
+                    errors.append(f"Review model {model_id} is missing {speed} audio.")
+                    continue
+                audio_count += 1
+                src = entry.get("src", "")
+                if not src.startswith("/audio/audition/"):
+                    errors.append(f"Review audio source must stay under /audio/audition/: {src}")
+                wav_path = ROOT / entry.get("wavPath", "")
+                if wav_path.exists():
+                    validate_wave(wav_path, errors)
+                else:
+                    errors.append(f"Review audio file is missing: {entry.get('wavPath')}")
+    if payload.get("entryCount") != audio_count:
+        errors.append("Review data entryCount does not match available audio entries.")
+    return audio_count
+
+
 def main():
     parser = argparse.ArgumentParser(description="Validate static Korean TTS metadata and generated WAV files.")
     parser.add_argument("--manifest", default=str(DEFAULT_MANIFEST), help="Generated manifest path to validate.")
@@ -191,6 +230,11 @@ def main():
         "--comparison-manifest",
         default=str(DEFAULT_COMPARISON_MANIFEST),
         help="MeloTTS/Qwen comparison manifest path to validate."
+    )
+    parser.add_argument(
+        "--review-data",
+        default=str(DEFAULT_REVIEW_DATA),
+        help="Listening review data path to validate."
     )
     args = parser.parse_args()
 
@@ -272,6 +316,7 @@ def main():
 
     manifest_entry_count = validate_manifest(Path(args.manifest), expected_jobs, errors, warnings)
     comparison_entry_count = validate_comparison_manifest(Path(args.comparison_manifest), errors, warnings)
+    review_audio_count = validate_review_data(Path(args.review_data), errors, warnings)
 
     for warning in warnings:
         print(f"WARN {warning}")
@@ -282,7 +327,7 @@ def main():
     print(
         f"TTS metadata validation passed: {len(sentences)} sentence(s), "
         f"{len(voices)} voice profile(s), {manifest_entry_count} manifest entry(s), "
-        f"{comparison_entry_count} comparison entry(s)."
+        f"{comparison_entry_count} comparison entry(s), {review_audio_count} review audio entry(s)."
     )
 
 

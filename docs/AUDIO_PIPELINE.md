@@ -47,6 +47,7 @@ npm run tts:compare:plan
 npm run tts:compare:manifest
 npm run tts:compare:generate -- --model-id melotts-korean-candidate
 npm run tts:compare:generate -- --model-id qwen3-tts-12hz-0.6b-customvoice-sohee
+npm run tts:review-data
 ```
 
 Windows wrapper:
@@ -84,6 +85,8 @@ public/audio/audition/qwen3-sohee/hello-nice-meet-you/slow.wav
 ```
 
 `tools/tts/comparison_manifest.json` records model name, model version, download URL, license, voice id, text hash, speed, output path, review status, generation speed, and runtime notes.
+
+`public/tts-review.html` loads `public/audio/audition/review-data.json` and provides a browser-based listening review surface. Review notes are stored in browser localStorage and can be exported as JSON.
 
 ## Local Runtime Notes
 
