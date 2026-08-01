@@ -40,6 +40,9 @@ npm run audio:validate
 npm run audio:manifest
 npm run audio:placeholder
 npm run audio:voices
+npm run tts:plan
+npm run tts:manifest
+npm run tts:validate
 ```
 
 `scripts/audio/validate-audio-assets.ts` checks required metadata and blocks paid providers such as ElevenLabs, Typecast, OpenAI, Azure, Google, AWS Polly, Naver, and Clova.
@@ -49,3 +52,5 @@ npm run audio:voices
 `scripts/audio/generate-placeholder-audio.ts` writes silent development-only placeholder WAV files only when `AUDIO_GENERATION_ENABLED=true`.
 
 `scripts/audio/list-browser-tts-voices.ts` prints the browser DevTools snippet for inspecting Korean voices.
+
+`tools/tts` contains the static Korean TTS audition pipeline. It is dry-run and pending-license-review by default. `npm run tts:manifest` writes review metadata without approving or generating production audio.

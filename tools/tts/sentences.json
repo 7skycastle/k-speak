@@ -1,0 +1,15 @@
+{
+  "version": "2026-08-02",
+  "sentences": [
+    {
+      "sentenceId": "day-1.hello-nice-meet-you",
+      "lessonId": "day-1",
+      "phraseId": "hello-nice-meet-you",
+      "koreanText": "안녕하세요. 만나서 반가워요.",
+      "romanization": "Annyeonghaseyo. Mannaseo bangawoyo.",
+      "speeds": ["natural", "slow"],
+      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "reviewStatus": "ready_for_audition"
+    }
+  ]
+}

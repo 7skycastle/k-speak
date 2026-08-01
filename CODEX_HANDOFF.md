@@ -56,9 +56,13 @@ npm run audio:validate
 npm run audio:manifest
 npm run audio:placeholder
 npm run audio:voices
+npm run tts:plan
+npm run tts:manifest
+npm run tts:validate
 ```
 
 `audio:manifest` and `audio:validate` both fail if paid TTS is enabled or configured.
+`tts:manifest` writes pending-review static audio metadata to `tools/tts/generated_manifest.json`; it does not approve or generate production audio.
 
 ## Environment
 
@@ -102,13 +106,16 @@ Supabase project creation was previously attempted through MCP but returned `INV
 - `src/data/audioCatalog.ts`: audio slots and browser fallback metadata.
 - `src/utils/audioPlayback.ts`: static-first audio playback and browser fallback.
 - `scripts/audio/`: free TTS/audio manifest and validation tools.
+- `tools/tts/`: static Korean TTS audition metadata, dry-run generator, and validation scripts.
 - `scripts/supabase/`: Supabase SQL contract validation and bundle output.
 - `AUDIO_SPEC.md`: audio policy details.
+- `docs/AUDIO_PIPELINE.md`: static audio creation workflow.
+- `docs/AUDIO_LICENSES.md`: license approval policy.
 - `TEST_REPORT.md`: latest verification notes.
 
 ## Remaining Work
 
-- Add real free/static Korean audio files and update `src/data/audioCatalog.ts`.
+- Select a license-approved local Korean TTS model, generate audition files through `tools/tts`, then update `src/data/audioCatalog.ts`.
 - Create/configure the dedicated Supabase project and add env vars in Vercel.
 - Apply `docs/supabase/schema.sql` and `docs/supabase/rls.sql`.
 - Run an end-to-end Supabase OTP/progress merge check after env vars are configured.

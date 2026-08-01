@@ -1,0 +1,49 @@
+{
+  "version": "2026-08-02",
+  "characters": [
+    {
+      "characterId": "haneul",
+      "voiceId": "candidate-haneul-soft-female",
+      "role": "friendly first Korean tutor",
+      "targetTone": "bright, soft female voice",
+      "rateNatural": 1.0,
+      "rateSlow": 0.86,
+      "modelId": "pending_model_selection",
+      "reviewStatus": "pending_model_license_review",
+      "commercialUse": false
+    },
+    {
+      "characterId": "jun",
+      "voiceId": "candidate-jun-natural-male",
+      "role": "practical Korean friend",
+      "targetTone": "natural everyday male voice",
+      "rateNatural": 1.0,
+      "rateSlow": 0.86,
+      "modelId": "pending_model_selection",
+      "reviewStatus": "pending_model_license_review",
+      "commercialUse": false
+    },
+    {
+      "characterId": "mina",
+      "voiceId": "candidate-mina-clear-female",
+      "role": "pronunciation coach",
+      "targetTone": "clear and accurate female voice",
+      "rateNatural": 0.96,
+      "rateSlow": 0.84,
+      "modelId": "pending_model_selection",
+      "reviewStatus": "pending_model_license_review",
+      "commercialUse": false
+    },
+    {
+      "characterId": "taeho",
+      "voiceId": "candidate-taeho-calm-male",
+      "role": "calm explainer",
+      "targetTone": "low, steady male voice",
+      "rateNatural": 0.94,
+      "rateSlow": 0.84,
+      "modelId": "pending_model_selection",
+      "reviewStatus": "pending_model_license_review",
+      "commercialUse": false
+    }
+  ]
+}

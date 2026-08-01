@@ -1,0 +1,2 @@
+# No runtime dependency is required for the safe dry-run and validation path.
+# Add local TTS dependencies only after model and data licenses are approved.

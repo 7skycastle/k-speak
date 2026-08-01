@@ -1,0 +1,39 @@
+{
+  "version": "2026-08-02",
+  "policy": {
+    "paidTtsAllowed": false,
+    "commercialUseDefault": false,
+    "approvalRule": "codeLicense, weightLicense, and trainingDataLicense must all allow the intended app use before commercialUse can be true."
+  },
+  "blockedProviders": [
+    "ElevenLabs",
+    "OpenAI TTS",
+    "Google Cloud TTS",
+    "Azure TTS",
+    "Naver Clova Voice",
+    "AWS Polly",
+    "Typecast"
+  ],
+  "candidateModels": [
+    {
+      "modelId": "qwen3-tts-candidate",
+      "name": "Qwen3-TTS candidate",
+      "sourceUrl": "https://github.com/QwenLM/Qwen3-TTS",
+      "codeLicense": "pending_review",
+      "weightLicense": "pending_review",
+      "trainingDataLicense": "pending_review",
+      "commercialUse": false,
+      "notes": "Evaluate Korean naturalness and all license layers before generating production assets."
+    },
+    {
+      "modelId": "melotts-korean-candidate",
+      "name": "MeloTTS Korean candidate",
+      "sourceUrl": "https://github.com/myshell-ai/MeloTTS",
+      "codeLicense": "pending_review",
+      "weightLicense": "pending_review",
+      "trainingDataLicense": "pending_review",
+      "commercialUse": false,
+      "notes": "Do not approve if model or training data has non-commercial restrictions."
+    }
+  ]
+}
