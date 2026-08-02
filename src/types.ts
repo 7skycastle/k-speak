@@ -191,6 +191,7 @@ export interface Lesson {
   roleplay: LessonRoleplay;
   reviewCards: LessonReviewCard[];
   countryNotes: Record<CountryPackId, string>;
+  pronunciationByCountry: Record<CountryPackId, string>;
   audioTargets: Record<string, LocalizedPhrase>;
   steps: LessonStep[];
 }

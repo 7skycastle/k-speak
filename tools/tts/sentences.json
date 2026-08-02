@@ -1,172 +1,2108 @@
 {
   "version": "2026-08-02",
+  "generatedFrom": "src/data/lessons.ts audioTargets",
+  "sentenceCount": 90,
+  "daySentenceCount": 84,
+  "auditionSentenceCount": 6,
   "sentences": [
     {
       "sentenceId": "day-1.hello-nice-meet-you",
       "lessonId": "day-1",
       "phraseId": "hello-nice-meet-you",
+      "audioTargetId": "core",
       "koreanText": "안녕하세요. 만나서 반가워요.",
       "romanization": "Annyeonghaseyo. Mannaseo bangawoyo.",
-      "auditionTags": ["day-content", "greeting", "polite-ending", "natural-dialogue"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-1.response",
+      "lessonId": "day-1",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "네, 저도 반가워요.",
+      "romanization": "Ne, jeodo bangawoyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-1.rescue",
+      "lessonId": "day-1",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "이름이 뭐예요?",
+      "romanization": "Ireumi mwoyeyo?",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-1.dialogue",
+      "lessonId": "day-1",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "안녕하세요. 안녕하세요. 만나서 반가워요. 네, 저도 반가워요. 이름이 뭐예요?",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-1.swap-1",
+      "lessonId": "day-1",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "안녕하세요.",
+      "romanization": "Annyeonghaseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-1.swap-2",
+      "lessonId": "day-1",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "반가워요.",
+      "romanization": "Bangawoyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-2.coffee-please",
       "lessonId": "day-2",
       "phraseId": "coffee-please",
+      "audioTargetId": "core",
       "koreanText": "아이스 아메리카노 하나 주세요.",
       "romanization": "Aiseu amerikano hana juseyo.",
-      "auditionTags": ["day-content", "loanword", "number", "polite-request"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-2.response",
+      "lessonId": "day-2",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "드시고 가세요?",
+      "romanization": "Deusigo gaseyo?",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-2.rescue",
+      "lessonId": "day-2",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "포장해 주세요.",
+      "romanization": "Pojanghae juseyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-2.dialogue",
+      "lessonId": "day-2",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "안녕하세요. 주문하시겠어요? 아이스 아메리카노 하나 주세요. 드시고 가세요? 포장해 주세요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-2.swap-1",
+      "lessonId": "day-2",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "물 하나 주세요.",
+      "romanization": "Mul hana juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-2.swap-2",
+      "lessonId": "day-2",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "커피 하나 주세요.",
+      "romanization": "Keopi hana juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-3.thank-you",
       "lessonId": "day-3",
       "phraseId": "thank-you",
+      "audioTargetId": "core",
       "koreanText": "감사합니다. 정말 도움이 됐어요.",
       "romanization": "Gamsahamnida. Jeongmal doumi dwaesseoyo.",
-      "auditionTags": ["day-content", "gratitude", "batchim", "polite-ending"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-3.response",
+      "lessonId": "day-3",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "아니에요. 괜찮아요.",
+      "romanization": "Anieyo. Gwaenchanayo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-3.rescue",
+      "lessonId": "day-3",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "죄송해요.",
+      "romanization": "Joesonghaeyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-3.dialogue",
+      "lessonId": "day-3",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "여기로 가시면 돼요. 감사합니다. 정말 도움이 됐어요. 아니에요. 괜찮아요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-3.swap-1",
+      "lessonId": "day-3",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "감사합니다.",
+      "romanization": "Gamsahamnida.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-3.swap-2",
+      "lessonId": "day-3",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "정말 좋아요.",
+      "romanization": "Jeongmal joayo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-4.where-is-station",
       "lessonId": "day-4",
       "phraseId": "where-is-station",
+      "audioTargetId": "core",
       "koreanText": "지하철역이 어디예요?",
       "romanization": "Jihacheolyeogi eodiyeyo?",
-      "auditionTags": ["day-content", "question-intonation", "linking", "place"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-4.response",
+      "lessonId": "day-4",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "저쪽이에요.",
+      "romanization": "Jeojjogiyeyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-4.rescue",
+      "lessonId": "day-4",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "여기서 멀어요?",
+      "romanization": "Yeogiseo meoreoyo?",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-4.dialogue",
+      "lessonId": "day-4",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "지하철역이 어디예요? 저쪽이에요. 여기서 멀어요? 아니요, 가까워요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-4.swap-1",
+      "lessonId": "day-4",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "화장실이 어디예요?",
+      "romanization": "Hwajangsiri eodiyeyo?",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-4.swap-2",
+      "lessonId": "day-4",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "카페가 어디예요?",
+      "romanization": "Kapega eodiyeyo?",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-5.how-much",
       "lessonId": "day-5",
       "phraseId": "how-much",
+      "audioTargetId": "core",
       "koreanText": "이거 얼마예요?",
       "romanization": "Igeo eolmayeyo?",
-      "auditionTags": ["day-content", "price", "question-intonation"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-5.response",
+      "lessonId": "day-5",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "만 원이에요.",
+      "romanization": "Man woniyeyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-5.rescue",
+      "lessonId": "day-5",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "카드 돼요?",
+      "romanization": "Kadeu dwaeyo?",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-5.dialogue",
+      "lessonId": "day-5",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "이거 얼마예요? 만 원이에요. 카드 돼요? 네, 돼요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-5.swap-1",
+      "lessonId": "day-5",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "그거 얼마예요?",
+      "romanization": "Geugeo eolmayeyo?",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-5.swap-2",
+      "lessonId": "day-5",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "이거 주세요.",
+      "romanization": "Igeo juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-6.speak-slowly",
       "lessonId": "day-6",
       "phraseId": "speak-slowly",
+      "audioTargetId": "core",
       "koreanText": "조금 천천히 말해 주세요.",
       "romanization": "Jogeum cheoncheonhi malhae juseyo.",
-      "auditionTags": ["day-content", "polite-request", "slow-speech-check"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-6.response",
+      "lessonId": "day-6",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "네, 천천히 말할게요.",
+      "romanization": "Ne, cheoncheonhi malhalgeyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-6.rescue",
+      "lessonId": "day-6",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "한국어를 조금 배웠어요.",
+      "romanization": "Hangugeoreul jogeum baewosseoyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-6.dialogue",
+      "lessonId": "day-6",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "여기에서 오른쪽으로 가세요. 죄송해요. 조금 천천히 말해 주세요. 네, 천천히 말할게요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-6.swap-1",
+      "lessonId": "day-6",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "다시 말해 주세요.",
+      "romanization": "Dasi malhae juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-6.swap-2",
+      "lessonId": "day-6",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "천천히 해 주세요.",
+      "romanization": "Cheoncheonhi hae juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-7.say-again",
       "lessonId": "day-7",
       "phraseId": "say-again",
+      "audioTargetId": "core",
       "koreanText": "다시 한 번 말해 주세요.",
       "romanization": "Dasi han beon malhae juseyo.",
-      "auditionTags": ["day-content", "polite-request", "batchim"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-7.response",
+      "lessonId": "day-7",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "네, 다시 말할게요.",
+      "romanization": "Ne, dasi malhalgeyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-7.rescue",
+      "lessonId": "day-7",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "잘 못 들었어요.",
+      "romanization": "Jal mot deureosseoyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-7.dialogue",
+      "lessonId": "day-7",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "예약 번호를 말씀해 주세요. 잘 못 들었어요. 다시 한 번 말해 주세요. 네, 다시 말할게요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-7.swap-1",
+      "lessonId": "day-7",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "다시 해 주세요.",
+      "romanization": "Dasi hae juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-7.swap-2",
+      "lessonId": "day-7",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "한 번 더요.",
+      "romanization": "Han beon deoyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-8.recommend-menu",
       "lessonId": "day-8",
       "phraseId": "recommend-menu",
+      "audioTargetId": "core",
       "koreanText": "추천 메뉴가 뭐예요?",
       "romanization": "Chucheon menyuga mwoyeyo?",
-      "auditionTags": ["day-content", "tense-consonant", "question-intonation", "restaurant"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-8.response",
+      "lessonId": "day-8",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "이 메뉴가 인기 있어요.",
+      "romanization": "I menyuga ingi isseoyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-8.rescue",
+      "lessonId": "day-8",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "맵지 않은 거 있어요?",
+      "romanization": "Maepji aneun geo isseoyo?",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-8.dialogue",
+      "lessonId": "day-8",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "추천 메뉴가 뭐예요? 이 메뉴가 인기 있어요. 맵지 않은 거 있어요?",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-8.swap-1",
+      "lessonId": "day-8",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "인기 메뉴가 뭐예요?",
+      "romanization": "Ingi menyuga mwoyeyo?",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-8.swap-2",
+      "lessonId": "day-8",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "안 매운 메뉴가 뭐예요?",
+      "romanization": "An maeun menyuga mwoyeyo?",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-9.reservation-check",
       "lessonId": "day-9",
       "phraseId": "reservation-check",
+      "audioTargetId": "core",
       "koreanText": "예약 확인하고 싶어요.",
       "romanization": "Yeyak hwaginhago sipeoyo.",
-      "auditionTags": ["day-content", "travel", "polite-ending", "linking"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-9.response",
+      "lessonId": "day-9",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "성함이 어떻게 되세요?",
+      "romanization": "Seonghami eotteoke doeseyo?",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-9.rescue",
+      "lessonId": "day-9",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "제 이름은 ...예요.",
+      "romanization": "Je ireumeun ...yeyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-9.dialogue",
+      "lessonId": "day-9",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "예약 확인하고 싶어요. 성함이 어떻게 되세요? 제 이름은 ...예요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-9.swap-1",
+      "lessonId": "day-9",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "주문하고 싶어요.",
+      "romanization": "Jumunhago sipeoyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-9.swap-2",
+      "lessonId": "day-9",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "예약하고 싶어요.",
+      "romanization": "Yeyakhago sipeoyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-10.its-okay",
       "lessonId": "day-10",
       "phraseId": "its-okay",
+      "audioTargetId": "core",
       "koreanText": "괜찮아요. 문제없어요.",
       "romanization": "Gwaenchanayo. Munje eopseoyo.",
-      "auditionTags": ["day-content", "reassurance", "batchim", "linking"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-10.response",
+      "lessonId": "day-10",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "다행이에요.",
+      "romanization": "Dahaengiyeyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-10.rescue",
+      "lessonId": "day-10",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "천천히 해도 돼요.",
+      "romanization": "Cheoncheonhi haedo dwaeyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-10.dialogue",
+      "lessonId": "day-10",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "죄송해요. 조금 늦었어요. 괜찮아요. 문제없어요. 다행이에요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-10.swap-1",
+      "lessonId": "day-10",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "괜찮아요.",
+      "romanization": "Gwaenchanayo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-10.swap-2",
+      "lessonId": "day-10",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "문제없어요.",
+      "romanization": "Munje eopseoyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-11.take-photo",
       "lessonId": "day-11",
       "phraseId": "take-photo",
+      "audioTargetId": "core",
       "koreanText": "사진 좀 찍어 주실 수 있어요?",
       "romanization": "Sajin jom jjigeo jusil su isseoyo?",
-      "auditionTags": ["day-content", "tense-consonant", "honorific", "question-intonation"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-11.response",
+      "lessonId": "day-11",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "네, 찍어 드릴게요.",
+      "romanization": "Ne, jjigeo deurilgeyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-11.rescue",
+      "lessonId": "day-11",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "여기 눌러 주세요.",
+      "romanization": "Yeogi nulleo juseyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-11.dialogue",
+      "lessonId": "day-11",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "사진 좀 찍어 주실 수 있어요? 네, 찍어 드릴게요. 여기 눌러 주세요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-11.swap-1",
+      "lessonId": "day-11",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "도와주실 수 있어요?",
+      "romanization": "Dowajusil su isseoyo?",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-11.swap-2",
+      "lessonId": "day-11",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "한 번 더 찍어 주세요.",
+      "romanization": "Han beon deo jjigeo juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-12.where-restroom",
       "lessonId": "day-12",
       "phraseId": "where-restroom",
+      "audioTargetId": "core",
       "koreanText": "화장실이 어디에 있어요?",
       "romanization": "Hwajangsiri eodie isseoyo?",
-      "auditionTags": ["day-content", "place", "question-intonation", "linking"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-12.response",
+      "lessonId": "day-12",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "오른쪽에 있어요.",
+      "romanization": "Oreunjjoge isseoyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-12.rescue",
+      "lessonId": "day-12",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "감사합니다.",
+      "romanization": "Gamsahamnida.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-12.dialogue",
+      "lessonId": "day-12",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "화장실이 어디에 있어요? 오른쪽에 있어요. 감사합니다.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-12.swap-1",
+      "lessonId": "day-12",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "엘리베이터가 어디에 있어요?",
+      "romanization": "Ellibeiteoga eodie isseoyo?",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-12.swap-2",
+      "lessonId": "day-12",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "출구가 어디에 있어요?",
+      "romanization": "Chulguga eodie isseoyo?",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-13.takeout-please",
       "lessonId": "day-13",
       "phraseId": "takeout-please",
+      "audioTargetId": "core",
       "koreanText": "포장해 주세요.",
       "romanization": "Pojanghae juseyo.",
-      "auditionTags": ["day-content", "polite-request", "aspirated-consonant"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-13.response",
+      "lessonId": "day-13",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "봉투 필요하세요?",
+      "romanization": "Bongtu piryo haseyo?",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-13.rescue",
+      "lessonId": "day-13",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "네, 부탁드려요.",
+      "romanization": "Ne, butakdeuryeoyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-13.dialogue",
+      "lessonId": "day-13",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "드시고 가세요? 포장해 주세요. 봉투 필요하세요? 네, 부탁드려요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-13.swap-1",
+      "lessonId": "day-13",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "계산해 주세요.",
+      "romanization": "Gyesanhae juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-13.swap-2",
+      "lessonId": "day-13",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "봉투 주세요.",
+      "romanization": "Bongtu juseyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
       "sentenceId": "day-14.see-you-again",
       "lessonId": "day-14",
       "phraseId": "see-you-again",
+      "audioTargetId": "core",
       "koreanText": "다음에 또 만나요.",
       "romanization": "Daeume tto mannayo.",
-      "auditionTags": ["day-content", "tense-consonant", "farewell", "polite-ending"],
+      "auditionTags": [
+        "day-content",
+        "core-phrase",
+        "saved-phrase"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-14.response",
+      "lessonId": "day-14",
+      "phraseId": "response",
+      "audioTargetId": "response",
+      "koreanText": "네, 연락할게요.",
+      "romanization": "Ne, yeollakhalgeyo.",
+      "auditionTags": [
+        "day-content",
+        "response",
+        "roleplay"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-14.rescue",
+      "lessonId": "day-14",
+      "phraseId": "rescue",
+      "audioTargetId": "rescue",
+      "koreanText": "오늘 즐거웠어요.",
+      "romanization": "Oneul jeulgeowosseoyo.",
+      "auditionTags": [
+        "day-content",
+        "rescue-phrase",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-14.dialogue",
+      "lessonId": "day-14",
+      "phraseId": "dialogue",
+      "audioTargetId": "dialogue",
+      "koreanText": "오늘 어땠어요? 오늘 즐거웠어요. 저도요. 다음에 또 만나요.",
+      "romanization": "",
+      "auditionTags": [
+        "day-content",
+        "dialogue",
+        "continuous-listening"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-14.swap-1",
+      "lessonId": "day-14",
+      "phraseId": "swap-1",
+      "audioTargetId": "swap-1",
+      "koreanText": "다음에 또 봐요.",
+      "romanization": "Daeume tto bwayo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
+      "reviewStatus": "ready_for_audition"
+    },
+    {
+      "sentenceId": "day-14.swap-2",
+      "lessonId": "day-14",
+      "phraseId": "swap-2",
+      "audioTargetId": "swap-2",
+      "koreanText": "오늘 즐거웠어요.",
+      "romanization": "Oneul jeulgeowosseoyo.",
+      "auditionTags": [
+        "day-content",
+        "substitution",
+        "saved-phrase"
+      ],
+      "licenseUse": "pending_review_audition_only",
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
@@ -175,10 +2111,23 @@
       "phraseId": "plain-tense-aspirated",
       "koreanText": "가방, 까만 커피, 파란 티셔츠를 말해 보세요.",
       "romanization": "Gabang, kkaman keopi, paran tisyeocheureul malhae boseyo.",
-      "auditionTags": ["plain-consonant", "tense-consonant", "aspirated-consonant", "loanword"],
+      "auditionTags": [
+        "plain-consonant",
+        "tense-consonant",
+        "aspirated-consonant",
+        "loanword"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
@@ -187,10 +2136,22 @@
       "phraseId": "final-consonant-linking",
       "koreanText": "밥을 먹어요. 물이 있어요.",
       "romanization": "Babeul meogeoyo. Muri isseoyo.",
-      "auditionTags": ["batchim", "linking", "polite-ending"],
+      "auditionTags": [
+        "batchim",
+        "linking",
+        "polite-ending"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
@@ -199,10 +2160,22 @@
       "phraseId": "number-price",
       "koreanText": "이거 두 개에 만 원이에요?",
       "romanization": "Igeo du gaee man wonieyo?",
-      "auditionTags": ["number", "price", "question-intonation"],
+      "auditionTags": [
+        "number",
+        "price",
+        "question-intonation"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
@@ -211,10 +2184,22 @@
       "phraseId": "help-request",
       "koreanText": "죄송하지만, 조금 천천히 말씀해 주세요.",
       "romanization": "Joesonghajiman, jogeum cheoncheonhi malsseumhae juseyo.",
-      "auditionTags": ["polite-request", "honorific", "slow-speech-check"],
+      "auditionTags": [
+        "polite-request",
+        "honorific",
+        "slow-speech-check"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
@@ -223,10 +2208,22 @@
       "phraseId": "short-reaction",
       "koreanText": "아, 정말요? 좋아요!",
       "romanization": "A, jeongmallyo? Joayo!",
-      "auditionTags": ["short-exclamation", "question-intonation", "natural-dialogue"],
+      "auditionTags": [
+        "short-exclamation",
+        "question-intonation",
+        "natural-dialogue"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     },
     {
@@ -235,10 +2232,23 @@
       "phraseId": "time-appointment",
       "koreanText": "내일 오후 세 시에 만날까요?",
       "romanization": "Naeil ohu se sie mannalkkayo?",
-      "auditionTags": ["time", "number", "question-intonation", "tense-consonant"],
+      "auditionTags": [
+        "time",
+        "number",
+        "question-intonation",
+        "tense-consonant"
+      ],
       "licenseUse": "pending_review_audition_only",
-      "speeds": ["natural", "slow"],
-      "characterIds": ["haneul", "jun", "mina", "taeho"],
+      "speeds": [
+        "natural",
+        "slow"
+      ],
+      "characterIds": [
+        "haneul",
+        "jun",
+        "mina",
+        "taeho"
+      ],
       "reviewStatus": "ready_for_audition"
     }
   ]

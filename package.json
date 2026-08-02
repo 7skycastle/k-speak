@@ -13,6 +13,7 @@
     "audio:validate": "tsx scripts/audio/validate-audio-assets.ts",
     "audio:placeholder": "tsx scripts/audio/generate-placeholder-audio.ts",
     "audio:voices": "tsx scripts/audio/list-browser-tts-voices.ts",
+    "tts:sentences": "tsx scripts/audio/generate-tts-sentences.ts",
     "tts:plan": "python tools/tts/generate_audio.py --dry-run",
     "tts:manifest": "python tools/tts/generate_audio.py --write-manifest",
     "tts:validate": "python tools/tts/validate_audio.py",
@@ -20,6 +21,7 @@
     "tts:compare:manifest": "python tools/tts/generate_comparison_audio.py --write-manifest",
     "tts:compare:generate": "python tools/tts/generate_comparison_audio.py --execute --write-manifest --continue-on-error",
     "tts:review-data": "python tools/tts/generate_review_data.py",
+    "qa:mobile": "tsx scripts/qa/mobile-learning-flow.ts",
     "supabase:validate": "tsx scripts/supabase/validate-sql.ts",
     "supabase:bundle": "tsx scripts/supabase/bundle-sql.ts"
   },

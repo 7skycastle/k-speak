@@ -109,6 +109,12 @@ export const markSavedPhrasePlayed = (state: UserState, phraseId: string): UserS
     )
   });
 
+export const removeSavedPhrase = (state: UserState, phraseId: string): UserState =>
+  saveState({
+    ...state,
+    savedPhrases: (state.savedPhrases ?? []).filter((item) => item.id !== phraseId)
+  });
+
 export const mergeGuestIntoAccount = (state: UserState, email: string): UserState => {
   const normalizedEmail = normalizeEmail(email);
   const cloudKey = `${CLOUD_PREFIX}${normalizedEmail}`;

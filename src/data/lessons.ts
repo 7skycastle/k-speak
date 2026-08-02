@@ -36,6 +36,14 @@ const commonCountryNotes = localized(
   "Primero di la frase en coreano y luego revisa la nota corta."
 );
 
+const commonPronunciationNotes = localized(
+  "Listen for the sentence ending first. Korean politeness often lives in the final sound, so compare rhythm before judging pronunciation.",
+  "ローマ字を長く頼らず、最後の요とパッチムの有無を聞きます。日本語の母音で伸ばしすぎないのがコツです。",
+  "先听句尾和停顿，不要只按汉字意思来读。",
+  "Hãy nghe phần cuối câu và nhịp nói trước, đừng chỉ đọc theo chữ romanization.",
+  "Escucha primero el final de la frase y el ritmo, no solo la romanización."
+);
+
 const reviewCards = (day: number, core: LocalizedPhrase, roleplayPrompt: LocalizedPhrase): LessonReviewCard[] => [
   {
     id: "listen",
@@ -436,6 +444,7 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
     },
     reviewCards: reviewCards(seed.day, seed.core, seed.roleplayPrompt),
     countryNotes: commonCountryNotes,
+    pronunciationByCountry: commonPronunciationNotes,
     audioTargets: {
       core: seed.core,
       response: seed.response,

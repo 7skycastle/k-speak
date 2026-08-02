@@ -46,6 +46,8 @@ describe("lesson catalog", () => {
       expect(lesson.countryNotes["jp-ja"]).toContain("助詞");
       expect(lesson.structure.explanationByCountry["us-en"]).toBeTruthy();
       expect(lesson.structure.explanationByCountry["jp-ja"]).toBeTruthy();
+      expect(lesson.pronunciationByCountry["us-en"]).toContain("rhythm");
+      expect(lesson.pronunciationByCountry["jp-ja"]).toContain("パッチム");
     }
   });
 

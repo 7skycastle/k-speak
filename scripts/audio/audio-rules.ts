@@ -38,7 +38,9 @@ const fileExistsForUrl = (publicDir: string, url: string) =>
 
 export const resolveAudioSlots = () =>
   lessons.flatMap((lesson) =>
-    tutorCharacters.map((character) => findAudioSlot(lesson.id, character.id))
+    Object.keys(lesson.audioTargets).flatMap((sentenceId) =>
+      tutorCharacters.map((character) => findAudioSlot(lesson.id, character.id, sentenceId))
+    )
   );
 
 export const hasPaidProvider = (provider: string | undefined) => isPaidProvider(provider);
@@ -83,8 +85,10 @@ export const validateAudioConfiguration = ({
     }
   }
 
-  const explicitSlots = new Set(audioCatalog.map((slot) => `${slot.lessonId}:${slot.characterId}`));
-  const generatedFallbackCount = slots.filter((slot) => !explicitSlots.has(`${slot.lessonId}:${slot.characterId}`)).length;
+  const explicitSlots = new Set(audioCatalog.map((slot) => `${slot.lessonId}:${slot.characterId}:${slot.sentenceId}`));
+  const generatedFallbackCount = slots.filter(
+    (slot) => !explicitSlots.has(`${slot.lessonId}:${slot.characterId}:${slot.sentenceId}`)
+  ).length;
   if (generatedFallbackCount > 0) {
     warnings.push(`${generatedFallbackCount} lesson/character audio slots use generated browser TTS fallback metadata.`);
   }

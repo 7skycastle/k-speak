@@ -3,6 +3,7 @@ import {
   BookOpen,
   Bookmark,
   Check,
+  Copy,
   Home,
   LoaderCircle,
   LogIn,
@@ -14,6 +15,7 @@ import {
   RotateCcw,
   Settings,
   Sparkles,
+  Trash2,
   Volume2
 } from "lucide-react";
 import { getCharacter, tutorCharacters } from "./data/characters";
@@ -35,6 +37,7 @@ import {
   logoutLocalAccount,
   markSavedPhrasePlayed,
   mergeGuestIntoAccount,
+  removeSavedPhrase,
   updateOnboarding,
   upsertLessonProgress,
   upsertReviewItems,
@@ -778,6 +781,9 @@ const LessonStepBody = ({
         <small>{lesson.countryNotes[countryPackId]}</small>
       </div>
     )}
+    {(step.kind === "phrase" || step.kind === "structure") && (
+      <p className="culture-note">{lesson.pronunciationByCountry[countryPackId]}</p>
+    )}
     {step.kind === "swap" && (
       <div className="stack">
         {lesson.swapSlots.map((slot) => (
@@ -912,6 +918,10 @@ const ReviewScreen = ({
     speakKorean(phrase.korean, rate);
     onPersist(markSavedPhrasePlayed(state, phrase.id));
   };
+  const removePhrase = (phrase: SavedPhrase) => {
+    const next = removeSavedPhrase(state, phrase.id);
+    onPersist(trackEvent(next, { name: "saved_phrase_removed", lessonId: phrase.lessonId, success: true }));
+  };
 
   if (!state.reviewItems.length) {
     return (
@@ -924,7 +934,7 @@ const ReviewScreen = ({
         <button className="primary-action" onClick={onStartLesson}>
           Day 1 학습하기
         </button>
-        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} />
+        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} />
       </section>
     );
   }
@@ -936,7 +946,7 @@ const ReviewScreen = ({
         <button className="primary-action" onClick={onStartLesson}>
           신규 수업으로 이동
         </button>
-        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} />
+        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} />
       </section>
     );
   }
@@ -964,7 +974,7 @@ const ReviewScreen = ({
           </button>
         </div>
       </Panel>
-      <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} />
+      <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} />
       <div className="sticky-actions">
         <button
           className="secondary-action"
@@ -993,39 +1003,96 @@ const ReviewScreen = ({
 
 const SavedPhraseBox = ({
   phrases,
-  onPlay
+  onPlay,
+  onRemove
 }: {
   phrases: SavedPhrase[];
   onPlay: (phrase: SavedPhrase, rate: number) => void;
-}) => (
-  <Panel title="저장 문장함">
-    {phrases.length ? (
-      <div className="saved-list">
-        {phrases.slice(0, 6).map((phrase) => (
-          <div className="saved-row" key={phrase.id}>
-            <div>
-              <span className="review-badge">{reviewKindLabel[phrase.source]}</span>
-              <strong>{phrase.korean}</strong>
-              <small>{phrase.meaning}</small>
-            </div>
-            <div className="audio-controls">
-              <button className="icon-button" onClick={() => onPlay(phrase, 1)}>
-                <Play />
-                듣기
+  onRemove: (phrase: SavedPhrase) => void;
+}) => {
+  const [sourceFilter, setSourceFilter] = useState<SavedPhrase["source"] | "all">("all");
+  const [dayFilter, setDayFilter] = useState("all");
+  const [copyMessage, setCopyMessage] = useState("");
+  const days = Array.from(new Set(phrases.map((phrase) => phrase.lessonId))).sort(
+    (a, b) => Number(a.replace("day-", "")) - Number(b.replace("day-", ""))
+  );
+  const filtered = phrases
+    .filter((phrase) => sourceFilter === "all" || phrase.source === sourceFilter)
+    .filter((phrase) => dayFilter === "all" || phrase.lessonId === dayFilter)
+    .sort((a, b) => b.savedAt.localeCompare(a.savedAt));
+
+  const copyPhrase = async (phrase: SavedPhrase) => {
+    try {
+      await navigator.clipboard?.writeText(phrase.korean);
+      setCopyMessage("복사했어요.");
+    } catch {
+      setCopyMessage("복사를 지원하지 않는 환경입니다.");
+    }
+  };
+
+  return (
+    <Panel title="저장 문장함">
+      {phrases.length ? (
+        <>
+          <div className="filter-row" aria-label="저장 문장 필터">
+            {(["all", "core", "rescue", "swap", "response"] as const).map((filter) => (
+              <button
+                key={filter}
+                className={sourceFilter === filter ? "selected" : ""}
+                onClick={() => setSourceFilter(filter)}
+              >
+                {filter === "all" ? "전체" : reviewKindLabel[filter]}
               </button>
-              <button className="icon-button" onClick={() => onPlay(phrase, 0.72)}>
-                <Volume2 />
-                천천히
-              </button>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-    ) : (
-      <p className="muted">수업 중 문장 저장을 누르면 여기에 모입니다.</p>
-    )}
-  </Panel>
-);
+          <div className="filter-row" aria-label="저장 문장 Day 보기">
+            <button className={dayFilter === "all" ? "selected" : ""} onClick={() => setDayFilter("all")}>
+              모든 Day
+            </button>
+            {days.map((day) => (
+              <button key={day} className={dayFilter === day ? "selected" : ""} onClick={() => setDayFilter(day)}>
+                Day {day.replace("day-", "")}
+              </button>
+            ))}
+          </div>
+          {copyMessage && <p className="audio-status">{copyMessage}</p>}
+          <div className="saved-list">
+            {filtered.slice(0, 12).map((phrase) => (
+              <div className="saved-row" key={phrase.id}>
+                <div>
+                  <span className="review-badge">{reviewKindLabel[phrase.source]}</span>
+                  <strong>{phrase.korean}</strong>
+                  <small>{phrase.meaning}</small>
+                </div>
+                <div className="audio-controls">
+                  <button className="icon-button" onClick={() => onPlay(phrase, 1)}>
+                    <Play />
+                    듣기
+                  </button>
+                  <button className="icon-button" onClick={() => onPlay(phrase, 0.72)}>
+                    <Volume2 />
+                    천천히
+                  </button>
+                  <button className="icon-button" onClick={() => copyPhrase(phrase)}>
+                    <Copy />
+                    복사
+                  </button>
+                  <button className="icon-button danger-lite" onClick={() => onRemove(phrase)}>
+                    <Trash2 />
+                    해제
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          {!filtered.length && <p className="muted">이 필터에 맞는 저장 문장이 없습니다.</p>}
+        </>
+      ) : (
+        <p className="muted">수업 중 문장 저장을 누르면 여기에 모입니다.</p>
+      )}
+    </Panel>
+  );
+};
 
 const SettingsScreen = ({
   state,
