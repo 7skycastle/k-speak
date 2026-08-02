@@ -12,13 +12,19 @@ The safe default is review-only:
 ## Files
 
 - `voices.json`: character voice profiles and review status
-- `sentences.json`: stable lesson/phrase text to generate
+- `sentences.json`: stable lesson/phrase text generated from `src/data/lessons.ts` audio targets
 - `licenses.json`: candidate model/license review notes
 - `generate_audio.py`: dry-run generation planner and optional local command runner
 - `validate_audio.py`: validates metadata and generated files
 - `generate.ps1`: Windows PowerShell wrapper
 
 ## Dry Run
+
+Refresh the lesson sentence plan from app data:
+
+```powershell
+npm run tts:sentences
+```
 
 ```powershell
 python tools/tts/generate_audio.py --dry-run
@@ -34,9 +40,11 @@ python tools/tts/generate_audio.py --lesson-id day-1 --character-id haneul --spe
 Write the review manifest without generating audio:
 
 ```powershell
-npm run tts:manifest -- --lesson-id day-1
+npm run tts:manifest
 python tools/tts/validate_audio.py
 ```
+
+The current Day 1-14 learning program contains 90 sentence targets. With four voice characters and two speeds, `generated_manifest.json` should contain 720 entries.
 
 Plan the 20-sentence MeloTTS/Qwen3 comparison pack:
 
@@ -103,11 +111,13 @@ The current comparison pack has 80 generated audition files:
 ```text
 public/audio/day-1/haneul/hello-nice-meet-you-natural.wav
 public/audio/day-1/haneul/hello-nice-meet-you-slow.wav
+public/audio/day-1/haneul/dialogue-natural.wav
+public/audio/day-1/haneul/rescue-slow.wav
 ```
 
 ## Audition Pack
 
-`sentences.json` includes a 20-sentence pending-review audition pack that checks:
+`sentences.json` includes the Day 1-14 program targets plus audition probes that check:
 
 - plain, tense, and aspirated consonants
 - batchim and linking

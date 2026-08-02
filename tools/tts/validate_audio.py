@@ -53,10 +53,15 @@ def validate_manifest(path, expected_jobs, errors, warnings):
 
     manifest = json.loads(path.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
+    declared_entry_count = manifest.get("entryCount")
+    if declared_entry_count != len(entries):
+        errors.append(f"Generated manifest entryCount={declared_entry_count} does not match entries length={len(entries)}.")
+
     expected_by_key = {
         f"{job['sentenceId']}::{job['characterId']}::{job['speed']}": job
         for job in expected_jobs
     }
+    manifest_keys = set()
     seen_audio_ids = set()
     paths_by_content = {}
 
@@ -70,6 +75,7 @@ def validate_manifest(path, expected_jobs, errors, warnings):
             errors.append(f"Manifest entry {audio_id} cannot be commercialUse=true before approval.")
 
         key = f"{entry.get('sentenceId')}::{entry.get('characterId')}::{entry.get('speed')}"
+        manifest_keys.add(key)
         expected = expected_by_key.get(key)
         if not expected:
             warnings.append(f"Manifest entry is not in current sentence plan: {audio_id}")
@@ -92,6 +98,14 @@ def validate_manifest(path, expected_jobs, errors, warnings):
         valid_paths = {path for path in paths if path}
         if len(valid_paths) > 1:
             warnings.append(f"Same text/voice/speed appears in multiple WAV paths: {content_key}")
+
+    missing_keys = sorted(set(expected_by_key) - manifest_keys)
+    if missing_keys:
+        preview = ", ".join(missing_keys[:5])
+        errors.append(
+            f"Generated manifest is missing {len(missing_keys)} expected TTS job(s). "
+            f"Run npm run tts:manifest. First missing: {preview}"
+        )
 
     return len(entries)
 
