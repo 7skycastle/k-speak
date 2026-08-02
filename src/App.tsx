@@ -54,6 +54,7 @@ import {
 } from "./services/cloudSync";
 import { playLessonAudio, type AudioPlaybackResult } from "./utils/audioPlayback";
 import { speakKorean } from "./utils/speech";
+import { t, createTranslator, type UiKey } from "./i18n";
 import type {
   CharacterId,
   CountryPackId,
@@ -70,20 +71,32 @@ import type {
 type Tab = "home" | "lesson" | "review" | "settings";
 type RecorderState = "idle" | "requesting" | "recording" | "denied" | "unsupported" | "ready";
 
-const levelLabels: Record<KoreanLevel, string> = {
-  "first-time": "처음 배워요",
-  beginner: "기초 표현은 알아요",
-  returning: "다시 시작해요",
-  daily: "일상 표현을 늘리고 싶어요"
+const levelUiKey: Record<KoreanLevel, UiKey> = {
+  "first-time": "level.first-time",
+  beginner: "level.beginner",
+  returning: "level.returning",
+  daily: "level.daily"
 };
 
-const goalLabels: Record<LearningGoal, string> = {
-  travel: "여행",
-  daily: "일상회화",
-  study: "유학",
-  work: "취업",
-  life: "한국 생활",
-  "k-content": "K-콘텐츠"
+const goalUiKey: Record<LearningGoal, UiKey> = {
+  travel: "goal.travel",
+  daily: "goal.daily",
+  study: "goal.study",
+  work: "goal.work",
+  life: "goal.life",
+  "k-content": "goal.k-content"
+};
+
+const kindUiKey: Record<string, UiKey> = {
+  listen: "kind.listen",
+  speak: "kind.speak",
+  roleplay: "kind.roleplay",
+  core: "kind.core",
+  response: "kind.response",
+  rescue: "kind.rescue",
+  swap: "kind.swap",
+  continuation: "kind.continuation",
+  review: "kind.review"
 };
 
 const goalOptions: LearningGoal[] = ["travel", "daily", "study", "work", "life", "k-content"];
@@ -102,27 +115,15 @@ const isPrimaryCourseCompleted = (state: UserState) =>
 const getCompletedPrimaryLessonCount = (state: UserState) =>
   primaryCourseLessons.filter((lesson) => state.lessonProgress[lesson.id]?.status === "completed").length;
 
-const formatDueLabel = (iso: string) => {
+const formatDueLabel = (iso: string, packId: CountryPackId) => {
   const deltaMs = new Date(iso).getTime() - Date.now();
-  if (deltaMs <= 0) return "지금";
+  if (deltaMs <= 0) return t("time.now", packId);
   const hours = Math.ceil(deltaMs / (60 * 60 * 1000));
-  if (hours < 24) return `${hours}시간 후`;
-  return `${Math.ceil(hours / 24)}일 후`;
+  if (hours < 24) return t("time.hoursLater", packId, { hours });
+  return t("time.daysLater", packId, { days: Math.ceil(hours / 24) });
 };
 
 const getContinuationStartDay = (module: ContinuationModule) => module.dayRange.match(/\d+/)?.[0] ?? "15";
-
-const reviewKindLabel: Record<NonNullable<SavedPhrase["source"] | "listen" | "speak" | "roleplay">, string> = {
-  listen: "듣기",
-  speak: "말하기",
-  roleplay: "역할극",
-  core: "핵심",
-  response: "반응",
-  rescue: "구출",
-  swap: "변형",
-  continuation: "다음 코스",
-  review: "복습"
-};
 
 const defaultOnboarding: OnboardingProfile = {
   countryPackId: "us-en",
@@ -162,7 +163,7 @@ export const App = () => {
         if (mounted) setState(next);
       })
       .catch((syncError) => {
-        if (mounted) setError(syncError instanceof Error ? syncError.message : "Supabase 동기화 중 오류가 발생했습니다.");
+        if (mounted) setError(syncError instanceof Error ? syncError.message : t("error.sync", countryPack.id));
       });
 
     const unsubscribe = subscribeToSupabaseAuth((session) => {
@@ -170,7 +171,7 @@ export const App = () => {
         syncWithSupabase(current, session)
           .then((next) => setState(next))
           .catch((syncError) =>
-            setError(syncError instanceof Error ? syncError.message : "Supabase 인증 상태 처리 중 오류가 발생했습니다.")
+            setError(syncError instanceof Error ? syncError.message : t("error.auth", countryPack.id))
           );
         return current;
       });
@@ -212,15 +213,19 @@ export const App = () => {
 
   if (isLoading) {
     return (
-      <Shell tab={tab} setTab={setTab}>
-        <StatePanel icon={<LoaderCircle className="spin" />} title="학습 상태를 불러오는 중" body="이전 진도와 복습 항목을 확인하고 있습니다." />
+      <Shell tab={tab} setTab={setTab} packId={countryPack.id}>
+        <StatePanel
+          icon={<LoaderCircle className="spin" />}
+          title={t("state.loading.title", countryPack.id)}
+          body={t("state.loading.body", countryPack.id)}
+        />
       </Shell>
     );
   }
 
   return (
-    <Shell tab={tab} setTab={setTab}>
-      {error && <StatusBanner tone="error" text={error} onClose={() => setError("")} />}
+    <Shell tab={tab} setTab={setTab} packId={countryPack.id}>
+      {error && <StatusBanner tone="error" text={error} onClose={() => setError("")} packId={countryPack.id} />}
       {!onboarding ? (
         <OnboardingFlow onComplete={completeOnboarding} />
       ) : (
@@ -267,17 +272,30 @@ export const App = () => {
   );
 };
 
-const Shell = ({ children, tab, setTab }: { children: React.ReactNode; tab: Tab; setTab: (tab: Tab) => void }) => (
-  <div className="app-shell">
-    <main className="screen">{children}</main>
-    <nav className="bottom-nav" aria-label="주요 메뉴">
-      <NavButton icon={<Home />} label="홈" active={tab === "home"} onClick={() => setTab("home")} />
-      <NavButton icon={<BookOpen />} label="학습" active={tab === "lesson"} onClick={() => setTab("lesson")} />
-      <NavButton icon={<RefreshCcw />} label="복습" active={tab === "review"} onClick={() => setTab("review")} />
-      <NavButton icon={<Settings />} label="내 정보" active={tab === "settings"} onClick={() => setTab("settings")} />
-    </nav>
-  </div>
-);
+const Shell = ({
+  children,
+  tab,
+  setTab,
+  packId
+}: {
+  children: React.ReactNode;
+  tab: Tab;
+  setTab: (tab: Tab) => void;
+  packId: CountryPackId;
+}) => {
+  const tr = createTranslator(packId);
+  return (
+    <div className="app-shell">
+      <main className="screen">{children}</main>
+      <nav className="bottom-nav" aria-label={tr("nav.ariaLabel")}>
+        <NavButton icon={<Home />} label={tr("nav.home")} active={tab === "home"} onClick={() => setTab("home")} />
+        <NavButton icon={<BookOpen />} label={tr("nav.lesson")} active={tab === "lesson"} onClick={() => setTab("lesson")} />
+        <NavButton icon={<RefreshCcw />} label={tr("nav.review")} active={tab === "review"} onClick={() => setTab("review")} />
+        <NavButton icon={<Settings />} label={tr("nav.settings")} active={tab === "settings"} onClick={() => setTab("settings")} />
+      </nav>
+    </div>
+  );
+};
 
 const NavButton = ({
   icon,
@@ -302,6 +320,7 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
   const pack = getCountryPack(profile.countryPackId);
   const character = getCharacter(profile.characterId);
   const totalSteps = 6;
+  const tr = createTranslator(pack.id);
 
   const updateProfile = (patch: Partial<OnboardingProfile>) => {
     const next = { ...profile, ...patch };
@@ -315,9 +334,9 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
 
   return (
     <section className="flow">
-      <ProgressHeader current={step + 1} total={totalSteps} title="첫 설정" />
+      <ProgressHeader current={step + 1} total={totalSteps} title={tr("onboarding.title")} />
       {step === 0 && (
-        <Panel title="어떤 언어로 안내할까요?" kicker="로그인 없이 시작">
+        <Panel title={tr("onboarding.step0.title")} kicker={tr("onboarding.step0.kicker")}>
           <p className="muted">{pack.onboardingNote}</p>
           <div className="option-grid">
             {countryPacks.map((country) => (
@@ -334,7 +353,7 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
         </Panel>
       )}
       {step === 1 && (
-        <Panel title="지금 한국어 수준은 어느 쪽인가요?">
+        <Panel title={tr("onboarding.step1.title")}>
           <div className="stack">
             {levelOptions.map((level) => (
               <button
@@ -342,14 +361,14 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
                 className={`row-choice ${profile.koreanLevel === level ? "selected" : ""}`}
                 onClick={() => updateProfile({ koreanLevel: level })}
               >
-                {levelLabels[level]}
+                {tr(levelUiKey[level])}
               </button>
             ))}
           </div>
         </Panel>
       )}
       {step === 2 && (
-        <Panel title="가장 먼저 필요한 한국어는요?">
+        <Panel title={tr("onboarding.step2.title")}>
           <div className="option-grid">
             {goalOptions.map((goal) => (
               <button
@@ -357,14 +376,14 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
                 className={`choice compact ${profile.learningGoal === goal ? "selected" : ""}`}
                 onClick={() => updateProfile({ learningGoal: goal })}
               >
-                <strong>{goalLabels[goal]}</strong>
+                <strong>{tr(goalUiKey[goal])}</strong>
               </button>
             ))}
           </div>
         </Panel>
       )}
       {step === 3 && (
-        <Panel title="하루에 몇 분이면 좋을까요?">
+        <Panel title={tr("onboarding.step3.title")}>
           <div className="minute-row">
             {minuteOptions.map((minutes) => (
               <button
@@ -373,14 +392,14 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
                 onClick={() => updateProfile({ dailyGoalMinutes: minutes })}
               >
                 {minutes}
-                <span>분</span>
+                <span>{tr("onboarding.minuteUnit")}</span>
               </button>
             ))}
           </div>
         </Panel>
       )}
       {step === 4 && (
-        <Panel title="함께 연습할 한국인 튜터를 고르세요">
+        <Panel title={tr("onboarding.step4.title")}>
           <div className="stack">
             {tutorCharacters.map((tutor) => (
               <button
@@ -399,14 +418,17 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
         </Panel>
       )}
       {step === 5 && (
-        <Panel title="설정 확인">
+        <Panel title={tr("onboarding.step5.title")}>
           <div className="summary-list">
-            <SummaryRow label="국가팩" value={`${pack.label} / ${pack.nativeLabel}`} />
-            <SummaryRow label="목적" value={goalLabels[profile.learningGoal]} />
-            <SummaryRow label="학습 목표" value={`${profile.dailyGoalMinutes}분`} />
-            <SummaryRow label="튜터" value={`${character.name} - ${character.tone}`} />
+            <SummaryRow label={tr("onboarding.field.country")} value={`${pack.label} / ${pack.nativeLabel}`} />
+            <SummaryRow label={tr("onboarding.field.goal")} value={tr(goalUiKey[profile.learningGoal])} />
+            <SummaryRow
+              label={tr("onboarding.field.dailyGoal")}
+              value={`${profile.dailyGoalMinutes} ${tr("onboarding.minuteUnit")}`}
+            />
+            <SummaryRow label={tr("onboarding.field.tutor")} value={`${character.name} - ${character.tone}`} />
             <label className="field">
-              <span>첫 학습 알림 시간</span>
+              <span>{tr("onboarding.field.reminderTime")}</span>
               <input
                 type="time"
                 value={profile.reminderTime}
@@ -418,13 +440,13 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
       )}
       <div className="sticky-actions">
         <button className="secondary-action" disabled={step === 0} onClick={() => setStep((value) => Math.max(0, value - 1))}>
-          이전
+          {tr("common.prev")}
         </button>
         <button
           className="primary-action"
           onClick={() => (step === totalSteps - 1 ? onComplete(profile) : setStep((value) => value + 1))}
         >
-          {step === totalSteps - 1 ? "Day 1 바로 시작" : "다음"}
+          {step === totalSteps - 1 ? tr("onboarding.cta") : tr("common.next")}
         </button>
       </div>
     </section>
@@ -456,6 +478,8 @@ const HomeScreen = ({
 }) => {
   const percent = progress ? getLessonPercent(progress) : 0;
   const countryPack = getCountryPack(state.onboarding?.countryPackId);
+  const packId = countryPack.id;
+  const tr = createTranslator(packId);
   const continuationTrack = getContinuationTrack(state.onboarding?.learningGoal);
   const completedCount = getCompletedPrimaryLessonCount(state);
   const courseCompleted = isPrimaryCourseCompleted(state);
@@ -479,28 +503,40 @@ const HomeScreen = ({
     <section className="flow">
       <header className="home-hero">
         <span className="kicker">Korean First Talk</span>
-        <h1>오늘 한 문장부터 말해요.</h1>
-        <p>{state.accountEmail ? `${state.accountEmail} 계정으로 저장 중` : "로그인 전에도 진도가 이 기기에 저장됩니다."}</p>
+        <h1>{tr("home.hero.title")}</h1>
+        <p>
+          {state.accountEmail
+            ? tr("home.hero.loggedIn", { email: state.accountEmail })
+            : tr("home.hero.anonymous")}
+        </p>
       </header>
       <div className="home-grid">
-        <Metric label="오늘 수업" value={progress?.status === "completed" ? `Day ${lesson.day} 완료` : `Day ${lesson.day}`} />
-        <Metric label="복습 문장" value={`${reviewCount}개`} />
-        <Metric label="저장 문장" value={`${savedCount}개`} />
-        <Metric label="튜터" value={characterName} />
+        <Metric
+          label={tr("home.metric.todayLesson")}
+          value={progress?.status === "completed" ? `Day ${lesson.day} done` : `Day ${lesson.day}`}
+        />
+        <Metric label={tr("home.metric.reviewCount")} value={String(reviewCount)} />
+        <Metric label={tr("home.metric.savedCount")} value={String(savedCount)} />
+        <Metric label={tr("home.metric.tutor")} value={characterName} />
       </div>
-      <Panel title={progress?.status === "completed" ? "다음은 짧은 복습이에요" : "이어 할 수업"}>
+      <Panel title={progress?.status === "completed" ? tr("home.panel.lessonCompleted") : tr("home.panel.lessonInProgress")}>
         <div className="lesson-preview">
           <div>
             <strong>
               Day {lesson.day}. {lesson.title}
             </strong>
-            <p className="muted">진행률 {percent}% · 목표 {state.onboarding?.dailyGoalMinutes}분</p>
+            <p className="muted">
+              {tr("home.lesson.meta", { percent, dailyGoal: state.onboarding?.dailyGoalMinutes ?? 5 })}
+            </p>
           </div>
           <button className="primary-action inline" onClick={onStartLesson}>
-            {progress ? "이어하기" : "시작"}
+            {progress ? tr("home.lesson.resume") : tr("common.start")}
           </button>
         </div>
-        <div className="progress-track" aria-label={`Day ${lesson.day} 진행률 ${percent}%`}>
+        <div
+          className="progress-track"
+          aria-label={tr("home.lesson.progressAriaLabel", { day: lesson.day, percent })}
+        >
           <span style={{ width: `${percent}%` }} />
         </div>
       </Panel>
@@ -510,25 +546,26 @@ const HomeScreen = ({
         courseCompleted={courseCompleted}
         savedIds={continuationSavedIds}
         onSavePhrase={saveContinuationPhrase}
+        packId={packId}
       />
-      <AudioReadinessPanel />
+      <AudioReadinessPanel packId={packId} />
       <CountryLearningGuidePanel countryPack={countryPack} />
       {reviewCount > 0 ? (
         <button className="wide-button review" onClick={onReview}>
           <RefreshCcw />
-          오늘 복습할 문장 확인
+          {tr("home.review.cta")}
         </button>
       ) : (
         <StatePanel
           icon={<Sparkles />}
-          title="아직 복습할 문장이 없어요"
-          body="수업을 마치면 어려웠던 표현을 바탕으로 짧은 복습이 만들어집니다."
+          title={tr("home.review.emptyTitle")}
+          body={tr("home.review.emptyBody")}
         />
       )}
       {!state.accountEmail && (
         <button className="wide-button quiet" onClick={onLogin}>
           <LogIn />
-          로그인하면 다른 세션에서도 진도를 복구할 수 있어요
+          {tr("home.login.cta")}
         </button>
       )}
     </section>
@@ -540,89 +577,105 @@ const ContinuationPathPanel = ({
   completedCount,
   courseCompleted,
   savedIds,
-  onSavePhrase
+  onSavePhrase,
+  packId
 }: {
   track: ReturnType<typeof getContinuationTrack>;
   completedCount: number;
   courseCompleted: boolean;
   savedIds: Set<string>;
   onSavePhrase: (module: ContinuationModule, phrase: string, phraseIndex: number) => void;
-}) => (
-  <Panel title={courseCompleted ? "Day 15 이후 프로그램" : "Day 14 이후 이어질 길"}>
-    <div className="path-summary">
-      <span className="review-badge">{completedCount}/14 완료</span>
-      <div>
-        <strong>{track.title}</strong>
-        <p className="muted">{track.promise}</p>
-      </div>
-    </div>
-    <div className="program-grid">
-      {track.modules.map((module) => (
-        <div className="program-card" key={module.dayRange}>
-          <span>{module.dayRange}</span>
-          <strong>{module.title}</strong>
-          <p>{module.outcome}</p>
-          <div className="continuation-phrases">
-            {module.samplePhrases.map((phrase, phraseIndex) => {
-              const startDay = getContinuationStartDay(module);
-              const savedId = `day-${startDay}:${track.id}-${startDay}-${phraseIndex + 1}`;
-              const isSaved = savedIds.has(savedId);
-              return (
-                <div className="continuation-phrase" key={phrase}>
-                  <span>{phrase}</span>
-                  <div>
-                    <button className="icon-button compact" onClick={() => speakKorean(phrase, 1)} aria-label={`${phrase} 듣기`}>
-                      <Play />
-                      듣기
-                    </button>
-                    <button className="icon-button compact" onClick={() => speakKorean(phrase, 0.72)} aria-label={`${phrase} 천천히`}>
-                      <Volume2 />
-                      천천히
-                    </button>
-                    <button
-                      className={`icon-button compact ${isSaved ? "saved" : ""}`}
-                      onClick={() => onSavePhrase(module, phrase, phraseIndex)}
-                      aria-label={`${phrase} 저장`}
-                    >
-                      <Bookmark />
-                      {isSaved ? "저장됨" : "저장"}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+  packId: CountryPackId;
+}) => {
+  const tr = createTranslator(packId);
+  return (
+    <Panel title={courseCompleted ? tr("continuation.panelCompleted") : tr("continuation.panelInProgress")}>
+      <div className="path-summary">
+        <span className="review-badge">{tr("continuation.progress", { count: completedCount })}</span>
+        <div>
+          <strong>{track.title}</strong>
+          <p className="muted">{track.promise}</p>
         </div>
-      ))}
-    </div>
-  </Panel>
-);
+      </div>
+      <div className="program-grid">
+        {track.modules.map((module) => (
+          <div className="program-card" key={module.dayRange}>
+            <span>{module.dayRange}</span>
+            <strong>{module.title}</strong>
+            <p>{module.outcome}</p>
+            <div className="continuation-phrases">
+              {module.samplePhrases.map((phrase, phraseIndex) => {
+                const startDay = getContinuationStartDay(module);
+                const savedId = `day-${startDay}:${track.id}-${startDay}-${phraseIndex + 1}`;
+                const isSaved = savedIds.has(savedId);
+                return (
+                  <div className="continuation-phrase" key={phrase}>
+                    <span>{phrase}</span>
+                    <div>
+                      <button
+                        className="icon-button compact"
+                        onClick={() => speakKorean(phrase, 1)}
+                        aria-label={tr("continuation.listenAriaLabel", { phrase })}
+                      >
+                        <Play />
+                        {tr("continuation.listen")}
+                      </button>
+                      <button
+                        className="icon-button compact"
+                        onClick={() => speakKorean(phrase, 0.72)}
+                        aria-label={tr("continuation.slowAriaLabel", { phrase })}
+                      >
+                        <Volume2 />
+                        {tr("continuation.slow")}
+                      </button>
+                      <button
+                        className={`icon-button compact ${isSaved ? "saved" : ""}`}
+                        onClick={() => onSavePhrase(module, phrase, phraseIndex)}
+                        aria-label={tr("continuation.saveAriaLabel", { phrase })}
+                      >
+                        <Bookmark />
+                        {isSaved ? tr("continuation.saved") : tr("continuation.save")}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+};
 
-const AudioReadinessPanel = () => (
-  <Panel title="오프라인 저용량 음원 준비">
-    <div className="readiness-grid">
-      <Metric label="학습 음원 슬롯" value={`${totalAudioSlots}개`} />
-      <Metric label="정적 파일 연결" value={`${staticAudioSlots}개`} />
-      <Metric label="브라우저 대체" value={`${fallbackAudioSlots}개`} />
-    </div>
-    <p className="muted">
-      Day 1-30 문장은 자연 속도와 느린 속도 기준으로 고정되어 있습니다. 실제 무료 정적 음원이 연결되기 전에는 브라우저
-      한국어 음성으로 학습을 이어갑니다.
-    </p>
-  </Panel>
-);
+const AudioReadinessPanel = ({ packId }: { packId: CountryPackId }) => {
+  const tr = createTranslator(packId);
+  return (
+    <Panel title={tr("audio.readinessTitle")}>
+      <div className="readiness-grid">
+        <Metric label={tr("audio.slots")} value={String(totalAudioSlots)} />
+        <Metric label={tr("audio.staticFiles")} value={String(staticAudioSlots)} />
+        <Metric label={tr("audio.fallback")} value={String(fallbackAudioSlots)} />
+      </div>
+      <p className="muted">{tr("audio.readinessBody")}</p>
+    </Panel>
+  );
+};
 
-const CountryLearningGuidePanel = ({ countryPack }: { countryPack: ReturnType<typeof getCountryPack> }) => (
-  <Panel title={`${countryPack.nativeLabel} 학습 설명`}>
-    <div className="guide-list">
-      <SummaryRow label="초점" value={countryPack.learningGuide.focus} />
-      <SummaryRow label="발음" value={countryPack.learningGuide.pronunciation} />
-      <SummaryRow label="구조" value={countryPack.learningGuide.grammarBridge} />
-      <SummaryRow label="복습" value={countryPack.learningGuide.reviewHabit} />
-      <SummaryRow label="오프라인" value={countryPack.learningGuide.offlineTip} />
-    </div>
-  </Panel>
-);
+const CountryLearningGuidePanel = ({ countryPack }: { countryPack: ReturnType<typeof getCountryPack> }) => {
+  const tr = createTranslator(countryPack.id);
+  return (
+    <Panel title={tr("guide.panelTitle", { nativeLabel: countryPack.nativeLabel })}>
+      <div className="guide-list">
+        <SummaryRow label={tr("guide.focus")} value={countryPack.learningGuide.focus} />
+        <SummaryRow label={tr("guide.pronunciation")} value={countryPack.learningGuide.pronunciation} />
+        <SummaryRow label={tr("guide.structure")} value={countryPack.learningGuide.grammarBridge} />
+        <SummaryRow label={tr("guide.review")} value={countryPack.learningGuide.reviewHabit} />
+        <SummaryRow label={tr("guide.offline")} value={countryPack.learningGuide.offlineTip} />
+      </div>
+    </Panel>
+  );
+};
 
 const LessonScreen = ({
   state,
@@ -646,6 +699,8 @@ const LessonScreen = ({
   const step = getCurrentStep(activeProgress);
   const character = getCharacter(state.onboarding?.characterId);
   const countryPack = getCountryPack(state.onboarding?.countryPackId);
+  const packId = countryPack.id;
+  const tr = createTranslator(packId);
   const meaning = lesson.meaningByCountry[countryPack.id];
   const audioTargetId = step.audioTargetId ?? "core";
   const audioTarget = lesson.audioTargets[audioTargetId] ?? lesson.audioTargets.core;
@@ -809,7 +864,7 @@ const LessonScreen = ({
   return (
     <section className="flow">
       <ProgressHeader current={activeProgress.completedStepIds.length + 1} total={lesson.steps.length} title={lesson.title} />
-      <Panel title={step.title} kicker={`튜터 ${character.name}`}>
+      <Panel title={step.title} kicker={tr("lesson.tutorKicker", { name: character.name })}>
         <LessonStepBody
           step={step}
           lesson={lesson}
@@ -825,18 +880,18 @@ const LessonScreen = ({
         {saveTarget && (
           <button className={`wide-button quiet ${isSaved ? "saved" : ""}`} onClick={saveCurrentPhrase}>
             <Bookmark />
-            {isSaved ? "저장한 문장" : "문장 저장"}
+            {isSaved ? tr("lesson.phrase.saved") : tr("lesson.phrase.save")}
           </button>
         )}
         {(step.kind === "dialogue" || step.kind === "listen" || step.kind === "repeat" || step.kind === "compare" || step.kind === "roleplay") && (
           <div className="audio-controls">
             <button className="icon-button" onClick={() => playOriginal(1)}>
               <Volume2 />
-              자연 속도
+              {tr("audio.naturalSpeed")}
             </button>
             <button className="icon-button" onClick={() => playOriginal(0.72)}>
               <Volume2 />
-              느린 속도
+              {tr("audio.slowSpeed")}
             </button>
           </div>
         )}
@@ -848,11 +903,12 @@ const LessonScreen = ({
             onStart={startRecording}
             onStop={stopRecording}
             onRetry={retryRecording}
+            packId={packId}
           />
         )}
         {step.kind === "quiz" && step.hint && (
           <div className="hint-area">
-            {hintVisible ? <p>{step.hint}</p> : <button onClick={() => setHintVisible(true)}>힌트 보기</button>}
+            {hintVisible ? <p>{step.hint}</p> : <button onClick={() => setHintVisible(true)}>{tr("lesson.hint.show")}</button>}
           </div>
         )}
       </Panel>
@@ -873,10 +929,14 @@ const LessonScreen = ({
             }
           }
         >
-          나중에 이어하기
+          {tr("lesson.pause")}
         </button>
         <button className="primary-action" onClick={advance}>
-          {step.kind === "summary" ? "완료하고 복습 예약" : step.kind === "quiz" && !selectedChoice ? "몰라도 계속" : "계속"}
+          {step.kind === "summary"
+            ? tr("lesson.complete")
+            : step.kind === "quiz" && !selectedChoice
+              ? tr("lesson.quiz.skip")
+              : tr("lesson.continue")}
         </button>
       </div>
     </section>
@@ -951,16 +1011,16 @@ const LessonStepBody = ({
       <div className="roleplay-card">
         <p className="culture-note">{roleplaySituation}</p>
         <div className="dialogue-line">
-          <span>상대</span>
+          <span>{t("roleplay.partner", countryPackId)}</span>
           <strong>{lesson.roleplay.prompt.korean}</strong>
           <small>{lesson.roleplay.prompt.meaningByCountry[countryPackId]}</small>
         </div>
         <div className="dialogue-line learner">
-          <span>내 답</span>
+          <span>{t("roleplay.myAnswer", countryPackId)}</span>
           <strong>{lesson.roleplay.expected.korean}</strong>
         </div>
         <div className="dialogue-line">
-          <span>구출</span>
+          <span>{t("roleplay.rescue", countryPackId)}</span>
           <strong>{lesson.roleplay.fallback.korean}</strong>
         </div>
       </div>
@@ -973,7 +1033,7 @@ const LessonStepBody = ({
       </div>
     )}
     {(step.kind === "listen" || step.kind === "compare") && (
-      <div className="waveform" aria-label="재생 진행 상태">
+      <div className="waveform" aria-label={t("audio.waveformAriaLabel", countryPackId)}>
         {Array.from({ length: 22 }, (_, index) => (
           <span key={index} style={{ height: `${18 + ((index * 9) % 32)}px` }} />
         ))}
@@ -992,7 +1052,7 @@ const LessonStepBody = ({
         ))}
       </div>
     )}
-    {audioIsTts && <p className="source-note">무료 정적 음원이 없으면 브라우저 TTS로 재생합니다.</p>}
+    {audioIsTts && <p className="source-note">{t("lesson.ttsNote", countryPackId)}</p>}
   </div>
 );
 
@@ -1001,51 +1061,56 @@ const RecorderControls = ({
   recordedUrl,
   onStart,
   onStop,
-  onRetry
+  onRetry,
+  packId
 }: {
   recorderState: RecorderState;
   recordedUrl: string;
   onStart: () => void;
   onStop: () => void;
   onRetry: () => void;
-}) => (
-  <div className="recorder-box">
-    {recorderState === "recording" ? (
-      <button className="danger-action" onClick={onStop}>
-        <Pause />
-        녹음 멈추기
-      </button>
-    ) : (
-      <button className="icon-button" onClick={onStart}>
-        <Mic />
-        내 목소리 녹음
-      </button>
-    )}
-    {recordedUrl && (
-      <div className="audio-controls">
-        <audio controls src={recordedUrl} />
-        <button className="icon-button" onClick={onRetry}>
-          <RotateCcw />
-          다시 녹음
+  packId: CountryPackId;
+}) => {
+  const tr = createTranslator(packId);
+  return (
+    <div className="recorder-box">
+      {recorderState === "recording" ? (
+        <button className="danger-action" onClick={onStop}>
+          <Pause />
+          {tr("recorder.stop")}
         </button>
-      </div>
-    )}
-    {recorderState === "denied" && (
-      <StatePanel
-        icon={<Mic />}
-        title="마이크 권한이 거절됐어요"
-        body="브라우저 주소창의 권한 설정에서 마이크를 허용하거나, 이번 녹음 단계는 건너뛰어도 됩니다."
-      />
-    )}
-    {recorderState === "unsupported" && (
-      <StatePanel
-        icon={<Mic />}
-        title="녹음을 사용할 수 없는 환경"
-        body="현재 브라우저는 녹음을 지원하지 않습니다. 수업은 계속 완료할 수 있어요."
-      />
-    )}
-  </div>
-);
+      ) : (
+        <button className="icon-button" onClick={onStart}>
+          <Mic />
+          {tr("recorder.start")}
+        </button>
+      )}
+      {recordedUrl && (
+        <div className="audio-controls">
+          <audio controls src={recordedUrl} />
+          <button className="icon-button" onClick={onRetry}>
+            <RotateCcw />
+            {tr("recorder.retry")}
+          </button>
+        </div>
+      )}
+      {recorderState === "denied" && (
+        <StatePanel
+          icon={<Mic />}
+          title={tr("recorder.denied.title")}
+          body={tr("recorder.denied.body")}
+        />
+      )}
+      {recorderState === "unsupported" && (
+        <StatePanel
+          icon={<Mic />}
+          title={tr("recorder.unsupported.title")}
+          body={tr("recorder.unsupported.body")}
+        />
+      )}
+    </div>
+  );
+};
 
 const ReviewScreen = ({
   state,
@@ -1056,6 +1121,8 @@ const ReviewScreen = ({
   onPersist: (state: UserState) => void;
   onStartLesson: () => void;
 }) => {
+  const packId: CountryPackId = state.onboarding?.countryPackId ?? "us-en";
+  const tr = createTranslator(packId);
   const dueReviews = getDueReviewItems(state.reviewItems);
   const [activeIndex, setActiveIndex] = useState(0);
   const active = dueReviews[activeIndex];
@@ -1073,13 +1140,13 @@ const ReviewScreen = ({
       <section className="flow">
         <StatePanel
           icon={<RefreshCcw />}
-          title="복습 항목이 아직 없어요"
-          body="첫 수업을 마치면 오답, 힌트, 반복 녹음 기록을 바탕으로 복습 문장이 만들어집니다."
+          title={tr("review.empty.title")}
+          body={tr("review.empty.body")}
         />
         <button className="primary-action" onClick={onStartLesson}>
-          Day 1 학습하기
+          {tr("review.empty.cta")}
         </button>
-        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} />
+        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} packId={packId} />
       </section>
     );
   }
@@ -1087,31 +1154,38 @@ const ReviewScreen = ({
   if (!active) {
     return (
       <section className="flow">
-        <ReviewOverview state={state} dueCount={dueReviews.length} />
-        <StatePanel icon={<Check />} title="오늘 복습은 끝났어요" body="다음 복습 시간에 다시 짧게 확인합니다." />
+        <ReviewOverview state={state} dueCount={dueReviews.length} packId={packId} />
+        <StatePanel icon={<Check />} title={tr("review.done.title")} body={tr("review.done.body")} />
         <button className="primary-action" onClick={onStartLesson}>
-          신규 수업으로 이동
+          {tr("review.done.cta")}
         </button>
-        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} />
+        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} packId={packId} />
       </section>
     );
   }
 
   return (
     <section className="flow">
-      <ReviewOverview state={state} dueCount={dueReviews.length} />
-      <ProgressHeader current={activeIndex + 1} total={dueReviews.length} title="3분 복습" />
+      <ReviewOverview state={state} dueCount={dueReviews.length} packId={packId} />
+      <ProgressHeader current={activeIndex + 1} total={dueReviews.length} title={tr("review.progressTitle")} />
       <Panel title={active.reason}>
-        {active.kind && <span className="review-badge">{reviewKindLabel[active.kind]}</span>}
-        <div className="review-priority-meter" aria-label={`복습 우선순위 ${active.priority}`}>
+        {active.kind && (
+          <span className="review-badge">
+            {t(kindUiKey[active.kind] ?? "kind.listen", packId)}
+          </span>
+        )}
+        <div
+          className="review-priority-meter"
+          aria-label={tr("review.priorityAriaLabel", { priority: active.priority })}
+        >
           <span style={{ width: `${Math.min(active.priority, 100)}%` }} />
         </div>
         <p className="source-note">
-          {active.lastResult === "hard" ? "지난 복습에서 어렵다고 표시한 문장입니다." : "수업 중 반복, 힌트, 녹음 기록을 바탕으로 예약된 문장입니다."}
+          {active.lastResult === "hard" ? tr("review.note.hard") : tr("review.note.scheduled")}
         </p>
         {active.prompt && <p className="culture-note">{active.prompt}</p>}
-        {active.kind === "speak" && <p className="muted">뜻을 먼저 보고 한국어를 말한 뒤 음성을 재생해 비교합니다.</p>}
-        {active.kind === "roleplay" && <p className="muted">상대 문장을 듣고 오늘 문장으로 바로 답합니다.</p>}
+        {active.kind === "speak" && <p className="muted">{tr("review.instruction.speak")}</p>}
+        {active.kind === "roleplay" && <p className="muted">{tr("review.instruction.roleplay")}</p>}
         <div className="korean-phrase">
           <strong>{active.korean}</strong>
           <small>{active.meaning}</small>
@@ -1119,15 +1193,15 @@ const ReviewScreen = ({
         <div className="audio-controls">
           <button className="icon-button" onClick={() => speakKorean(active.korean, 1)}>
             <Play />
-            듣기
+            {tr("review.listen")}
           </button>
           <button className="icon-button" onClick={() => speakKorean(active.korean, 0.72)}>
             <Volume2 />
-            천천히
+            {tr("review.slow")}
           </button>
         </div>
       </Panel>
-      <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} />
+      <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} packId={packId} />
       <div className="sticky-actions">
         <button
           className="secondary-action"
@@ -1136,7 +1210,7 @@ const ReviewScreen = ({
             setActiveIndex((value) => value + 1);
           }}
         >
-          아직 어려움
+          {tr("review.action.hard")}
         </button>
         <button
           className="primary-action"
@@ -1147,14 +1221,23 @@ const ReviewScreen = ({
             setActiveIndex((value) => value + 1);
           }}
         >
-          기억났어요
+          {tr("review.action.success")}
         </button>
       </div>
     </section>
   );
 };
 
-const ReviewOverview = ({ state, dueCount }: { state: UserState; dueCount: number }) => {
+const ReviewOverview = ({
+  state,
+  dueCount,
+  packId
+}: {
+  state: UserState;
+  dueCount: number;
+  packId: CountryPackId;
+}) => {
+  const tr = createTranslator(packId);
   const hardCount = state.reviewItems.filter((item) => item.lastResult === "hard").length;
   const highPriorityCount = state.reviewItems.filter((item) => item.priority >= 55).length;
   const nextDue = state.reviewItems
@@ -1162,14 +1245,16 @@ const ReviewOverview = ({ state, dueCount }: { state: UserState; dueCount: numbe
     .sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime())[0];
 
   return (
-    <Panel title="복습 상태">
+    <Panel title={tr("review.overview.title")}>
       <div className="readiness-grid">
-        <Metric label="오늘 할 문장" value={`${dueCount}개`} />
-        <Metric label="어려움 표시" value={`${hardCount}개`} />
-        <Metric label="높은 우선순위" value={`${highPriorityCount}개`} />
+        <Metric label={tr("review.overview.dueCount")} value={String(dueCount)} />
+        <Metric label={tr("review.overview.hardCount")} value={String(hardCount)} />
+        <Metric label={tr("review.overview.highPriority")} value={String(highPriorityCount)} />
       </div>
       <p className="muted">
-        {nextDue ? `다음 예약 복습은 ${formatDueLabel(nextDue.dueAt)}에 열립니다.` : "새 수업을 완료하면 다음 복습 시간이 자동으로 예약됩니다."}
+        {nextDue
+          ? tr("review.overview.nextDue", { time: formatDueLabel(nextDue.dueAt, packId) })
+          : tr("review.overview.noNextDue")}
       </p>
     </Panel>
   );
@@ -1178,12 +1263,15 @@ const ReviewOverview = ({ state, dueCount }: { state: UserState; dueCount: numbe
 const SavedPhraseBox = ({
   phrases,
   onPlay,
-  onRemove
+  onRemove,
+  packId
 }: {
   phrases: SavedPhrase[];
   onPlay: (phrase: SavedPhrase, rate: number) => void;
   onRemove: (phrase: SavedPhrase) => void;
+  packId: CountryPackId;
 }) => {
+  const tr = createTranslator(packId);
   const [sourceFilter, setSourceFilter] = useState<SavedPhrase["source"] | "all">("all");
   const [dayFilter, setDayFilter] = useState("all");
   const [copyMessage, setCopyMessage] = useState("");
@@ -1198,30 +1286,30 @@ const SavedPhraseBox = ({
   const copyPhrase = async (phrase: SavedPhrase) => {
     try {
       await navigator.clipboard?.writeText(phrase.korean);
-      setCopyMessage("복사했어요.");
+      setCopyMessage(tr("saved.copied"));
     } catch {
-      setCopyMessage("복사를 지원하지 않는 환경입니다.");
+      setCopyMessage(tr("saved.copyFailed"));
     }
   };
 
   return (
-    <Panel title="저장 문장함">
+    <Panel title={tr("saved.title")}>
       {phrases.length ? (
         <>
-          <div className="filter-row" aria-label="저장 문장 필터">
+          <div className="filter-row" aria-label={tr("saved.filterAriaLabel")}>
             {(["all", "core", "rescue", "swap", "response", "continuation"] as const).map((filter) => (
               <button
                 key={filter}
                 className={sourceFilter === filter ? "selected" : ""}
                 onClick={() => setSourceFilter(filter)}
               >
-                {filter === "all" ? "전체" : reviewKindLabel[filter]}
+                {filter === "all" ? tr("saved.filter.all") : t(kindUiKey[filter] ?? "kind.core", packId)}
               </button>
             ))}
           </div>
-          <div className="filter-row" aria-label="저장 문장 Day 보기">
+          <div className="filter-row" aria-label={tr("saved.dayFilterAriaLabel")}>
             <button className={dayFilter === "all" ? "selected" : ""} onClick={() => setDayFilter("all")}>
-              모든 Day
+              {tr("saved.dayFilter.all")}
             </button>
             {days.map((day) => (
               <button key={day} className={dayFilter === day ? "selected" : ""} onClick={() => setDayFilter(day)}>
@@ -1234,35 +1322,35 @@ const SavedPhraseBox = ({
             {filtered.slice(0, 12).map((phrase) => (
               <div className="saved-row" key={phrase.id}>
                 <div>
-                  <span className="review-badge">{reviewKindLabel[phrase.source]}</span>
+                  <span className="review-badge">{t(kindUiKey[phrase.source] ?? "kind.core", packId)}</span>
                   <strong>{phrase.korean}</strong>
                   <small>{phrase.meaning}</small>
                 </div>
                 <div className="audio-controls">
                   <button className="icon-button" onClick={() => onPlay(phrase, 1)}>
                     <Play />
-                    듣기
+                    {tr("saved.listen")}
                   </button>
                   <button className="icon-button" onClick={() => onPlay(phrase, 0.72)}>
                     <Volume2 />
-                    천천히
+                    {tr("saved.slow")}
                   </button>
                   <button className="icon-button" onClick={() => copyPhrase(phrase)}>
                     <Copy />
-                    복사
+                    {tr("saved.copy")}
                   </button>
                   <button className="icon-button danger-lite" onClick={() => onRemove(phrase)}>
                     <Trash2 />
-                    해제
+                    {tr("saved.remove")}
                   </button>
                 </div>
               </div>
             ))}
           </div>
-          {!filtered.length && <p className="muted">이 필터에 맞는 저장 문장이 없습니다.</p>}
+          {!filtered.length && <p className="muted">{tr("saved.emptyFilter")}</p>}
         </>
       ) : (
-        <p className="muted">수업 중 문장 저장을 누르면 여기에 모입니다.</p>
+        <p className="muted">{tr("saved.empty")}</p>
       )}
     </Panel>
   );
@@ -1283,6 +1371,7 @@ const SettingsScreen = ({
   const profile = state.onboarding ?? defaultOnboarding;
   const character = getCharacter(profile.characterId);
   const pack = getCountryPack(profile.countryPackId);
+  const tr = createTranslator(pack.id);
 
   const updateProfile = (patch: Partial<OnboardingProfile>) => {
     const next = { ...profile, ...patch };
@@ -1296,10 +1385,10 @@ const SettingsScreen = ({
 
   return (
     <section className="flow">
-      <Panel title="내 학습 설정" kicker={describeSupabaseStatus()}>
+      <Panel title={tr("settings.title")} kicker={describeSupabaseStatus()}>
         <div className="summary-list">
           <label className="field">
-            <span>국가팩</span>
+            <span>{tr("settings.field.country")}</span>
             <select value={profile.countryPackId} onChange={(event) => updateProfile({ countryPackId: event.target.value as CountryPackId })}>
               {countryPacks.map((country) => (
                 <option key={country.id} value={country.id}>
@@ -1309,7 +1398,7 @@ const SettingsScreen = ({
             </select>
           </label>
           <label className="field">
-            <span>튜터</span>
+            <span>{tr("settings.field.tutor")}</span>
             <select value={profile.characterId} onChange={(event) => updateProfile({ characterId: event.target.value as CharacterId })}>
               {tutorCharacters.map((tutor) => (
                 <option key={tutor.id} value={tutor.id}>
@@ -1319,27 +1408,27 @@ const SettingsScreen = ({
             </select>
           </label>
           <label className="field">
-            <span>하루 목표</span>
+            <span>{tr("settings.field.dailyGoal")}</span>
             <select
               value={profile.dailyGoalMinutes}
               onChange={(event) => updateProfile({ dailyGoalMinutes: Number(event.target.value) as DailyGoalMinutes })}
             >
               {minuteOptions.map((minutes) => (
                 <option key={minutes} value={minutes}>
-                  {minutes}분
+                  {tr("settings.minuteOption", { minutes })}
                 </option>
               ))}
             </select>
           </label>
         </div>
         <p className="culture-note">
-          현재 {pack.label} 국가팩과 {character.name} 튜터가 홈, 수업, 복습 안내에 반영됩니다.
+          {tr("settings.note", { country: pack.label, tutor: character.name })}
         </p>
       </Panel>
       <CountryLearningGuidePanel countryPack={pack} />
-      <Panel title="계정 연결">
+      <Panel title={tr("settings.account.title")}>
         <label className="field">
-          <span>이메일</span>
+          <span>{tr("settings.field.email")}</span>
           <input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" />
         </label>
         <div className="button-row">
@@ -1348,7 +1437,7 @@ const SettingsScreen = ({
             onClick={async () => {
               const normalizedEmail = email.trim().toLowerCase();
               if (!normalizedEmail.includes("@")) {
-                onError("이메일 주소를 확인해 주세요.");
+                onError(tr("error.invalidEmail"));
                 return;
               }
               try {
@@ -1369,12 +1458,12 @@ const SettingsScreen = ({
                   )
                 );
               } catch (loginError) {
-                onError(loginError instanceof Error ? loginError.message : "로그인 링크 전송에 실패했습니다.");
+                onError(loginError instanceof Error ? loginError.message : tr("error.loginFailed"));
               }
             }}
           >
             <LogIn />
-            로그인·병합
+            {tr("settings.account.login")}
           </button>
           <button
             className="secondary-action inline"
@@ -1383,16 +1472,16 @@ const SettingsScreen = ({
                 await signOutFromSupabase();
                 onPersist(logoutLocalAccount(state));
               } catch (logoutError) {
-                onError(logoutError instanceof Error ? logoutError.message : "로그아웃 중 오류가 발생했습니다.");
+                onError(logoutError instanceof Error ? logoutError.message : tr("error.logoutFailed"));
               }
             }}
           >
             <LogOut />
-            로그아웃
+            {tr("settings.account.logout")}
           </button>
         </div>
       </Panel>
-      <Panel title="동기화 상태">
+      <Panel title={tr("settings.sync.title")}>
         <p>{state.sync.message}</p>
         <button
           className="secondary-action inline"
@@ -1400,14 +1489,14 @@ const SettingsScreen = ({
             try {
               onPersist(await markSyncAttempt(state));
             } catch (syncError) {
-              onError(syncError instanceof Error ? syncError.message : "동기화 중 오류가 발생했습니다.");
+              onError(syncError instanceof Error ? syncError.message : tr("error.syncFailed"));
             }
           }}
         >
-          연결 상태 확인
+          {tr("settings.sync.button")}
         </button>
       </Panel>
-      <Panel title="개발용 이벤트 확인">
+      <Panel title={tr("settings.debug.title")}>
         {state.analyticsEvents.length ? (
           <div className="event-list">
             {state.analyticsEvents.slice(-8).map((event) => (
@@ -1417,7 +1506,7 @@ const SettingsScreen = ({
             ))}
           </div>
         ) : (
-          <p className="muted">아직 기록된 이벤트가 없습니다.</p>
+          <p className="muted">{tr("settings.debug.empty")}</p>
         )}
       </Panel>
     </section>
@@ -1432,7 +1521,7 @@ const ProgressHeader = ({ current, total, title }: { current: number; total: num
       </span>
       <h1>{title}</h1>
     </div>
-    <div className="ring" aria-label={`진행 ${Math.min(current, total)} / ${total}`}>
+    <div className="ring" aria-label={`${Math.min(current, total)} / ${total}`}>
       {Math.round((Math.min(current, total) / total) * 100)}%
     </div>
   </header>
@@ -1468,9 +1557,19 @@ const StatePanel = ({ icon, title, body }: { icon: React.ReactNode; title: strin
   </section>
 );
 
-const StatusBanner = ({ text, tone, onClose }: { text: string; tone: "error" | "info"; onClose: () => void }) => (
+const StatusBanner = ({
+  text,
+  tone,
+  onClose,
+  packId
+}: {
+  text: string;
+  tone: "error" | "info";
+  onClose: () => void;
+  packId: CountryPackId;
+}) => (
   <div className={`status-banner ${tone}`}>
     <span>{text}</span>
-    <button onClick={onClose}>닫기</button>
+    <button onClick={onClose}>{t("common.close", packId)}</button>
   </div>
 );

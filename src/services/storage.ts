@@ -20,7 +20,7 @@ export const createInitialState = (): UserState => ({
     pending: false,
     message: hasSupabaseEnvironment()
       ? "Supabase environment variables are present. Cloud sync can be connected."
-      : "로컬에 안전하게 저장 중입니다. 새 Supabase 프로젝트 정보가 준비되면 동기화할 수 있습니다."
+      : "Saved safely on this device. Sync will be available once a Supabase project is configured." // A3: localize via sync.localOnly
   },
   updatedAt: now()
 });
@@ -129,8 +129,8 @@ export const mergeGuestIntoAccount = (state: UserState, email: string): UserStat
       ...merged.sync,
       pending: hasSupabaseEnvironment(),
       message: hasSupabaseEnvironment()
-        ? "계정 진도와 로컬 진도를 병합했습니다. Supabase 연결 후 클라우드 저장을 실행할 수 있습니다."
-        : "계정 진도와 로컬 진도를 이 브라우저의 계정 저장소에 병합했습니다."
+        ? "Account and local progress merged. Cloud save can be run after Supabase is connected." // A3: localize
+        : "Account and local progress merged into this browser's account storage." // A3: localize
     }
   });
 };
@@ -141,7 +141,7 @@ export const logoutLocalAccount = (state: UserState): UserState =>
     accountEmail: undefined,
     sync: {
       ...state.sync,
-      message: "로그아웃했습니다. 비회원 진도는 이 기기에 계속 보관됩니다."
+      message: "Logged out. Guest progress continues to be stored on this device." // A3: localize
     }
   });
 
