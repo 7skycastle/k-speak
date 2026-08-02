@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { getCharacter, tutorCharacters } from "./data/characters";
 import { countryPacks, getCountryPack } from "./data/countryPacks";
-import { getContinuationTrack } from "./data/continuationProgram";
+import { getContinuationTrack, type ContinuationModule } from "./data/continuationProgram";
 import { getLesson, getNextLesson, lessons } from "./data/lessons";
 import { audioCatalog, findAudioSlot } from "./data/audioCatalog";
 import { buildReviewItems, getDueReviewItems } from "./engine/reviewEngine";
@@ -109,6 +109,8 @@ const formatDueLabel = (iso: string) => {
   return `${Math.ceil(hours / 24)}일 후`;
 };
 
+const getContinuationStartDay = (module: ContinuationModule) => module.dayRange.match(/\d+/)?.[0] ?? "15";
+
 const reviewKindLabel: Record<NonNullable<SavedPhrase["source"] | "listen" | "speak" | "roleplay">, string> = {
   listen: "듣기",
   speak: "말하기",
@@ -117,6 +119,7 @@ const reviewKindLabel: Record<NonNullable<SavedPhrase["source"] | "listen" | "sp
   response: "반응",
   rescue: "구출",
   swap: "변형",
+  continuation: "다음 코스",
   review: "복습"
 };
 
@@ -232,6 +235,7 @@ export const App = () => {
               onStartLesson={startLesson}
               onReview={() => setTab("review")}
               onLogin={() => setTab("settings")}
+              onPersist={updateState}
             />
           )}
           {tab === "lesson" && (
@@ -435,7 +439,8 @@ const HomeScreen = ({
   savedCount,
   onStartLesson,
   onReview,
-  onLogin
+  onLogin,
+  onPersist
 }: {
   state: UserState;
   characterName: string;
@@ -446,12 +451,29 @@ const HomeScreen = ({
   onStartLesson: () => void;
   onReview: () => void;
   onLogin: () => void;
+  onPersist: (state: UserState) => void;
 }) => {
   const percent = progress ? getLessonPercent(progress) : 0;
   const countryPack = getCountryPack(state.onboarding?.countryPackId);
   const continuationTrack = getContinuationTrack(state.onboarding?.learningGoal);
   const completedCount = getCompletedLessonCount(state);
   const courseCompleted = isCourseCompleted(state);
+  const continuationSavedIds = new Set((state.savedPhrases ?? []).map((phrase) => phrase.id));
+  const saveContinuationPhrase = (module: ContinuationModule, phrase: string, phraseIndex: number) => {
+    const startDay = getContinuationStartDay(module);
+    const phraseId = `${continuationTrack.id}-${startDay}-${phraseIndex + 1}`;
+    const saved = upsertSavedPhrase(state, {
+      id: `day-${startDay}:${phraseId}`,
+      lessonId: `day-${startDay}`,
+      phraseId,
+      korean: phrase,
+      meaning: module.outcome,
+      tags: ["continuation", continuationTrack.id, module.title],
+      source: "continuation",
+      savedAt: new Date().toISOString()
+    });
+    onPersist(trackEvent(saved, { name: "continuation_phrase_saved", lessonId: `day-${startDay}`, success: true }));
+  };
   return (
     <section className="flow">
       <header className="home-hero">
@@ -485,6 +507,8 @@ const HomeScreen = ({
         track={continuationTrack}
         completedCount={completedCount}
         courseCompleted={courseCompleted}
+        savedIds={continuationSavedIds}
+        onSavePhrase={saveContinuationPhrase}
       />
       <AudioReadinessPanel />
       <CountryLearningGuidePanel countryPack={countryPack} />
@@ -513,11 +537,15 @@ const HomeScreen = ({
 const ContinuationPathPanel = ({
   track,
   completedCount,
-  courseCompleted
+  courseCompleted,
+  savedIds,
+  onSavePhrase
 }: {
   track: ReturnType<typeof getContinuationTrack>;
   completedCount: number;
   courseCompleted: boolean;
+  savedIds: Set<string>;
+  onSavePhrase: (module: ContinuationModule, phrase: string, phraseIndex: number) => void;
 }) => (
   <Panel title={courseCompleted ? "Day 15 이후 프로그램" : "Day 14 이후 이어질 길"}>
     <div className="path-summary">
@@ -534,21 +562,34 @@ const ContinuationPathPanel = ({
           <strong>{module.title}</strong>
           <p>{module.outcome}</p>
           <div className="continuation-phrases">
-            {module.samplePhrases.map((phrase) => (
-              <div className="continuation-phrase" key={phrase}>
-                <span>{phrase}</span>
-                <div>
-                  <button className="icon-button compact" onClick={() => speakKorean(phrase, 1)} aria-label={`${phrase} 듣기`}>
-                    <Play />
-                    듣기
-                  </button>
-                  <button className="icon-button compact" onClick={() => speakKorean(phrase, 0.72)} aria-label={`${phrase} 천천히`}>
-                    <Volume2 />
-                    천천히
-                  </button>
+            {module.samplePhrases.map((phrase, phraseIndex) => {
+              const startDay = getContinuationStartDay(module);
+              const savedId = `day-${startDay}:${track.id}-${startDay}-${phraseIndex + 1}`;
+              const isSaved = savedIds.has(savedId);
+              return (
+                <div className="continuation-phrase" key={phrase}>
+                  <span>{phrase}</span>
+                  <div>
+                    <button className="icon-button compact" onClick={() => speakKorean(phrase, 1)} aria-label={`${phrase} 듣기`}>
+                      <Play />
+                      듣기
+                    </button>
+                    <button className="icon-button compact" onClick={() => speakKorean(phrase, 0.72)} aria-label={`${phrase} 천천히`}>
+                      <Volume2 />
+                      천천히
+                    </button>
+                    <button
+                      className={`icon-button compact ${isSaved ? "saved" : ""}`}
+                      onClick={() => onSavePhrase(module, phrase, phraseIndex)}
+                      aria-label={`${phrase} 저장`}
+                    >
+                      <Bookmark />
+                      {isSaved ? "저장됨" : "저장"}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ))}
@@ -1167,7 +1208,7 @@ const SavedPhraseBox = ({
       {phrases.length ? (
         <>
           <div className="filter-row" aria-label="저장 문장 필터">
-            {(["all", "core", "rescue", "swap", "response"] as const).map((filter) => (
+            {(["all", "core", "rescue", "swap", "response", "continuation"] as const).map((filter) => (
               <button
                 key={filter}
                 className={sourceFilter === filter ? "selected" : ""}

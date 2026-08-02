@@ -239,7 +239,7 @@ export interface SavedPhrase {
   romanization?: string;
   meaning: string;
   tags: string[];
-  source: "core" | "response" | "rescue" | "swap" | "review";
+  source: "core" | "response" | "rescue" | "swap" | "review" | "continuation";
   savedAt: string;
   lastPlayedAt?: string;
 }

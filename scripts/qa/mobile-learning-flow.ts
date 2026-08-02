@@ -66,6 +66,7 @@ try {
     await page.getByText("여기로 가 주세요.").waitFor();
     await page.getByRole("button", { name: "여기로 가 주세요. 듣기" }).waitFor();
     await page.getByRole("button", { name: "여기로 가 주세요. 천천히" }).waitFor();
+    await page.getByRole("button", { name: "여기로 가 주세요. 저장" }).click();
     await page.getByText("오프라인 저용량 음원 준비").waitFor();
     await page.getByText("English 학습 설명").waitFor();
     await page.getByRole("button", { name: /시작|이어하기/ }).click();
@@ -75,6 +76,9 @@ try {
     await page.getByRole("button", { name: "복습" }).click();
     await page.getByText("저장 문장함").waitFor();
     await page.getByText("안녕하세요. 만나서 반가워요.").waitFor();
+    await page.getByText("여기로 가 주세요.").waitFor();
+    await page.getByRole("button", { name: "다음 코스" }).click();
+    await page.getByText("여기로 가 주세요.").waitFor();
     await page.getByRole("button", { name: "핵심" }).click();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     if (overflow) throw new Error(`${viewport.name} has horizontal overflow.`);

@@ -734,6 +734,12 @@ select:focus-visible {
   height: 15px;
 }
 
+.icon-button.saved {
+  border-color: var(--primary);
+  background: var(--surface-strong);
+  color: var(--primary);
+}
+
 .audio-controls audio {
   width: min(100%, 320px);
 }
