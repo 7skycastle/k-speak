@@ -41,15 +41,23 @@ describe("lesson catalog", () => {
     }
   });
 
-  it("contains first-pass English and Japanese explanation notes", () => {
+  it("contains localized explanation and pronunciation notes", () => {
     for (const lesson of lessons) {
       expect(lesson.countryNotes["us-en"]).toContain("rhythm");
       expect(lesson.countryNotes["jp-ja"]).toContain("助詞");
       expect(lesson.structure.explanationByCountry["us-en"]).toBeTruthy();
       expect(lesson.structure.explanationByCountry["jp-ja"]).toBeTruthy();
-      expect(lesson.pronunciationByCountry["us-en"]).toContain("rhythm");
-      expect(lesson.pronunciationByCountry["jp-ja"]).toContain("パッチム");
+      expect(lesson.pronunciationByCountry["us-en"]).toBeTruthy();
+      expect(lesson.pronunciationByCountry["jp-ja"]).toBeTruthy();
     }
+
+    const day1 = lessons[0];
+    const day14 = lessons[13];
+
+    expect(day1.structure.explanationByCountry["us-en"]).toContain("polite");
+    expect(day1.pronunciationByCountry["jp-ja"]).toContain("요");
+    expect(day14.structure.explanationByCountry["jp-ja"]).toContain("また会いたい");
+    expect(day14.pronunciationByCountry["us-en"]).toContain("warm rhythm");
   });
 
   it("contains expanded learning guidance for every country pack", () => {
