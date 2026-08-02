@@ -35,6 +35,7 @@ npm run build
 - Day 1 to Day 14 lesson data.
 - Lesson flow includes listening, repeating, recording, comparing, quiz, roleplay, and summary.
 - Day 15 to Day 30 continuation program guidance is shown by learning goal after the first 14-day path.
+- Day 15 to Day 30 continuation sample phrases can be previewed at natural and slow browser-TTS speeds from the home screen.
 - Review screen includes due count, hard-review count, high-priority count, next due timing, and priority context.
 - Home and settings show country-specific learning guidance for pronunciation, structure, review, and offline practice.
 - Home shows static/offline audio readiness for the compact Day 1 to Day 14 audio pack.

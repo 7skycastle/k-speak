@@ -533,7 +533,23 @@ const ContinuationPathPanel = ({
           <span>{module.dayRange}</span>
           <strong>{module.title}</strong>
           <p>{module.outcome}</p>
-          <small>{module.samplePhrases.join(" · ")}</small>
+          <div className="continuation-phrases">
+            {module.samplePhrases.map((phrase) => (
+              <div className="continuation-phrase" key={phrase}>
+                <span>{phrase}</span>
+                <div>
+                  <button className="icon-button compact" onClick={() => speakKorean(phrase, 1)} aria-label={`${phrase} 듣기`}>
+                    <Play />
+                    듣기
+                  </button>
+                  <button className="icon-button compact" onClick={() => speakKorean(phrase, 0.72)} aria-label={`${phrase} 천천히`}>
+                    <Volume2 />
+                    천천히
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>
