@@ -1,5 +1,5 @@
 import type { Session, SupabaseClient, User } from "@supabase/supabase-js";
-import type { AnalyticsEvent, LessonProgress, OnboardingProfile, ReviewItem, UserState } from "../types";
+import type { AnalyticsEvent, LessonProgress, OnboardingProfile, ReviewItem, SavedPhrase, UserState } from "../types";
 import { createInitialState, mergeUserStates, saveState } from "./storage";
 import { getSupabaseClient, isSupabaseConfigured } from "./supabaseClient";
 
@@ -31,10 +31,25 @@ interface ReviewItemRow {
   phrase_id: string;
   korean: string;
   meaning: string;
+  kind?: ReviewItem["kind"] | null;
+  prompt?: string | null;
   reason: string;
   priority: number;
   due_at: string;
   last_result?: ReviewItem["lastResult"] | null;
+}
+
+interface SavedPhraseRow {
+  id: string;
+  lesson_id: string;
+  phrase_id: string;
+  korean: string;
+  romanization?: string | null;
+  meaning: string;
+  tags: string[];
+  source: SavedPhrase["source"];
+  saved_at: string;
+  last_played_at?: string | null;
 }
 
 export const requestEmailSignIn = async (email: string) => {
@@ -114,15 +129,17 @@ export const syncWithSupabase = async (state: UserState, session?: Session | nul
 };
 
 const loadCloudState = async (supabase: SupabaseClient, user: User, anonymousId: string): Promise<UserState> => {
-  const [profileResult, progressResult, reviewResult] = await Promise.all([
+  const [profileResult, progressResult, reviewResult, savedPhraseResult] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle<ProfileRow>(),
     supabase.from("lesson_progress").select("*").eq("user_id", user.id).returns<LessonProgressRow[]>(),
-    supabase.from("review_items").select("*").eq("user_id", user.id).returns<ReviewItemRow[]>()
+    supabase.from("review_items").select("*").eq("user_id", user.id).returns<ReviewItemRow[]>(),
+    supabase.from("saved_phrases").select("*").eq("user_id", user.id).returns<SavedPhraseRow[]>()
   ]);
 
   if (profileResult.error) throw profileResult.error;
   if (progressResult.error) throw progressResult.error;
   if (reviewResult.error) throw reviewResult.error;
+  if (savedPhraseResult.error) throw savedPhraseResult.error;
 
   const cloud = createInitialState();
   cloud.anonymousId = anonymousId;
@@ -130,6 +147,7 @@ const loadCloudState = async (supabase: SupabaseClient, user: User, anonymousId:
   cloud.onboarding = profileResult.data ? profileRowToOnboarding(profileResult.data) : undefined;
   cloud.lessonProgress = Object.fromEntries((progressResult.data ?? []).map((row) => [row.lesson_id, progressRowToState(row)]));
   cloud.reviewItems = (reviewResult.data ?? []).map(reviewRowToState);
+  cloud.savedPhrases = (savedPhraseResult.data ?? []).map(savedPhraseRowToState);
   return cloud;
 };
 
@@ -148,6 +166,14 @@ const persistCloudState = async (supabase: SupabaseClient, user: User, state: Us
   if (state.reviewItems.length) {
     const { error } = await supabase.from("review_items").upsert(
       state.reviewItems.map((item) => reviewToRow(user.id, item)),
+      { onConflict: "id,user_id" }
+    );
+    if (error) throw error;
+  }
+
+  if ((state.savedPhrases ?? []).length) {
+    const { error } = await supabase.from("saved_phrases").upsert(
+      state.savedPhrases.map((item) => savedPhraseToRow(user.id, item)),
       { onConflict: "id,user_id" }
     );
     if (error) throw error;
@@ -187,10 +213,25 @@ const reviewRowToState = (row: ReviewItemRow): ReviewItem => ({
   phraseId: row.phrase_id,
   korean: row.korean,
   meaning: row.meaning,
+  kind: row.kind ?? undefined,
+  prompt: row.prompt ?? undefined,
   reason: row.reason,
   priority: row.priority,
   dueAt: row.due_at,
   lastResult: row.last_result ?? undefined
+});
+
+const savedPhraseRowToState = (row: SavedPhraseRow): SavedPhrase => ({
+  id: row.id,
+  lessonId: row.lesson_id,
+  phraseId: row.phrase_id,
+  korean: row.korean,
+  romanization: row.romanization ?? undefined,
+  meaning: row.meaning,
+  tags: row.tags ?? [],
+  source: row.source,
+  savedAt: row.saved_at,
+  lastPlayedAt: row.last_played_at ?? undefined
 });
 
 const profileToRow = (userId: string, profile: OnboardingProfile): ProfileRow => ({
@@ -223,10 +264,26 @@ const reviewToRow = (userId: string, item: ReviewItem) => ({
   phrase_id: item.phraseId,
   korean: item.korean,
   meaning: item.meaning,
+  kind: item.kind,
+  prompt: item.prompt,
   reason: item.reason,
   priority: item.priority,
   due_at: item.dueAt,
   last_result: item.lastResult
+});
+
+const savedPhraseToRow = (userId: string, item: SavedPhrase) => ({
+  id: item.id,
+  user_id: userId,
+  lesson_id: item.lessonId,
+  phrase_id: item.phraseId,
+  korean: item.korean,
+  romanization: item.romanization,
+  meaning: item.meaning,
+  tags: item.tags,
+  source: item.source,
+  saved_at: item.savedAt,
+  last_played_at: item.lastPlayedAt
 });
 
 const analyticsToRow = (userId: string, anonymousId: string, event: AnalyticsEvent) => ({

@@ -5,6 +5,7 @@ export const requiredTables = [
   "profiles",
   "lesson_progress",
   "review_items",
+  "saved_phrases",
   "analytics_events",
   "guest_merge_requests",
   "country_pack_snapshots"
@@ -39,10 +40,25 @@ export const requiredColumns: Record<(typeof requiredTables)[number], string[]> 
     "phrase_id",
     "korean",
     "meaning",
+    "kind",
+    "prompt",
     "reason",
     "priority",
     "due_at",
     "last_result"
+  ],
+  saved_phrases: [
+    "id",
+    "user_id",
+    "lesson_id",
+    "phrase_id",
+    "korean",
+    "romanization",
+    "meaning",
+    "tags",
+    "source",
+    "saved_at",
+    "last_played_at"
   ],
   analytics_events: ["id", "user_id", "anonymous_id", "name", "properties", "occurred_at"],
   guest_merge_requests: ["id", "user_id", "anonymous_id", "merged_summary", "created_at"],
@@ -59,6 +75,9 @@ export const requiredPolicies = [
   "review_items_select_own",
   "review_items_insert_own",
   "review_items_update_own",
+  "saved_phrases_select_own",
+  "saved_phrases_insert_own",
+  "saved_phrases_update_own",
   "analytics_insert_own_or_guest",
   "analytics_update_own",
   "guest_merge_insert_own",
@@ -121,8 +140,9 @@ export const validateSupabaseSql = (schemaSql: string, rlsSql: string): Supabase
     errors.push("Missing unique constraint for lesson_progress user_id/lesson_id upsert.");
   }
 
-  if (!normalizedSchema.includes("primary key (id, user_id)")) {
-    errors.push("Missing composite primary key for review_items id/user_id upsert.");
+  const primaryKeyMatches = normalizedSchema.match(/primary key \(id, user_id\)/g) ?? [];
+  if (primaryKeyMatches.length < 2) {
+    errors.push("Missing composite primary key for review_items and saved_phrases id/user_id upserts.");
   }
 
   if (!normalizedSchema.includes("grant select, insert, update on public.lesson_progress to authenticated")) {

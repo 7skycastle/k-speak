@@ -11,6 +11,7 @@ describe("lesson catalog", () => {
     for (const lesson of lessons) {
       expect(lesson.steps.at(0)?.id).toBe("situation");
       expect(lesson.steps.at(-1)?.id).toBe("summary");
+      expect(lesson.steps.length).toBeLessThanOrEqual(12);
       expect(lesson.steps.some((step) => step.kind === "listen")).toBe(true);
       expect(lesson.steps.some((step) => step.kind === "record")).toBe(true);
       expect(lesson.steps.some((step) => step.kind === "compare")).toBe(true);
@@ -23,6 +24,11 @@ describe("lesson catalog", () => {
       expect(lesson.swapSlots.length).toBeGreaterThanOrEqual(2);
       expect(lesson.sceneWords).toHaveLength(3);
       expect(lesson.reviewCards.map((card) => card.kind)).toEqual(["listen", "speak", "roleplay"]);
+      expect(lesson.audioTargets.core.korean).toBe(lesson.korean);
+      expect(lesson.audioTargets.response.korean).toBe(lesson.responsePhrase.korean);
+      expect(lesson.audioTargets.rescue.korean).toBe(lesson.rescuePhrase.korean);
+      expect(lesson.audioTargets.dialogue.korean).toContain(lesson.korean);
+      expect(lesson.steps.filter((step) => step.saveTargetId).length).toBeGreaterThanOrEqual(3);
     }
   });
 
@@ -31,6 +37,15 @@ describe("lesson catalog", () => {
       for (const pack of countryPacks) {
         expect(lesson.meaningByCountry[pack.id]).toBeTruthy();
       }
+    }
+  });
+
+  it("contains first-pass English and Japanese explanation notes", () => {
+    for (const lesson of lessons) {
+      expect(lesson.countryNotes["us-en"]).toContain("rhythm");
+      expect(lesson.countryNotes["jp-ja"]).toContain("助詞");
+      expect(lesson.structure.explanationByCountry["us-en"]).toBeTruthy();
+      expect(lesson.structure.explanationByCountry["jp-ja"]).toBeTruthy();
     }
   });
 

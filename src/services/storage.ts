@@ -1,4 +1,4 @@
-import type { LessonProgress, OnboardingProfile, ReviewItem, UserState } from "../types";
+import type { LessonProgress, OnboardingProfile, ReviewItem, SavedPhrase, UserState } from "../types";
 
 const STATE_KEY = "korean-first-talk:user-state:v1";
 const CLOUD_PREFIX = "korean-first-talk:cloud-profile:";
@@ -13,6 +13,7 @@ export const createInitialState = (): UserState => ({
   anonymousId: createId("guest"),
   lessonProgress: {},
   reviewItems: [],
+  savedPhrases: [],
   analyticsEvents: [],
   sync: {
     mode: hasSupabaseEnvironment() ? "supabase-ready" : "local-only",
@@ -93,6 +94,21 @@ export const completeReviewItem = (state: UserState, reviewItemId: string, resul
     )
   });
 
+export const upsertSavedPhrase = (state: UserState, phrase: SavedPhrase): UserState => {
+  const existing = new Map((state.savedPhrases ?? []).map((item) => [item.id, item]));
+  const current = existing.get(phrase.id);
+  existing.set(phrase.id, current && current.savedAt > phrase.savedAt ? current : phrase);
+  return saveState({ ...state, savedPhrases: Array.from(existing.values()) });
+};
+
+export const markSavedPhrasePlayed = (state: UserState, phraseId: string): UserState =>
+  saveState({
+    ...state,
+    savedPhrases: (state.savedPhrases ?? []).map((item) =>
+      item.id === phraseId ? { ...item, lastPlayedAt: now() } : item
+    )
+  });
+
 export const mergeGuestIntoAccount = (state: UserState, email: string): UserState => {
   const normalizedEmail = normalizeEmail(email);
   const cloudKey = `${CLOUD_PREFIX}${normalizedEmail}`;
@@ -169,6 +185,12 @@ export const mergeUserStates = (account: UserState, guest: UserState, email?: st
     if (!reviewItems.has(item.id)) reviewItems.set(item.id, item);
   }
 
+  const savedPhrases = new Map((account.savedPhrases ?? []).map((item) => [item.id, item]));
+  for (const item of guest.savedPhrases ?? []) {
+    const current = savedPhrases.get(item.id);
+    savedPhrases.set(item.id, current && current.savedAt > item.savedAt ? current : item);
+  }
+
   return {
     ...account,
     anonymousId: guest.anonymousId,
@@ -176,6 +198,7 @@ export const mergeUserStates = (account: UserState, guest: UserState, email?: st
     onboarding: guest.onboarding ?? account.onboarding,
     lessonProgress,
     reviewItems: Array.from(reviewItems.values()),
+    savedPhrases: Array.from(savedPhrases.values()),
     analyticsEvents: [...account.analyticsEvents, ...guest.analyticsEvents],
     updatedAt: now()
   };

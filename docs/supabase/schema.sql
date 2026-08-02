@@ -33,10 +33,28 @@ create table if not exists public.review_items (
   phrase_id text not null,
   korean text not null,
   meaning text not null,
+  kind text,
+  prompt text,
   reason text not null,
   priority integer not null,
   due_at timestamptz not null,
   last_result text,
+  updated_at timestamptz not null default now(),
+  primary key (id, user_id)
+);
+
+create table if not exists public.saved_phrases (
+  id text not null,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  lesson_id text not null,
+  phrase_id text not null,
+  korean text not null,
+  romanization text,
+  meaning text not null,
+  tags text[] not null default '{}',
+  source text not null,
+  saved_at timestamptz not null,
+  last_played_at timestamptz,
   updated_at timestamptz not null default now(),
   primary key (id, user_id)
 );
@@ -68,6 +86,7 @@ create table if not exists public.country_pack_snapshots (
 grant select, insert, update on public.profiles to authenticated;
 grant select, insert, update on public.lesson_progress to authenticated;
 grant select, insert, update on public.review_items to authenticated;
+grant select, insert, update on public.saved_phrases to authenticated;
 grant insert, update on public.analytics_events to authenticated;
 grant insert on public.guest_merge_requests to authenticated;
 grant select on public.country_pack_snapshots to anon, authenticated;

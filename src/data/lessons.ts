@@ -29,8 +29,8 @@ const phrase = (
 });
 
 const commonCountryNotes = localized(
-  "Say the Korean first, then check the short structure note.",
-  "まず韓国語を声に出してから、短い構造メモを確認します。",
+  "Korean often puts the object or place before the action. Say the full phrase first, then compare the rhythm instead of chasing a score.",
+  "韓国語は日本語と語順が近いですが、助詞を一対一で置き換えず、最後の요まで一つのかたまりで声に出します。",
   "先开口说韩语，再看简短的句子结构说明。",
   "Hãy nói tiếng Hàn trước, rồi xem ghi chú cấu trúc ngắn.",
   "Primero di la frase en coreano y luego revisa la nota corta."
@@ -436,12 +436,23 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
     },
     reviewCards: reviewCards(seed.day, seed.core, seed.roleplayPrompt),
     countryNotes: commonCountryNotes,
+    audioTargets: {
+      core: seed.core,
+      response: seed.response,
+      rescue: seed.rescue,
+      dialogue: {
+        korean: dialogue.map((line) => line.korean).join(" "),
+        meaningByCountry: seed.core.meaningByCountry
+      },
+      ...Object.fromEntries(seed.swapSlots.map((slot, index) => [`swap-${index + 1}`, slot]))
+    },
     steps: [
       {
         id: "situation",
         kind: "situation",
         title: "오늘의 상황",
         body: seed.situation,
+        audioTargetId: "dialogue",
         reviewWeight: 1
       },
       {
@@ -450,6 +461,7 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         title: "전체 대화 듣기",
         body: "짧은 대화를 먼저 듣고, 오늘 내가 말할 차례를 찾아봅니다.",
         korean: dialogue.map((line) => line.korean).join(" "),
+        audioTargetId: "dialogue",
         reviewWeight: 2
       },
       {
@@ -459,6 +471,8 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         body: "소리와 뜻을 함께 확인합니다.",
         korean: seed.core.korean,
         romanization: seed.core.romanization,
+        audioTargetId: "core",
+        saveTargetId: "core",
         reviewWeight: 2
       },
       {
@@ -466,6 +480,7 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         kind: "structure",
         title: "문장 뼈대",
         body: "문법 이름보다 먼저 바로 써먹을 문장틀을 확인합니다.",
+        audioTargetId: "core",
         reviewWeight: 2
       },
       {
@@ -473,21 +488,9 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         kind: "swap",
         title: "바꿔 말하기",
         body: "단어 하나만 바꿔 같은 장면에서 다시 말합니다.",
+        audioTargetId: "swap-1",
+        saveTargetId: "swap-1",
         reviewWeight: 2
-      },
-      {
-        id: "meaning",
-        kind: "meaning",
-        title: "뜻 확인",
-        body: "상황에 맞게 짧고 정중하게 사용할 수 있는 표현입니다.",
-        reviewWeight: 1
-      },
-      {
-        id: "scene-words",
-        kind: "scene-words",
-        title: "장면 단어 3개",
-        body: "오늘 대화를 꺼낼 때 필요한 단어만 짧게 확인합니다.",
-        reviewWeight: 1
       },
       {
         id: "natural-listen",
@@ -495,6 +498,7 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         title: "자연 속도로 듣기",
         body: "먼저 전체 리듬을 들어 봅니다.",
         korean: seed.core.korean,
+        audioTargetId: "core",
         reviewWeight: 2
       },
       {
@@ -503,6 +507,7 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         title: "느린 속도로 듣기",
         body: "낯선 소리를 천천히 확인합니다.",
         korean: seed.core.korean,
+        audioTargetId: "core",
         reviewWeight: 2
       },
       {
@@ -511,6 +516,8 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         title: "내 목소리로 말하기",
         body: "한 번 말해 보고, 필요하면 다시 녹음합니다.",
         korean: seed.core.korean,
+        audioTargetId: "core",
+        saveTargetId: "core",
         reviewWeight: 4
       },
       {
@@ -519,6 +526,7 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         title: "원본과 내 목소리 비교",
         body: "점수 대신 원본과 내 리듬을 번갈아 들어 봅니다.",
         korean: seed.core.korean,
+        audioTargetId: "core",
         reviewWeight: 4
       },
       {
@@ -537,6 +545,8 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
         title: "짧은 역할극",
         body: "상대의 짧은 반응 뒤에 오늘 문장으로 답합니다.",
         korean: seed.core.korean,
+        audioTargetId: "response",
+        saveTargetId: "rescue",
         reviewWeight: 3
       },
       {

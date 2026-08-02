@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   BookOpen,
+  Bookmark,
   Check,
   Home,
   LoaderCircle,
@@ -32,10 +33,12 @@ import {
   completeReviewItem,
   loadState,
   logoutLocalAccount,
+  markSavedPhrasePlayed,
   mergeGuestIntoAccount,
   updateOnboarding,
   upsertLessonProgress,
-  upsertReviewItems
+  upsertReviewItems,
+  upsertSavedPhrase
 } from "./services/storage";
 import { describeSupabaseStatus } from "./services/supabaseClient";
 import { markSyncAttempt } from "./services/sync";
@@ -56,6 +59,7 @@ import type {
   LessonProgress,
   LessonStep,
   OnboardingProfile,
+  SavedPhrase,
   UserState
 } from "./types";
 
@@ -81,6 +85,17 @@ const goalLabels: Record<LearningGoal, string> = {
 const goalOptions: LearningGoal[] = ["travel", "daily", "study", "work", "life", "k-content"];
 const levelOptions: KoreanLevel[] = ["first-time", "beginner", "returning", "daily"];
 const minuteOptions: DailyGoalMinutes[] = [3, 5, 10, 15];
+
+const reviewKindLabel: Record<NonNullable<SavedPhrase["source"] | "listen" | "speak" | "roleplay">, string> = {
+  listen: "듣기",
+  speak: "말하기",
+  roleplay: "역할극",
+  core: "핵심",
+  response: "반응",
+  rescue: "구출",
+  swap: "변형",
+  review: "복습"
+};
 
 const defaultOnboarding: OnboardingProfile = {
   countryPackId: "us-en",
@@ -186,11 +201,11 @@ export const App = () => {
           {tab === "home" && (
             <HomeScreen
               state={state}
-              countryLabel={countryPack.label}
               characterName={character.name}
               lesson={currentLesson}
               progress={progress}
               reviewCount={dueReviews.length}
+              savedCount={state.savedPhrases?.length ?? 0}
               onStartLesson={startLesson}
               onReview={() => setTab("review")}
               onLogin={() => setTab("settings")}
@@ -390,21 +405,21 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
 
 const HomeScreen = ({
   state,
-  countryLabel,
   characterName,
   lesson,
   progress,
   reviewCount,
+  savedCount,
   onStartLesson,
   onReview,
   onLogin
 }: {
   state: UserState;
-  countryLabel: string;
   characterName: string;
   lesson: ReturnType<typeof getLesson>;
   progress?: LessonProgress;
   reviewCount: number;
+  savedCount: number;
   onStartLesson: () => void;
   onReview: () => void;
   onLogin: () => void;
@@ -420,8 +435,8 @@ const HomeScreen = ({
       <div className="home-grid">
         <Metric label="오늘 수업" value={progress?.status === "completed" ? `Day ${lesson.day} 완료` : `Day ${lesson.day}`} />
         <Metric label="복습 문장" value={`${reviewCount}개`} />
+        <Metric label="저장 문장" value={`${savedCount}개`} />
         <Metric label="튜터" value={characterName} />
-        <Metric label="국가팩" value={countryLabel} />
       </div>
       <Panel title={progress?.status === "completed" ? "다음은 짧은 복습이에요" : "이어 할 수업"}>
         <div className="lesson-preview">
@@ -484,7 +499,12 @@ const LessonScreen = ({
   const character = getCharacter(state.onboarding?.characterId);
   const countryPack = getCountryPack(state.onboarding?.countryPackId);
   const meaning = lesson.meaningByCountry[countryPack.id];
-  const audioSlot = findAudioSlot(lesson.id, character.id);
+  const audioTargetId = step.audioTargetId ?? "core";
+  const audioTarget = lesson.audioTargets[audioTargetId] ?? lesson.audioTargets.core;
+  const audioSlot = findAudioSlot(lesson.id, character.id, audioTargetId);
+  const saveTarget = step.saveTargetId ? (lesson.audioTargets[step.saveTargetId] ?? lesson.audioTargets.core) : undefined;
+  const savePhraseId = step.saveTargetId ? `${lesson.id}:${step.saveTargetId}` : "";
+  const isSaved = Boolean(savePhraseId && (state.savedPhrases ?? []).some((item) => item.id === savePhraseId));
   const [selectedChoice, setSelectedChoice] = useState("");
   const [hintVisible, setHintVisible] = useState(false);
   const [startMs, setStartMs] = useState(Date.now());
@@ -514,7 +534,7 @@ const LessonScreen = ({
   };
 
   const playOriginal = async (rate: number) => {
-    const result = await playLessonAudio(audioSlot, step.korean ?? lesson.korean, rate < 1 ? "slow" : "natural");
+    const result = await playLessonAudio(audioSlot, audioTarget.korean, rate < 1 ? "slow" : "natural");
     setAudioStatus(result);
     const metricKey = rate < 1 ? "slowPlayCount" : "naturalPlayCount";
     const currentMetric = activeProgress.metrics[step.id];
@@ -541,6 +561,29 @@ const LessonScreen = ({
     }
     onPersist(nextState);
     if (!result.ok) onError(result.message);
+  };
+
+  const saveCurrentPhrase = () => {
+    if (!step.saveTargetId || !saveTarget) return;
+    const source: SavedPhrase["source"] = step.saveTargetId.startsWith("swap")
+      ? "swap"
+      : step.saveTargetId === "rescue"
+        ? "rescue"
+        : step.saveTargetId === "response"
+          ? "response"
+          : "core";
+    const saved = upsertSavedPhrase(state, {
+      id: savePhraseId,
+      lessonId: lesson.id,
+      phraseId: step.saveTargetId,
+      korean: saveTarget.korean,
+      romanization: saveTarget.romanization,
+      meaning: saveTarget.meaningByCountry[countryPack.id],
+      tags: [source, ...lesson.sceneWords.slice(0, 2)],
+      source,
+      savedAt: new Date().toISOString()
+    });
+    onPersist(trackEvent(saved, { name: "phrase_saved", lessonId: lesson.id, stepId: step.id, success: true }));
   };
 
   const startRecording = async () => {
@@ -631,7 +674,13 @@ const LessonScreen = ({
           selectedChoice={selectedChoice}
           setSelectedChoice={setSelectedChoice}
         />
-        {(step.kind === "listen" || step.kind === "repeat" || step.kind === "compare") && (
+        {saveTarget && (
+          <button className={`wide-button quiet ${isSaved ? "saved" : ""}`} onClick={saveCurrentPhrase}>
+            <Bookmark />
+            {isSaved ? "저장한 문장" : "문장 저장"}
+          </button>
+        )}
+        {(step.kind === "dialogue" || step.kind === "listen" || step.kind === "repeat" || step.kind === "compare" || step.kind === "roleplay") && (
           <div className="audio-controls">
             <button className="icon-button" onClick={() => playOriginal(1)}>
               <Volume2 />
@@ -739,7 +788,7 @@ const LessonStepBody = ({
         ))}
       </div>
     )}
-    {step.kind === "scene-words" && (
+    {(step.kind === "situation" || step.kind === "scene-words") && (
       <div className="word-chip-row">
         {lesson.sceneWords.map((word) => (
           <span key={word}>{word}</span>
@@ -859,6 +908,10 @@ const ReviewScreen = ({
   const dueReviews = getDueReviewItems(state.reviewItems);
   const [activeIndex, setActiveIndex] = useState(0);
   const active = dueReviews[activeIndex];
+  const playSavedPhrase = (phrase: SavedPhrase, rate: number) => {
+    speakKorean(phrase.korean, rate);
+    onPersist(markSavedPhrasePlayed(state, phrase.id));
+  };
 
   if (!state.reviewItems.length) {
     return (
@@ -871,6 +924,7 @@ const ReviewScreen = ({
         <button className="primary-action" onClick={onStartLesson}>
           Day 1 학습하기
         </button>
+        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} />
       </section>
     );
   }
@@ -882,6 +936,7 @@ const ReviewScreen = ({
         <button className="primary-action" onClick={onStartLesson}>
           신규 수업으로 이동
         </button>
+        <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} />
       </section>
     );
   }
@@ -890,7 +945,10 @@ const ReviewScreen = ({
     <section className="flow">
       <ProgressHeader current={activeIndex + 1} total={dueReviews.length} title="3분 복습" />
       <Panel title={active.reason}>
+        {active.kind && <span className="review-badge">{reviewKindLabel[active.kind]}</span>}
         {active.prompt && <p className="culture-note">{active.prompt}</p>}
+        {active.kind === "speak" && <p className="muted">뜻을 먼저 보고 한국어를 말한 뒤 음성을 재생해 비교합니다.</p>}
+        {active.kind === "roleplay" && <p className="muted">상대 문장을 듣고 오늘 문장으로 바로 답합니다.</p>}
         <div className="korean-phrase">
           <strong>{active.korean}</strong>
           <small>{active.meaning}</small>
@@ -906,6 +964,7 @@ const ReviewScreen = ({
           </button>
         </div>
       </Panel>
+      <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} />
       <div className="sticky-actions">
         <button
           className="secondary-action"
@@ -931,6 +990,42 @@ const ReviewScreen = ({
     </section>
   );
 };
+
+const SavedPhraseBox = ({
+  phrases,
+  onPlay
+}: {
+  phrases: SavedPhrase[];
+  onPlay: (phrase: SavedPhrase, rate: number) => void;
+}) => (
+  <Panel title="저장 문장함">
+    {phrases.length ? (
+      <div className="saved-list">
+        {phrases.slice(0, 6).map((phrase) => (
+          <div className="saved-row" key={phrase.id}>
+            <div>
+              <span className="review-badge">{reviewKindLabel[phrase.source]}</span>
+              <strong>{phrase.korean}</strong>
+              <small>{phrase.meaning}</small>
+            </div>
+            <div className="audio-controls">
+              <button className="icon-button" onClick={() => onPlay(phrase, 1)}>
+                <Play />
+                듣기
+              </button>
+              <button className="icon-button" onClick={() => onPlay(phrase, 0.72)}>
+                <Volume2 />
+                천천히
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p className="muted">수업 중 문장 저장을 누르면 여기에 모입니다.</p>
+    )}
+  </Panel>
+);
 
 const SettingsScreen = ({
   state,

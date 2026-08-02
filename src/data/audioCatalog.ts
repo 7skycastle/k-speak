@@ -60,11 +60,14 @@ export const audioCatalog: AudioSlot[] = [
   )
 ];
 
-export const findAudioSlot = (lessonId: string, characterId: string) =>
+export const findAudioSlot = (lessonId: string, characterId: string, sentenceId = "core") =>
+  audioCatalog.find(
+    (slot) => slot.lessonId === lessonId && slot.characterId === characterId && slot.sentenceId === sentenceId
+  ) ??
   audioCatalog.find((slot) => slot.lessonId === lessonId && slot.characterId === characterId) ??
   createBrowserTtsSlot(
     lessonId,
     characterId as AudioSlot["characterId"],
-    "lesson-phrase",
-    `Optional: add free/static natural and slow files for ${lessonId}/${characterId}, then update this generated fallback slot.`
+    sentenceId,
+    `Optional: add free/static natural and slow files for ${lessonId}/${characterId}/${sentenceId}, then update this generated fallback slot.`
   );

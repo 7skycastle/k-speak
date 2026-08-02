@@ -33,6 +33,17 @@ describe("audio catalog", () => {
     }
   });
 
+  it("returns sentence-level fallback slots for dialogue, rescue, and swap targets", () => {
+    const dialogue = findAudioSlot("day-2", "haneul", "dialogue");
+    const rescue = findAudioSlot("day-2", "haneul", "rescue");
+    const swap = findAudioSlot("day-2", "haneul", "swap-1");
+
+    expect(dialogue.sentenceId).toBe("dialogue");
+    expect(rescue.sentenceId).toBe("rescue");
+    expect(swap.sentenceId).toBe("swap-1");
+    expect(dialogue.usesTtsFallback).toBe(true);
+  });
+
   it("links all tutor characters to free browser voice profiles", () => {
     for (const character of tutorCharacters) {
       expect(character.voiceProfile.provider).toBe("browser_speech_synthesis");

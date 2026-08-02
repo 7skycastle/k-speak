@@ -1,6 +1,7 @@
 alter table public.profiles enable row level security;
 alter table public.lesson_progress enable row level security;
 alter table public.review_items enable row level security;
+alter table public.saved_phrases enable row level security;
 alter table public.analytics_events enable row level security;
 alter table public.guest_merge_requests enable row level security;
 alter table public.country_pack_snapshots enable row level security;
@@ -30,6 +31,15 @@ create policy "review_items_insert_own" on public.review_items
   for insert to authenticated with check ((select auth.uid()) = user_id);
 
 create policy "review_items_update_own" on public.review_items
+  for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+
+create policy "saved_phrases_select_own" on public.saved_phrases
+  for select to authenticated using ((select auth.uid()) = user_id);
+
+create policy "saved_phrases_insert_own" on public.saved_phrases
+  for insert to authenticated with check ((select auth.uid()) = user_id);
+
+create policy "saved_phrases_update_own" on public.saved_phrases
   for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 
 create policy "analytics_insert_own_or_guest" on public.analytics_events

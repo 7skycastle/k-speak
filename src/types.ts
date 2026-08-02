@@ -135,6 +135,8 @@ export interface LessonStep {
   choices?: string[];
   answer?: string;
   hint?: string;
+  audioTargetId?: string;
+  saveTargetId?: string;
   reviewWeight?: number;
 }
 
@@ -189,6 +191,7 @@ export interface Lesson {
   roleplay: LessonRoleplay;
   reviewCards: LessonReviewCard[];
   countryNotes: Record<CountryPackId, string>;
+  audioTargets: Record<string, LocalizedPhrase>;
   steps: LessonStep[];
 }
 
@@ -218,6 +221,19 @@ export interface ReviewItem {
   lastResult?: "success" | "hard";
 }
 
+export interface SavedPhrase {
+  id: string;
+  lessonId: string;
+  phraseId: string;
+  korean: string;
+  romanization?: string;
+  meaning: string;
+  tags: string[];
+  source: "core" | "response" | "rescue" | "swap" | "review";
+  savedAt: string;
+  lastPlayedAt?: string;
+}
+
 export interface LessonProgress {
   lessonId: string;
   status: LessonStatus;
@@ -234,6 +250,7 @@ export interface UserState {
   onboarding?: OnboardingProfile;
   lessonProgress: Record<string, LessonProgress>;
   reviewItems: ReviewItem[];
+  savedPhrases: SavedPhrase[];
   analyticsEvents: AnalyticsEvent[];
   sync: SyncState;
   updatedAt: string;
