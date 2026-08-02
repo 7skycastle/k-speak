@@ -34,6 +34,10 @@ npm run build
 - Tutor characters: Haneul, Jun, Mina, Taeho.
 - Day 1 to Day 14 lesson data.
 - Lesson flow includes listening, repeating, recording, comparing, quiz, roleplay, and summary.
+- Day 15 to Day 30 continuation program guidance is shown by learning goal after the first 14-day path.
+- Review screen includes due count, hard-review count, high-priority count, next due timing, and priority context.
+- Home and settings show country-specific learning guidance for pronunciation, structure, review, and offline practice.
+- Home shows static/offline audio readiness for the compact Day 1 to Day 14 audio pack.
 - Review items are generated after completed lessons.
 - Local progress persistence is implemented.
 - Supabase email OTP and progress sync are ready when env vars are configured.
@@ -116,6 +120,7 @@ Supabase project creation was previously attempted through MCP but returned `INV
 ## Remaining Work
 
 - Select a license-approved local Korean TTS model, generate audition files through `tools/tts`, then update `src/data/audioCatalog.ts`.
+- Replace the Day 15 to Day 30 continuation guidance with full playable lessons when the next curriculum is approved.
 - Create/configure the dedicated Supabase project and add env vars in Vercel.
 - Apply `docs/supabase/schema.sql` and `docs/supabase/rls.sql`.
 - Run an end-to-end Supabase OTP/progress merge check after env vars are configured.

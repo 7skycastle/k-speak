@@ -20,8 +20,9 @@ import {
 } from "lucide-react";
 import { getCharacter, tutorCharacters } from "./data/characters";
 import { countryPacks, getCountryPack } from "./data/countryPacks";
-import { getLesson, getNextLesson } from "./data/lessons";
-import { findAudioSlot } from "./data/audioCatalog";
+import { getContinuationTrack } from "./data/continuationProgram";
+import { getLesson, getNextLesson, lessons } from "./data/lessons";
+import { audioCatalog, findAudioSlot } from "./data/audioCatalog";
 import { buildReviewItems, getDueReviewItems } from "./engine/reviewEngine";
 import {
   completeStep,
@@ -88,6 +89,25 @@ const goalLabels: Record<LearningGoal, string> = {
 const goalOptions: LearningGoal[] = ["travel", "daily", "study", "work", "life", "k-content"];
 const levelOptions: KoreanLevel[] = ["first-time", "beginner", "returning", "daily"];
 const minuteOptions: DailyGoalMinutes[] = [3, 5, 10, 15];
+
+const audioTargetCount = lessons.reduce((count, lesson) => count + Object.keys(lesson.audioTargets).length, 0);
+const totalAudioSlots = audioTargetCount * tutorCharacters.length;
+const staticAudioSlots = audioCatalog.filter((slot) => slot.naturalUrl && slot.slowUrl).length;
+const fallbackAudioSlots = totalAudioSlots - staticAudioSlots;
+
+const isCourseCompleted = (state: UserState) =>
+  lessons.every((lesson) => state.lessonProgress[lesson.id]?.status === "completed");
+
+const getCompletedLessonCount = (state: UserState) =>
+  lessons.filter((lesson) => state.lessonProgress[lesson.id]?.status === "completed").length;
+
+const formatDueLabel = (iso: string) => {
+  const deltaMs = new Date(iso).getTime() - Date.now();
+  if (deltaMs <= 0) return "지금";
+  const hours = Math.ceil(deltaMs / (60 * 60 * 1000));
+  if (hours < 24) return `${hours}시간 후`;
+  return `${Math.ceil(hours / 24)}일 후`;
+};
 
 const reviewKindLabel: Record<NonNullable<SavedPhrase["source"] | "listen" | "speak" | "roleplay">, string> = {
   listen: "듣기",
@@ -428,6 +448,10 @@ const HomeScreen = ({
   onLogin: () => void;
 }) => {
   const percent = progress ? getLessonPercent(progress) : 0;
+  const countryPack = getCountryPack(state.onboarding?.countryPackId);
+  const continuationTrack = getContinuationTrack(state.onboarding?.learningGoal);
+  const completedCount = getCompletedLessonCount(state);
+  const courseCompleted = isCourseCompleted(state);
   return (
     <section className="flow">
       <header className="home-hero">
@@ -457,6 +481,13 @@ const HomeScreen = ({
           <span style={{ width: `${percent}%` }} />
         </div>
       </Panel>
+      <ContinuationPathPanel
+        track={continuationTrack}
+        completedCount={completedCount}
+        courseCompleted={courseCompleted}
+      />
+      <AudioReadinessPanel />
+      <CountryLearningGuidePanel countryPack={countryPack} />
       {reviewCount > 0 ? (
         <button className="wide-button review" onClick={onReview}>
           <RefreshCcw />
@@ -478,6 +509,62 @@ const HomeScreen = ({
     </section>
   );
 };
+
+const ContinuationPathPanel = ({
+  track,
+  completedCount,
+  courseCompleted
+}: {
+  track: ReturnType<typeof getContinuationTrack>;
+  completedCount: number;
+  courseCompleted: boolean;
+}) => (
+  <Panel title={courseCompleted ? "Day 15 이후 프로그램" : "Day 14 이후 이어질 길"}>
+    <div className="path-summary">
+      <span className="review-badge">{completedCount}/14 완료</span>
+      <div>
+        <strong>{track.title}</strong>
+        <p className="muted">{track.promise}</p>
+      </div>
+    </div>
+    <div className="program-grid">
+      {track.modules.map((module) => (
+        <div className="program-card" key={module.dayRange}>
+          <span>{module.dayRange}</span>
+          <strong>{module.title}</strong>
+          <p>{module.outcome}</p>
+          <small>{module.samplePhrases.join(" · ")}</small>
+        </div>
+      ))}
+    </div>
+  </Panel>
+);
+
+const AudioReadinessPanel = () => (
+  <Panel title="오프라인 저용량 음원 준비">
+    <div className="readiness-grid">
+      <Metric label="학습 음원 슬롯" value={`${totalAudioSlots}개`} />
+      <Metric label="정적 파일 연결" value={`${staticAudioSlots}개`} />
+      <Metric label="브라우저 대체" value={`${fallbackAudioSlots}개`} />
+    </div>
+    <p className="muted">
+      Day 1-14 문장은 자연 속도와 느린 속도 기준으로 고정되어 있습니다. 실제 무료 정적 음원이 연결되기 전에는 브라우저
+      한국어 음성으로 학습을 이어갑니다.
+    </p>
+  </Panel>
+);
+
+const CountryLearningGuidePanel = ({ countryPack }: { countryPack: ReturnType<typeof getCountryPack> }) => (
+  <Panel title={`${countryPack.nativeLabel} 학습 설명`}>
+    <div className="guide-list">
+      <SummaryRow label="초점" value={countryPack.learningGuide.focus} />
+      <SummaryRow label="발음" value={countryPack.learningGuide.pronunciation} />
+      <SummaryRow label="구조" value={countryPack.learningGuide.grammarBridge} />
+      <SummaryRow label="복습" value={countryPack.learningGuide.reviewHabit} />
+      <SummaryRow label="오프라인" value={countryPack.learningGuide.offlineTip} />
+    </div>
+  </Panel>
+);
 
 const LessonScreen = ({
   state,
@@ -942,6 +1029,7 @@ const ReviewScreen = ({
   if (!active) {
     return (
       <section className="flow">
+        <ReviewOverview state={state} dueCount={dueReviews.length} />
         <StatePanel icon={<Check />} title="오늘 복습은 끝났어요" body="다음 복습 시간에 다시 짧게 확인합니다." />
         <button className="primary-action" onClick={onStartLesson}>
           신규 수업으로 이동
@@ -953,9 +1041,16 @@ const ReviewScreen = ({
 
   return (
     <section className="flow">
+      <ReviewOverview state={state} dueCount={dueReviews.length} />
       <ProgressHeader current={activeIndex + 1} total={dueReviews.length} title="3분 복습" />
       <Panel title={active.reason}>
         {active.kind && <span className="review-badge">{reviewKindLabel[active.kind]}</span>}
+        <div className="review-priority-meter" aria-label={`복습 우선순위 ${active.priority}`}>
+          <span style={{ width: `${Math.min(active.priority, 100)}%` }} />
+        </div>
+        <p className="source-note">
+          {active.lastResult === "hard" ? "지난 복습에서 어렵다고 표시한 문장입니다." : "수업 중 반복, 힌트, 녹음 기록을 바탕으로 예약된 문장입니다."}
+        </p>
         {active.prompt && <p className="culture-note">{active.prompt}</p>}
         {active.kind === "speak" && <p className="muted">뜻을 먼저 보고 한국어를 말한 뒤 음성을 재생해 비교합니다.</p>}
         {active.kind === "roleplay" && <p className="muted">상대 문장을 듣고 오늘 문장으로 바로 답합니다.</p>}
@@ -998,6 +1093,27 @@ const ReviewScreen = ({
         </button>
       </div>
     </section>
+  );
+};
+
+const ReviewOverview = ({ state, dueCount }: { state: UserState; dueCount: number }) => {
+  const hardCount = state.reviewItems.filter((item) => item.lastResult === "hard").length;
+  const highPriorityCount = state.reviewItems.filter((item) => item.priority >= 55).length;
+  const nextDue = state.reviewItems
+    .filter((item) => new Date(item.dueAt).getTime() > Date.now())
+    .sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime())[0];
+
+  return (
+    <Panel title="복습 상태">
+      <div className="readiness-grid">
+        <Metric label="오늘 할 문장" value={`${dueCount}개`} />
+        <Metric label="어려움 표시" value={`${hardCount}개`} />
+        <Metric label="높은 우선순위" value={`${highPriorityCount}개`} />
+      </div>
+      <p className="muted">
+        {nextDue ? `다음 예약 복습은 ${formatDueLabel(nextDue.dueAt)}에 열립니다.` : "새 수업을 완료하면 다음 복습 시간이 자동으로 예약됩니다."}
+      </p>
+    </Panel>
   );
 };
 
@@ -1162,6 +1278,7 @@ const SettingsScreen = ({
           현재 {pack.label} 국가팩과 {character.name} 튜터가 홈, 수업, 복습 안내에 반영됩니다.
         </p>
       </Panel>
+      <CountryLearningGuidePanel countryPack={pack} />
       <Panel title="계정 연결">
         <label className="field">
           <span>이메일</span>

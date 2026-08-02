@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { countryPacks } from "./countryPacks";
+import { continuationTracks, getContinuationTrack } from "./continuationProgram";
 import { findAudioSlot } from "./audioCatalog";
 import { lessons } from "./lessons";
 import { tutorCharacters } from "./characters";
@@ -48,6 +49,29 @@ describe("lesson catalog", () => {
       expect(lesson.structure.explanationByCountry["jp-ja"]).toBeTruthy();
       expect(lesson.pronunciationByCountry["us-en"]).toContain("rhythm");
       expect(lesson.pronunciationByCountry["jp-ja"]).toContain("パッチム");
+    }
+  });
+
+  it("contains expanded learning guidance for every country pack", () => {
+    for (const pack of countryPacks) {
+      expect(pack.learningGuide.focus).toBeTruthy();
+      expect(pack.learningGuide.pronunciation).toBeTruthy();
+      expect(pack.learningGuide.grammarBridge).toBeTruthy();
+      expect(pack.learningGuide.reviewHabit).toBeTruthy();
+      expect(pack.learningGuide.offlineTip).toBeTruthy();
+    }
+  });
+
+  it("maps every learning goal to a Day 15 through Day 30 continuation program", () => {
+    const expectedGoals = ["travel", "daily", "study", "work", "life", "k-content"];
+
+    expect(continuationTracks.map((track) => track.id).sort()).toEqual(expectedGoals.sort());
+
+    for (const goal of expectedGoals) {
+      const track = getContinuationTrack(goal as (typeof continuationTracks)[number]["id"]);
+      expect(track.title).toContain("Day 15-30");
+      expect(track.modules).toHaveLength(3);
+      expect(track.modules.every((module) => module.samplePhrases.length >= 3)).toBe(true);
     }
   });
 

@@ -5,6 +5,14 @@ export type LearningGoal = "travel" | "daily" | "study" | "work" | "life" | "k-c
 export type DailyGoalMinutes = 3 | 5 | 10 | 15;
 export type LessonStatus = "not-started" | "in-progress" | "completed";
 
+export interface CountryLearningGuide {
+  focus: string;
+  pronunciation: string;
+  grammarBridge: string;
+  reviewHabit: string;
+  offlineTip: string;
+}
+
 export interface CountryPack {
   id: CountryPackId;
   label: string;
@@ -16,6 +24,7 @@ export interface CountryPack {
   feedback: string[];
   reminders: string[];
   comebackMessage: string;
+  learningGuide: CountryLearningGuide;
   preferredGoals: LearningGoal[];
   defaultDailyGoal: DailyGoalMinutes;
   notificationWindow: string;

@@ -20,12 +20,12 @@ Passed:
 Current unit test result:
 
 - 8 test files passed
-- 28 tests passed
+- 30 tests passed
 
 Build result:
 
 - Vite production build passed
-- Output JS gzip size: 90.61 kB
+- Output JS gzip size: 94.36 kB
 
 Audio validation result:
 

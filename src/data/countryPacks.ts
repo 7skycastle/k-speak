@@ -12,6 +12,13 @@ export const countryPacks: CountryPack[] = [
     feedback: ["Nice and clear.", "Try the ending one more time.", "That sounded natural enough to use today."],
     reminders: ["Three minutes is enough for one phrase.", "Come back for a short speaking check."],
     comebackMessage: "Pick up from the sentence you practiced last time.",
+    learningGuide: {
+      focus: "Start by saying the whole sentence aloud before reading grammar.",
+      pronunciation: "Listen for the final polite ending. Rhythm matters more than perfect romanization.",
+      grammarBridge: "Korean often places the object or place before the action, then finishes with the polite ending.",
+      reviewHabit: "Save phrases you could use today, then replay them slowly before trying normal speed.",
+      offlineTip: "Keep the compact Day 1-14 audio pack ready for travel or weak network moments."
+    },
     preferredGoals: ["travel", "daily", "k-content"],
     defaultDailyGoal: 5,
     notificationWindow: "18:00-21:00",
@@ -38,6 +45,13 @@ export const countryPacks: CountryPack[] = [
     feedback: ["いい流れです。", "語尾を少しだけ長く言ってみましょう。", "今日そのまま使える表現です。"],
     reminders: ["3分だけ韓国語を声に出しましょう。", "昨日の表現を短く確認します。"],
     comebackMessage: "前回練習した表現から続けましょう。",
+    learningGuide: {
+      focus: "日本語に似た丁寧さを使いながら、まず韓国語の語尾を声に出します。",
+      pronunciation: "パッチムと連音を短く確認し、最後の「요」を急がずに言います。",
+      grammarBridge: "助詞は日本語と似ていますが、은/는 と 이/가 は固定訳で覚えすぎないようにします。",
+      reviewHabit: "保存した文を見ずに一度言ってから、ゆっくり音声で確認します。",
+      offlineTip: "通勤中でも使えるように、Day 1-14 の軽量音声を優先します。"
+    },
     preferredGoals: ["travel", "daily", "work"],
     defaultDailyGoal: 5,
     notificationWindow: "19:00-22:00",
@@ -64,6 +78,13 @@ export const countryPacks: CountryPack[] = [
     feedback: ["表达很清楚。", "结尾再慢一点会更自然。", "这是今天就能使用的句子。"],
     reminders: ["用3分钟练一句韩语。", "回来复习昨天觉得难的表达。"],
     comebackMessage: "从你上次练过的句子继续。",
+    learningGuide: {
+      focus: "先用完整韩语句子开口，不用英语作为中间语言。",
+      pronunciation: "注意收音和连读，先听句尾礼貌语气，再跟读。",
+      grammarBridge: "用中文说明句子结构，但练习时只保留韩语语序。",
+      reviewHabit: "把听不清或说得慢的句子加入复习，第二天重新说一遍。",
+      offlineTip: "保留低容量音频包，方便在通勤和网络不稳定时复习。"
+    },
     preferredGoals: ["study", "work", "life"],
     defaultDailyGoal: 10,
     notificationWindow: "20:00-22:00",
@@ -90,6 +111,13 @@ export const countryPacks: CountryPack[] = [
     feedback: ["Rất rõ ràng.", "Thử nói phần cuối chậm hơn một chút.", "Câu này có thể dùng ngay hôm nay."],
     reminders: ["Ba phút là đủ cho một câu.", "Quay lại luyện câu bạn thấy khó hôm qua."],
     comebackMessage: "Tiếp tục từ câu bạn đã luyện lần trước.",
+    learningGuide: {
+      focus: "Bắt đầu bằng câu dùng ngay trong đời sống, sau đó mới xem giải thích ngắn.",
+      pronunciation: "Nghe phần cuối câu và phụ âm cuối trước, rồi lặp lại chậm.",
+      grammarBridge: "Giải thích bằng tiếng Việt ngắn gọn, nhưng thứ tự luyện nói vẫn theo tiếng Hàn.",
+      reviewHabit: "Ôn lại câu đã lưu trước khi đi làm, đi học hoặc ra ngoài.",
+      offlineTip: "Ưu tiên gói âm thanh nhẹ để học khi mạng yếu hoặc dùng điện thoại cấu hình thấp."
+    },
     preferredGoals: ["work", "life", "daily"],
     defaultDailyGoal: 10,
     notificationWindow: "19:30-21:30",
@@ -116,6 +144,13 @@ export const countryPacks: CountryPack[] = [
     feedback: ["Se entiende bien.", "Prueba el final un poco mas suave.", "Esa frase ya puedes usarla hoy."],
     reminders: ["Tres minutos alcanzan para una frase.", "Vuelve para comparar tu voz con el modelo."],
     comebackMessage: "Retoma desde la frase que practicaste antes.",
+    learningGuide: {
+      focus: "Habla una frase completa primero; la gramatica aparece solo para ayudarte a usarla.",
+      pronunciation: "Escucha el cierre de la frase y repite el ritmo antes de mirar la romanizacion.",
+      grammarBridge: "El coreano marca cortesia al final; no todo se resuelve con una sola palabra como please.",
+      reviewHabit: "Guarda frases utiles y repitelas lento antes de usarlas a velocidad normal.",
+      offlineTip: "Mantén listo el paquete ligero Day 1-14 para practicar sin depender de buena conexion."
+    },
     preferredGoals: ["travel", "daily", "k-content"],
     defaultDailyGoal: 5,
     notificationWindow: "18:00-21:00",

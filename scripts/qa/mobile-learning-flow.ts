@@ -61,6 +61,10 @@ try {
       localStorage.setItem("korean-first-talk:user-state:v1", JSON.stringify(value));
     }, state);
     await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded" });
+    await page.getByText("Day 14 이후 이어질 길").waitFor();
+    await page.getByText("Day 15-30 여행 생존 말하기").waitFor();
+    await page.getByText("오프라인 저용량 음원 준비").waitFor();
+    await page.getByText("English 학습 설명").waitFor();
     await page.getByRole("button", { name: /시작|이어하기/ }).click();
     await page.getByRole("button", { name: "계속" }).click();
     await page.getByRole("button", { name: "계속" }).click();
@@ -71,7 +75,7 @@ try {
     await page.getByRole("button", { name: "핵심" }).click();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     if (overflow) throw new Error(`${viewport.name} has horizontal overflow.`);
-    console.log(`${viewport.name}: saved phrase review flow passed`);
+    console.log(`${viewport.name}: home program and saved phrase review flow passed`);
     await page.close();
   }
   await browser.close();
