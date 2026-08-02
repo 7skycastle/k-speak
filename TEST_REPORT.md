@@ -25,18 +25,18 @@ Current unit test result:
 Build result:
 
 - Vite production build passed
-- Output JS gzip size: 94.73 kB
+- Output JS gzip size: 103.99 kB
 
 Audio validation result:
 
-- 336 lesson/character audio slots checked
+- 720 lesson/character audio slots checked
 - 0 validation errors
-- 312 generated browser-TTS fallback slot warnings
+- 696 generated browser-TTS fallback slot warnings
 
 TTS metadata validation result:
 
-- 90 sentence targets checked
-- 720 generated manifest entries checked
+- 186 sentence targets checked
+- 1,488 generated manifest entries checked
 - 80 comparison audio entries checked
 - 80 listening review audio entries checked
 

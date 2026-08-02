@@ -409,6 +409,360 @@ const lessonSeeds = [
     ],
     sceneWords: ["다음", "또", "즐거웠어요"],
     roleplayPrompt: phrase("오늘 어땠어요?", "Oneul eottaesseoyo?", "How was today?", "今日はどうでしたか。", "今天怎么样？", "Hôm nay thế nào?", "¿Qué tal estuvo hoy?")
+  },
+  {
+    day: 15,
+    title: "목적지 말하기",
+    situation: "택시나 길 안내 상황에서 어디로 가고 싶은지 분명하게 말합니다.",
+    phraseId: "go-here-please",
+    core: phrase("여기로 가 주세요.", "Yeogiro ga juseyo.", "Please go here.", "ここへ行ってください。", "请去这里。", "Làm ơn đi đến đây.", "Por favor, vaya aquí."),
+    response: phrase("네, 알겠습니다.", "Ne, algesseumnida.", "Okay, I understand.", "はい、わかりました。", "好的，明白了。", "Vâng, tôi hiểu rồi.", "Sí, entendido."),
+    rescue: phrase("주소를 보여 드릴게요.", "Jusoreul boyeo deurilgeyo.", "I will show you the address.", "住所をお見せします。", "我给您看地址。", "Tôi sẽ cho bạn xem địa chỉ.", "Le muestro la dirección."),
+    dialogue: [
+      { speaker: "기사", text: "어디로 가세요?" },
+      { speaker: "학습자", text: "여기로 가 주세요." },
+      { speaker: "기사", text: "네, 알겠습니다." },
+      { speaker: "학습자", text: "주소를 보여 드릴게요." }
+    ],
+    structurePattern: "장소 + 로 가 주세요",
+    structureExplanation: localized("Use `-로 가 주세요` to ask someone to go toward a place.", "`-로 가 주세요`で行き先を丁寧に伝えます。", "用 `-로 가 주세요` 礼貌地说明目的地。", "Dùng `-로 가 주세요` để nói điểm đến.", "Usa `-로 가 주세요` para indicar el destino."),
+    swapSlots: [
+      phrase("호텔로 가 주세요.", "Hotello ga juseyo.", "Please go to the hotel.", "ホテルへ行ってください。", "请去酒店。", "Làm ơn đi đến khách sạn.", "Vaya al hotel, por favor."),
+      phrase("역으로 가 주세요.", "Yeogeuro ga juseyo.", "Please go to the station.", "駅へ行ってください。", "请去车站。", "Làm ơn đi đến ga.", "Vaya a la estación, por favor.")
+    ],
+    sceneWords: ["여기", "주소", "택시"],
+    roleplayPrompt: phrase("어디로 가세요?", "Eodiro gaseyo?", "Where are you going?", "どこへ行きますか。", "你要去哪里？", "Bạn đi đâu?", "¿A dónde va?")
+  },
+  {
+    day: 16,
+    title: "출구 번호 묻기",
+    situation: "지하철역에서 어느 출구로 나가야 하는지 묻습니다.",
+    phraseId: "which-exit",
+    core: phrase("몇 번 출구예요?", "Myeot beon chulguyeyo?", "Which exit number is it?", "何番出口ですか。", "是几号出口？", "Là cửa ra số mấy?", "¿Qué número de salida es?"),
+    response: phrase("삼 번 출구예요.", "Sam beon chulguyeyo.", "It is exit three.", "三番出口です。", "三号出口。", "Cửa ra số ba.", "Es la salida tres."),
+    rescue: phrase("지도에서 보여 주세요.", "Jidoeseo boyeo juseyo.", "Please show me on the map.", "地図で見せてください。", "请在地图上给我看。", "Hãy chỉ trên bản đồ giúp tôi.", "Muéstremelo en el mapa."),
+    dialogue: [
+      { speaker: "학습자", text: "몇 번 출구예요?" },
+      { speaker: "상대", text: "삼 번 출구예요." },
+      { speaker: "학습자", text: "지도에서 보여 주세요." }
+    ],
+    structurePattern: "몇 번 + N예요?",
+    structureExplanation: localized("Use `몇 번` when asking for a number like an exit or bus.", "`몇 번`は出口やバス番号を聞くときに使います。", "`몇 번` 用来问出口、公交等号码。", "Dùng `몇 번` để hỏi số cửa ra hoặc xe buýt.", "Usa `몇 번` para preguntar un número."),
+    swapSlots: [
+      phrase("몇 번 버스예요?", "Myeot beon beoseuyeyo?", "Which bus number is it?", "何番バスですか。", "是几路公交？", "Xe buýt số mấy?", "¿Qué número de autobús es?"),
+      phrase("몇 번 방이에요?", "Myeot beon bangieyo?", "Which room number is it?", "何号室ですか。", "是几号房？", "Phòng số mấy?", "¿Qué número de habitación es?")
+    ],
+    sceneWords: ["몇 번", "출구", "지도"],
+    roleplayPrompt: phrase("어디로 나가세요?", "Eodiro nagaseyo?", "Where are you exiting?", "どちらへ出ますか。", "你从哪里出去？", "Bạn ra hướng nào?", "¿Por dónde sale?")
+  },
+  {
+    day: 17,
+    title: "내릴 곳 말하기",
+    situation: "택시나 버스에서 여기서 내리고 싶다고 말합니다.",
+    phraseId: "get-off-here",
+    core: phrase("여기서 내려 주세요.", "Yeogiseo naeryeo juseyo.", "Please let me off here.", "ここで降ろしてください。", "请在这里下车。", "Cho tôi xuống ở đây.", "Déjeme bajar aquí, por favor."),
+    response: phrase("네, 여기서 세울게요.", "Ne, yeogiseo seulkkeyo.", "Okay, I will stop here.", "はい、ここで止めます。", "好的，我在这里停。", "Vâng, tôi sẽ dừng ở đây.", "Sí, paro aquí."),
+    rescue: phrase("조금 더 가 주세요.", "Jogeum deo ga juseyo.", "Please go a little farther.", "もう少し進んでください。", "请再往前一点。", "Đi thêm một chút giúp tôi.", "Avance un poco más, por favor."),
+    dialogue: [
+      { speaker: "학습자", text: "여기서 내려 주세요." },
+      { speaker: "기사", text: "네, 여기서 세울게요." },
+      { speaker: "학습자", text: "조금 더 가 주세요." }
+    ],
+    structurePattern: "여기서 + V-아/어 주세요",
+    structureExplanation: localized("Use `여기서` to mark the place where an action happens.", "`여기서`は動作をする場所を示します。", "`여기서` 表示动作发生的地方。", "`여기서` chỉ nơi hành động diễn ra.", "`여기서` marca el lugar de la acción."),
+    swapSlots: [
+      phrase("여기서 기다려 주세요.", "Yeogiseo gidaryeo juseyo.", "Please wait here.", "ここで待ってください。", "请在这里等。", "Hãy chờ ở đây.", "Espere aquí, por favor."),
+      phrase("여기서 멈춰 주세요.", "Yeogiseo meomchwo juseyo.", "Please stop here.", "ここで止まってください。", "请在这里停。", "Dừng ở đây giúp tôi.", "Deténgase aquí, por favor.")
+    ],
+    sceneWords: ["여기서", "내려", "조금 더"],
+    roleplayPrompt: phrase("어디서 내리세요?", "Eodiseo naeriseyo?", "Where are you getting off?", "どこで降りますか。", "你在哪里下车？", "Bạn xuống ở đâu?", "¿Dónde baja?")
+  },
+  {
+    day: 18,
+    title: "예상 시간 묻기",
+    situation: "이동 중 목적지까지 얼마나 걸리는지 확인합니다.",
+    phraseId: "how-long",
+    core: phrase("얼마나 걸려요?", "Eolmana geollyeoyo?", "How long does it take?", "どのくらいかかりますか。", "要多久？", "Mất bao lâu?", "¿Cuánto tarda?"),
+    response: phrase("십 분 정도 걸려요.", "Sip bun jeongdo geollyeoyo.", "It takes about ten minutes.", "10分くらいかかります。", "大概要十分钟。", "Mất khoảng mười phút.", "Tarda unos diez minutos."),
+    rescue: phrase("급하지 않아요.", "Geuphaji anayo.", "I am not in a hurry.", "急いでいません。", "我不着急。", "Tôi không vội.", "No tengo prisa."),
+    dialogue: [
+      { speaker: "학습자", text: "얼마나 걸려요?" },
+      { speaker: "상대", text: "십 분 정도 걸려요." },
+      { speaker: "학습자", text: "급하지 않아요." }
+    ],
+    structurePattern: "얼마나 + V-아요/어요?",
+    structureExplanation: localized("Use `얼마나` to ask about amount, time, or degree.", "`얼마나`は時間や量を聞くときに使います。", "`얼마나` 用来问时间、数量或程度。", "Dùng `얼마나` để hỏi thời gian hoặc mức độ.", "Usa `얼마나` para preguntar cantidad o tiempo."),
+    swapSlots: [
+      phrase("얼마나 멀어요?", "Eolmana meoreoyo?", "How far is it?", "どのくらい遠いですか。", "有多远？", "Xa bao nhiêu?", "¿Qué tan lejos está?"),
+      phrase("얼마나 비싸요?", "Eolmana bissayo?", "How expensive is it?", "どのくらい高いですか。", "有多贵？", "Đắt bao nhiêu?", "¿Qué tan caro es?")
+    ],
+    sceneWords: ["얼마나", "걸려요", "십 분"],
+    roleplayPrompt: phrase("시간 괜찮으세요?", "Sigan gwaenchaneuseyo?", "Is the timing okay?", "時間は大丈夫ですか。", "时间可以吗？", "Thời gian ổn không?", "¿Le va bien el tiempo?")
+  },
+  {
+    day: 19,
+    title: "맵지 않게 요청하기",
+    situation: "식당에서 매운맛을 줄여 달라고 부탁합니다.",
+    phraseId: "not-spicy",
+    core: phrase("맵지 않게 해 주세요.", "Maepji anke hae juseyo.", "Please make it not spicy.", "辛くないようにしてください。", "请做得不辣。", "Làm ơn làm không cay.", "Por favor, que no sea picante."),
+    response: phrase("네, 안 맵게 해 드릴게요.", "Ne, an maepge hae deurilgeyo.", "Okay, I will make it not spicy.", "はい、辛くないようにします。", "好的，我给您做不辣。", "Vâng, tôi sẽ làm không cay.", "Sí, lo preparo sin picante."),
+    rescue: phrase("조금만 맵게 해 주세요.", "Jogeumman maepge hae juseyo.", "Please make it only a little spicy.", "少しだけ辛くしてください。", "请做得微辣。", "Làm cay một chút thôi.", "Solo un poco picante, por favor."),
+    dialogue: [
+      { speaker: "직원", text: "맵게 해 드릴까요?" },
+      { speaker: "학습자", text: "맵지 않게 해 주세요." },
+      { speaker: "직원", text: "네, 안 맵게 해 드릴게요." }
+    ],
+    structurePattern: "A-지 않게 해 주세요",
+    structureExplanation: localized("Use this to ask for something to be made in a certain way.", "`-지 않게`で「そうならないように」と頼めます。", "用 `-지 않게` 表示“不要变成那样”。", "Dùng `-지 않게` để yêu cầu tránh trạng thái đó.", "Usa `-지 않게` para pedir que no quede de cierta forma."),
+    swapSlots: [
+      phrase("짜지 않게 해 주세요.", "Jjaji anke hae juseyo.", "Please make it not salty.", "塩辛くないようにしてください。", "请做得不咸。", "Làm không mặn giúp tôi.", "Que no sea salado, por favor."),
+      phrase("달지 않게 해 주세요.", "Dalji anke hae juseyo.", "Please make it not sweet.", "甘くないようにしてください。", "请做得不甜。", "Làm không ngọt giúp tôi.", "Que no sea dulce, por favor.")
+    ],
+    sceneWords: ["맵지 않게", "조금만", "식당"],
+    roleplayPrompt: phrase("맵게 해 드릴까요?", "Maepge hae deurilkkayo?", "Should I make it spicy?", "辛くしましょうか。", "要做辣一点吗？", "Bạn muốn cay không?", "¿Lo quiere picante?")
+  },
+  {
+    day: 20,
+    title: "알레르기 말하기",
+    situation: "먹지 못하는 재료가 있을 때 미리 알립니다.",
+    phraseId: "allergy",
+    core: phrase("저는 땅콩 알레르기가 있어요.", "Jeoneun ttangkong allereugiga isseoyo.", "I have a peanut allergy.", "私はピーナッツアレルギーがあります。", "我对花生过敏。", "Tôi bị dị ứng đậu phộng.", "Tengo alergia al cacahuate."),
+    response: phrase("알겠습니다. 빼 드릴게요.", "Algesseumnida. Ppae deurilgeyo.", "Understood. I will leave it out.", "わかりました。抜きますね。", "明白了。我会去掉。", "Tôi hiểu. Tôi sẽ bỏ ra.", "Entendido. Lo quitamos."),
+    rescue: phrase("이거 들어가요?", "Igeo deureogayo?", "Does this contain it?", "これは入っていますか。", "这里面有吗？", "Món này có không?", "¿Esto lo contiene?"),
+    dialogue: [
+      { speaker: "학습자", text: "저는 땅콩 알레르기가 있어요." },
+      { speaker: "직원", text: "알겠습니다. 빼 드릴게요." },
+      { speaker: "학습자", text: "이거 들어가요?" }
+    ],
+    structurePattern: "저는 + N 알레르기가 있어요",
+    structureExplanation: localized("Use this to clearly state an allergy or food restriction.", "アレルギーや食べられない物をはっきり伝えます。", "用来清楚说明过敏或忌口。", "Dùng để nói rõ dị ứng hoặc món không ăn được.", "Úsalo para decir una alergia claramente."),
+    swapSlots: [
+      phrase("저는 우유 알레르기가 있어요.", "Jeoneun uyu allereugiga isseoyo.", "I have a milk allergy.", "私は牛乳アレルギーがあります。", "我对牛奶过敏。", "Tôi dị ứng sữa.", "Tengo alergia a la leche."),
+      phrase("저는 고기를 못 먹어요.", "Jeoneun gogireul mot meogeoyo.", "I cannot eat meat.", "私は肉を食べられません。", "我不能吃肉。", "Tôi không ăn được thịt.", "No puedo comer carne.")
+    ],
+    sceneWords: ["알레르기", "땅콩", "빼 주세요"],
+    roleplayPrompt: phrase("못 드시는 음식이 있어요?", "Mot deusineun eumsigi isseoyo?", "Is there any food you cannot eat?", "食べられないものはありますか。", "有不能吃的食物吗？", "Có món nào bạn không ăn được không?", "¿Hay algo que no pueda comer?")
+  },
+  {
+    day: 21,
+    title: "따로 포장 부탁하기",
+    situation: "음식을 나눠 담거나 따로 포장해 달라고 요청합니다.",
+    phraseId: "pack-separately",
+    core: phrase("따로 포장해 주세요.", "Ttaro pojanghae juseyo.", "Please pack it separately.", "別々に包んでください。", "请分开打包。", "Làm ơn gói riêng.", "Empáquelo por separado, por favor."),
+    response: phrase("네, 따로 해 드릴게요.", "Ne, ttaro hae deurilgeyo.", "Okay, I will do it separately.", "はい、別々にします。", "好的，我给您分开。", "Vâng, tôi sẽ làm riêng.", "Sí, lo separo."),
+    rescue: phrase("봉투 하나 더 주세요.", "Bongtu hana deo juseyo.", "Please give me one more bag.", "袋をもう一つください。", "请再给我一个袋子。", "Cho tôi thêm một túi.", "Deme una bolsa más, por favor."),
+    dialogue: [
+      { speaker: "학습자", text: "따로 포장해 주세요." },
+      { speaker: "직원", text: "네, 따로 해 드릴게요." },
+      { speaker: "학습자", text: "봉투 하나 더 주세요." }
+    ],
+    structurePattern: "따로 + V-아/어 주세요",
+    structureExplanation: localized("Use `따로` when asking to separate items or actions.", "`따로`は別々にしてほしい時に使います。", "`따로` 表示分开、另外。", "Dùng `따로` khi muốn tách riêng.", "Usa `따로` para pedir algo separado."),
+    swapSlots: [
+      phrase("따로 계산해 주세요.", "Ttaro gyesanhae juseyo.", "Please calculate separately.", "別々に会計してください。", "请分开结账。", "Tính riêng giúp tôi.", "Cobren por separado, por favor."),
+      phrase("따로 주세요.", "Ttaro juseyo.", "Please give it separately.", "別にください。", "请分开给我。", "Cho riêng giúp tôi.", "Démelo aparte, por favor.")
+    ],
+    sceneWords: ["따로", "포장", "봉투"],
+    roleplayPrompt: phrase("같이 포장해 드릴까요?", "Gachi pojanghae deurilkkayo?", "Should I pack them together?", "一緒に包みましょうか。", "要一起打包吗？", "Gói chung được không?", "¿Lo empaco junto?")
+  },
+  {
+    day: 22,
+    title: "계산 요청하기",
+    situation: "식당이나 카페에서 계산을 부탁합니다.",
+    phraseId: "check-please",
+    core: phrase("계산해 주세요.", "Gyesanhae juseyo.", "Please ring me up.", "お会計をお願いします。", "请结账。", "Tính tiền giúp tôi.", "La cuenta, por favor."),
+    response: phrase("카드로 하세요?", "Kadeuro haseyo?", "Will you pay by card?", "カードで払いますか。", "您刷卡吗？", "Bạn trả bằng thẻ không?", "¿Paga con tarjeta?"),
+    rescue: phrase("영수증 주세요.", "Yeongsujeung juseyo.", "Please give me a receipt.", "レシートをください。", "请给我收据。", "Cho tôi hóa đơn.", "Deme el recibo, por favor."),
+    dialogue: [
+      { speaker: "학습자", text: "계산해 주세요." },
+      { speaker: "직원", text: "카드로 하세요?" },
+      { speaker: "학습자", text: "영수증 주세요." }
+    ],
+    structurePattern: "N으로 하세요?",
+    structureExplanation: localized("Use `-으로` to ask or say the method, like card or cash.", "`-으로`は支払い方法などを表します。", "`-으로` 表示方式，比如刷卡或现金。", "Dùng `-으로` để nói phương thức.", "Usa `-으로` para el método de pago."),
+    swapSlots: [
+      phrase("현금으로 할게요.", "Hyeongeumeuro halgeyo.", "I will pay in cash.", "現金で払います。", "我用现金。", "Tôi trả bằng tiền mặt.", "Pago en efectivo."),
+      phrase("카드로 할게요.", "Kadeuro halgeyo.", "I will pay by card.", "カードで払います。", "我刷卡。", "Tôi trả bằng thẻ.", "Pago con tarjeta.")
+    ],
+    sceneWords: ["계산", "카드", "영수증"],
+    roleplayPrompt: phrase("결제 도와드릴까요?", "Gyeolje dowadeurilkkayo?", "May I help you pay?", "お支払いをお手伝いしましょうか。", "需要帮您付款吗？", "Tôi giúp thanh toán nhé?", "¿Le ayudo con el pago?")
+  },
+  {
+    day: 23,
+    title: "물건을 잃어버렸다고 말하기",
+    situation: "분실 상황에서 무엇을 잃어버렸는지 말합니다.",
+    phraseId: "lost-item",
+    core: phrase("지갑을 잃어버렸어요.", "Jigabeul ireobeoryeosseoyo.", "I lost my wallet.", "財布をなくしました。", "我丢了钱包。", "Tôi làm mất ví.", "Perdí mi cartera."),
+    response: phrase("어디에서 잃어버리셨어요?", "Eodieseo ireobeorisyeosseoyo?", "Where did you lose it?", "どこでなくしましたか。", "你在哪里丢的？", "Bạn mất ở đâu?", "¿Dónde la perdió?"),
+    rescue: phrase("도와주실 수 있어요?", "Dowajusil su isseoyo?", "Could you help me?", "手伝っていただけますか。", "可以帮我吗？", "Bạn có thể giúp tôi không?", "¿Podría ayudarme?"),
+    dialogue: [
+      { speaker: "학습자", text: "지갑을 잃어버렸어요." },
+      { speaker: "상대", text: "어디에서 잃어버리셨어요?" },
+      { speaker: "학습자", text: "도와주실 수 있어요?" }
+    ],
+    structurePattern: "N을/를 잃어버렸어요",
+    structureExplanation: localized("Use this when something is lost and you need help.", "物をなくした時に使う表現です。", "丢东西时使用。", "Dùng khi bạn làm mất đồ.", "Úsalo cuando perdiste algo."),
+    swapSlots: [
+      phrase("휴대폰을 잃어버렸어요.", "Hyudaeponeul ireobeoryeosseoyo.", "I lost my phone.", "携帯をなくしました。", "我丢了手机。", "Tôi làm mất điện thoại.", "Perdí mi teléfono."),
+      phrase("가방을 잃어버렸어요.", "Gabang-eul ireobeoryeosseoyo.", "I lost my bag.", "かばんをなくしました。", "我丢了包。", "Tôi làm mất túi.", "Perdí mi bolsa.")
+    ],
+    sceneWords: ["지갑", "잃어버렸어요", "도움"],
+    roleplayPrompt: phrase("무슨 일이에요?", "Museun irieyo?", "What happened?", "どうしましたか。", "发生什么事了？", "Có chuyện gì vậy?", "¿Qué pasó?")
+  },
+  {
+    day: 24,
+    title: "예약 바꾸기",
+    situation: "예약 시간이나 날짜를 바꾸고 싶다고 말합니다.",
+    phraseId: "change-reservation",
+    core: phrase("예약을 바꾸고 싶어요.", "Yeyageul bakkugo sipeoyo.", "I would like to change my reservation.", "予約を変更したいです。", "我想改预约。", "Tôi muốn đổi đặt chỗ.", "Quisiera cambiar mi reservación."),
+    response: phrase("언제로 바꾸시겠어요?", "Eonjero bakkusigesseoyo?", "When would you like to change it to?", "いつに変更しますか。", "想改到什么时候？", "Bạn muốn đổi sang khi nào?", "¿Para cuándo quiere cambiarla?"),
+    rescue: phrase("내일로 가능해요?", "Naeillo ganeunghaeyo?", "Is tomorrow possible?", "明日にできますか。", "明天可以吗？", "Ngày mai được không?", "¿Es posible mañana?"),
+    dialogue: [
+      { speaker: "학습자", text: "예약을 바꾸고 싶어요." },
+      { speaker: "직원", text: "언제로 바꾸시겠어요?" },
+      { speaker: "학습자", text: "내일로 가능해요?" }
+    ],
+    structurePattern: "N을/를 바꾸고 싶어요",
+    structureExplanation: localized("Use this when you want to change a reservation, time, or plan.", "予約や時間を変更したい時に使います。", "想更改预约、时间或计划时使用。", "Dùng khi muốn đổi lịch hoặc kế hoạch.", "Úsalo para cambiar una reserva o plan."),
+    swapSlots: [
+      phrase("시간을 바꾸고 싶어요.", "Siganeul bakkugo sipeoyo.", "I want to change the time.", "時間を変えたいです。", "我想改时间。", "Tôi muốn đổi giờ.", "Quiero cambiar la hora."),
+      phrase("날짜를 바꾸고 싶어요.", "Naljjareul bakkugo sipeoyo.", "I want to change the date.", "日付を変えたいです。", "我想改日期。", "Tôi muốn đổi ngày.", "Quiero cambiar la fecha.")
+    ],
+    sceneWords: ["예약", "바꾸고", "내일"],
+    roleplayPrompt: phrase("예약 도와드릴까요?", "Yeyak dowadeurilkkayo?", "May I help with your reservation?", "予約をお手伝いしましょうか。", "需要帮您预约吗？", "Tôi giúp đặt chỗ nhé?", "¿Le ayudo con la reserva?")
+  },
+  {
+    day: 25,
+    title: "날씨 이야기하기",
+    situation: "가벼운 대화를 시작하기 위해 날씨를 말합니다.",
+    phraseId: "nice-weather",
+    core: phrase("오늘 날씨 좋네요.", "Oneul nalssi joneyo.", "The weather is nice today.", "今日は天気がいいですね。", "今天天气很好。", "Hôm nay thời tiết đẹp nhỉ.", "Hoy hace buen tiempo."),
+    response: phrase("그러게요. 정말 좋네요.", "Geureogeyo. Jeongmal joneyo.", "Yes, it really is nice.", "そうですね。本当にいいですね。", "是啊，真的很好。", "Đúng vậy. Rất đẹp.", "Sí, está muy bien."),
+    rescue: phrase("조금 추워요.", "Jogeum chuwoyo.", "It is a little cold.", "少し寒いです。", "有点冷。", "Hơi lạnh.", "Hace un poco de frío."),
+    dialogue: [
+      { speaker: "학습자", text: "오늘 날씨 좋네요." },
+      { speaker: "상대", text: "그러게요. 정말 좋네요." },
+      { speaker: "학습자", text: "조금 추워요." }
+    ],
+    structurePattern: "N 좋네요",
+    structureExplanation: localized("Use `-네요` for a soft reaction to what you notice.", "`-네요`は気づいたことをやわらかく言う表現です。", "`-네요` 用来柔和地表达发现或感受。", "Dùng `-네요` để nhận xét nhẹ nhàng.", "Usa `-네요` para una observación suave."),
+    swapSlots: [
+      phrase("분위기 좋네요.", "Bunwigi joneyo.", "The atmosphere is nice.", "雰囲気がいいですね。", "气氛很好。", "Không khí tốt nhỉ.", "El ambiente está bien."),
+      phrase("여기 좋네요.", "Yeogi joneyo.", "This place is nice.", "ここはいいですね。", "这里很好。", "Ở đây đẹp nhỉ.", "Este lugar está bien.")
+    ],
+    sceneWords: ["날씨", "좋네요", "추워요"],
+    roleplayPrompt: phrase("오늘 날씨 어때요?", "Oneul nalssi eottaeyo?", "How is the weather today?", "今日の天気はどうですか。", "今天天气怎么样？", "Thời tiết hôm nay thế nào?", "¿Cómo está el clima hoy?")
+  },
+  {
+    day: 26,
+    title: "약속 시간 정하기",
+    situation: "친구나 동료와 만날 시간을 정합니다.",
+    phraseId: "what-time-meet",
+    core: phrase("몇 시에 만날까요?", "Myeot sie mannalkkayo?", "What time shall we meet?", "何時に会いましょうか。", "几点见面？", "Mấy giờ gặp nhau?", "¿A qué hora nos vemos?"),
+    response: phrase("세 시에 만나요.", "Se sie mannayo.", "Let us meet at three.", "3時に会いましょう。", "三点见。", "Gặp lúc ba giờ nhé.", "Nos vemos a las tres."),
+    rescue: phrase("조금 늦을 것 같아요.", "Jogeum neujeul geot gatayo.", "I think I will be a little late.", "少し遅れそうです。", "我可能会晚一点。", "Tôi nghĩ sẽ trễ một chút.", "Creo que llegaré un poco tarde."),
+    dialogue: [
+      { speaker: "학습자", text: "몇 시에 만날까요?" },
+      { speaker: "친구", text: "세 시에 만나요." },
+      { speaker: "학습자", text: "조금 늦을 것 같아요." }
+    ],
+    structurePattern: "몇 시에 + V-ㄹ까요?",
+    structureExplanation: localized("Use `-ㄹ까요?` to suggest or ask what to do together.", "`-ㄹ까요?`は一緒に決める時に使います。", "`-ㄹ까요?` 用来一起商量。", "Dùng `-ㄹ까요?` khi cùng quyết định.", "Usa `-ㄹ까요?` para proponer juntos."),
+    swapSlots: [
+      phrase("어디에서 만날까요?", "Eodieseo mannalkkayo?", "Where shall we meet?", "どこで会いましょうか。", "在哪里见？", "Gặp ở đâu?", "¿Dónde nos vemos?"),
+      phrase("내일 만날까요?", "Naeil mannalkkayo?", "Shall we meet tomorrow?", "明日会いましょうか。", "明天见吗？", "Ngày mai gặp nhé?", "¿Nos vemos mañana?")
+    ],
+    sceneWords: ["몇 시", "만날까요", "늦을"],
+    roleplayPrompt: phrase("언제 만날까요?", "Eonje mannalkkayo?", "When shall we meet?", "いつ会いましょうか。", "什么时候见？", "Khi nào gặp?", "¿Cuándo nos vemos?")
+  },
+  {
+    day: 27,
+    title: "좋아하는 것 말하기",
+    situation: "음식이나 콘텐츠 취향을 짧게 말합니다.",
+    phraseId: "i-like-this",
+    core: phrase("이거 정말 좋아해요.", "Igeo jeongmal joahaeyo.", "I really like this.", "これが本当に好きです。", "我真的很喜欢这个。", "Tôi rất thích cái này.", "Esto me gusta mucho."),
+    response: phrase("저도 좋아해요.", "Jeodo joahaeyo.", "I like it too.", "私も好きです。", "我也喜欢。", "Tôi cũng thích.", "A mí también me gusta."),
+    rescue: phrase("추천해 주세요.", "Chucheonhae juseyo.", "Please recommend something.", "おすすめしてください。", "请推荐一下。", "Hãy gợi ý giúp tôi.", "Recomiéndeme algo, por favor."),
+    dialogue: [
+      { speaker: "학습자", text: "이거 정말 좋아해요." },
+      { speaker: "친구", text: "저도 좋아해요." },
+      { speaker: "학습자", text: "추천해 주세요." }
+    ],
+    structurePattern: "N을/를 좋아해요",
+    structureExplanation: localized("Use `좋아해요` for preferences, not only romantic liking.", "`좋아해요`は好みを表す時にも使えます。", "`좋아해요` 可用于表达喜好。", "Dùng `좋아해요` để nói sở thích.", "Usa `좋아해요` para gustos."),
+    swapSlots: [
+      phrase("이 노래 좋아해요.", "I norae joahaeyo.", "I like this song.", "この歌が好きです。", "我喜欢这首歌。", "Tôi thích bài hát này.", "Me gusta esta canción."),
+      phrase("이 음식 좋아해요.", "I eumsik joahaeyo.", "I like this food.", "この食べ物が好きです。", "我喜欢这个食物。", "Tôi thích món này.", "Me gusta esta comida.")
+    ],
+    sceneWords: ["좋아해요", "추천", "노래"],
+    roleplayPrompt: phrase("뭐 좋아해요?", "Mwo joahaeyo?", "What do you like?", "何が好きですか。", "你喜欢什么？", "Bạn thích gì?", "¿Qué le gusta?")
+  },
+  {
+    day: 28,
+    title: "병원 증상 말하기",
+    situation: "몸이 좋지 않을 때 증상을 짧게 말합니다.",
+    phraseId: "head-hurts",
+    core: phrase("머리가 아파요.", "Meoriga apayo.", "My head hurts.", "頭が痛いです。", "我头疼。", "Tôi đau đầu.", "Me duele la cabeza."),
+    response: phrase("언제부터 아팠어요?", "Eonjebuteo apasseoyo?", "Since when has it hurt?", "いつから痛いですか。", "从什么时候开始疼？", "Đau từ khi nào?", "¿Desde cuándo le duele?"),
+    rescue: phrase("약을 사고 싶어요.", "Yageul sago sipeoyo.", "I want to buy medicine.", "薬を買いたいです。", "我想买药。", "Tôi muốn mua thuốc.", "Quiero comprar medicina."),
+    dialogue: [
+      { speaker: "학습자", text: "머리가 아파요." },
+      { speaker: "직원", text: "언제부터 아팠어요?" },
+      { speaker: "학습자", text: "약을 사고 싶어요." }
+    ],
+    structurePattern: "몸 + 이/가 아파요",
+    structureExplanation: localized("Use body part + `아파요` to explain symptoms simply.", "体の部分に`아파요`をつけて症状を言います。", "身体部位加 `아파요` 可说明症状。", "Dùng bộ phận cơ thể + `아파요` để nói triệu chứng.", "Usa parte del cuerpo + `아파요` para síntomas."),
+    swapSlots: [
+      phrase("배가 아파요.", "Baega apayo.", "My stomach hurts.", "お腹が痛いです。", "我肚子疼。", "Tôi đau bụng.", "Me duele el estómago."),
+      phrase("목이 아파요.", "Mogi apayo.", "My throat hurts.", "喉が痛いです。", "我嗓子疼。", "Tôi đau họng.", "Me duele la garganta.")
+    ],
+    sceneWords: ["머리", "아파요", "약"],
+    roleplayPrompt: phrase("어디가 아프세요?", "Eodiga apeuseyo?", "Where does it hurt?", "どこが痛いですか。", "哪里疼？", "Bạn đau ở đâu?", "¿Dónde le duele?")
+  },
+  {
+    day: 29,
+    title: "서류 확인 부탁하기",
+    situation: "은행이나 행정 창구에서 필요한 서류를 확인합니다.",
+    phraseId: "check-document",
+    core: phrase("이 서류가 필요해요?", "I seoryuga piryohaeyo?", "Do I need this document?", "この書類が必要ですか。", "需要这份文件吗？", "Có cần giấy tờ này không?", "¿Necesito este documento?"),
+    response: phrase("네, 필요해요.", "Ne, piryohaeyo.", "Yes, you need it.", "はい、必要です。", "是的，需要。", "Vâng, cần.", "Sí, lo necesita."),
+    rescue: phrase("확인해 주세요.", "Hwaginhae juseyo.", "Please check it.", "確認してください。", "请确认。", "Hãy kiểm tra giúp tôi.", "Revíselo, por favor."),
+    dialogue: [
+      { speaker: "학습자", text: "이 서류가 필요해요?" },
+      { speaker: "직원", text: "네, 필요해요." },
+      { speaker: "학습자", text: "확인해 주세요." }
+    ],
+    structurePattern: "N이/가 필요해요?",
+    structureExplanation: localized("Use `필요해요` to ask whether something is required.", "`필요해요`で必要かどうかを確認します。", "用 `필요해요` 确认是否需要。", "Dùng `필요해요` để hỏi có cần không.", "Usa `필요해요` para preguntar si hace falta."),
+    swapSlots: [
+      phrase("여권이 필요해요?", "Yeogwoni piryohaeyo?", "Do I need my passport?", "パスポートが必要ですか。", "需要护照吗？", "Có cần hộ chiếu không?", "¿Necesito pasaporte?"),
+      phrase("사진이 필요해요?", "Sajini piryohaeyo?", "Do I need a photo?", "写真が必要ですか。", "需要照片吗？", "Có cần ảnh không?", "¿Necesito una foto?")
+    ],
+    sceneWords: ["서류", "필요", "확인"],
+    roleplayPrompt: phrase("무슨 서류가 필요하세요?", "Museun seoryuga piryo haseyo?", "What document do you need?", "どんな書類が必要ですか。", "需要什么文件？", "Bạn cần giấy tờ gì?", "¿Qué documento necesita?")
+  },
+  {
+    day: 30,
+    title: "다음 계획 말하기",
+    situation: "30일 과정을 마무리하며 다음에 무엇을 할지 말합니다.",
+    phraseId: "next-plan",
+    core: phrase("다음에는 더 길게 말하고 싶어요.", "Daeumeneun deo gilge malhago sipeoyo.", "Next time, I want to speak longer.", "次はもっと長く話したいです。", "下次我想说得更长一点。", "Lần sau tôi muốn nói dài hơn.", "La próxima vez quiero hablar más."),
+    response: phrase("좋아요. 계속 연습해요.", "Joayo. Gyesok yeonseuphaeyo.", "Good. Let us keep practicing.", "いいですね。続けて練習しましょう。", "好。继续练习吧。", "Tốt. Hãy tiếp tục luyện tập.", "Bien. Sigamos practicando."),
+    rescue: phrase("오늘 배운 문장을 다시 말할게요.", "Oneul baeun munjangeul dasi malhalgeyo.", "I will say today's sentence again.", "今日習った文をもう一度言います。", "我再说一遍今天学的句子。", "Tôi sẽ nói lại câu hôm nay.", "Diré otra vez la frase de hoy."),
+    dialogue: [
+      { speaker: "튜터", text: "다음에는 뭘 하고 싶어요?" },
+      { speaker: "학습자", text: "다음에는 더 길게 말하고 싶어요." },
+      { speaker: "튜터", text: "좋아요. 계속 연습해요." },
+      { speaker: "학습자", text: "오늘 배운 문장을 다시 말할게요." }
+    ],
+    structurePattern: "다음에는 + V-고 싶어요",
+    structureExplanation: localized("Use this to say what you want to do next.", "次にしたいことを言う形です。", "用来表达下一步想做什么。", "Dùng để nói điều bạn muốn làm tiếp theo.", "Usa esto para decir qué quieres hacer después."),
+    swapSlots: [
+      phrase("다음에는 혼자 주문하고 싶어요.", "Daeumeneun honja jumunhago sipeoyo.", "Next time, I want to order alone.", "次は一人で注文したいです。", "下次我想自己点单。", "Lần sau tôi muốn tự gọi món.", "La próxima vez quiero ordenar solo."),
+      phrase("다음에는 친구랑 말하고 싶어요.", "Daeumeneun chingurang malhago sipeoyo.", "Next time, I want to speak with a friend.", "次は友だちと話したいです。", "下次我想和朋友说话。", "Lần sau tôi muốn nói với bạn.", "La próxima vez quiero hablar con un amigo.")
+    ],
+    sceneWords: ["다음", "길게", "계속"],
+    roleplayPrompt: phrase("다음 목표가 뭐예요?", "Daeum mokpyoga mwoyeyo?", "What is your next goal?", "次の目標は何ですか。", "下一个目标是什么？", "Mục tiêu tiếp theo là gì?", "¿Cuál es su próximo objetivo?")
   }
 ] as const;
 

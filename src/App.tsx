@@ -94,12 +94,13 @@ const audioTargetCount = lessons.reduce((count, lesson) => count + Object.keys(l
 const totalAudioSlots = audioTargetCount * tutorCharacters.length;
 const staticAudioSlots = audioCatalog.filter((slot) => slot.naturalUrl && slot.slowUrl).length;
 const fallbackAudioSlots = totalAudioSlots - staticAudioSlots;
+const primaryCourseLessons = lessons.filter((lesson) => lesson.day <= 14);
 
-const isCourseCompleted = (state: UserState) =>
-  lessons.every((lesson) => state.lessonProgress[lesson.id]?.status === "completed");
+const isPrimaryCourseCompleted = (state: UserState) =>
+  primaryCourseLessons.every((lesson) => state.lessonProgress[lesson.id]?.status === "completed");
 
-const getCompletedLessonCount = (state: UserState) =>
-  lessons.filter((lesson) => state.lessonProgress[lesson.id]?.status === "completed").length;
+const getCompletedPrimaryLessonCount = (state: UserState) =>
+  primaryCourseLessons.filter((lesson) => state.lessonProgress[lesson.id]?.status === "completed").length;
 
 const formatDueLabel = (iso: string) => {
   const deltaMs = new Date(iso).getTime() - Date.now();
@@ -456,8 +457,8 @@ const HomeScreen = ({
   const percent = progress ? getLessonPercent(progress) : 0;
   const countryPack = getCountryPack(state.onboarding?.countryPackId);
   const continuationTrack = getContinuationTrack(state.onboarding?.learningGoal);
-  const completedCount = getCompletedLessonCount(state);
-  const courseCompleted = isCourseCompleted(state);
+  const completedCount = getCompletedPrimaryLessonCount(state);
+  const courseCompleted = isPrimaryCourseCompleted(state);
   const continuationSavedIds = new Set((state.savedPhrases ?? []).map((phrase) => phrase.id));
   const saveContinuationPhrase = (module: ContinuationModule, phrase: string, phraseIndex: number) => {
     const startDay = getContinuationStartDay(module);
@@ -605,7 +606,7 @@ const AudioReadinessPanel = () => (
       <Metric label="브라우저 대체" value={`${fallbackAudioSlots}개`} />
     </div>
     <p className="muted">
-      Day 1-14 문장은 자연 속도와 느린 속도 기준으로 고정되어 있습니다. 실제 무료 정적 음원이 연결되기 전에는 브라우저
+      Day 1-30 문장은 자연 속도와 느린 속도 기준으로 고정되어 있습니다. 실제 무료 정적 음원이 연결되기 전에는 브라우저
       한국어 음성으로 학습을 이어갑니다.
     </p>
   </Panel>

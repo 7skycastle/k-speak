@@ -44,7 +44,7 @@ npm run tts:manifest
 python tools/tts/validate_audio.py
 ```
 
-The current Day 1-14 learning program contains 90 sentence targets. With four voice characters and two speeds, `generated_manifest.json` should contain 720 entries.
+The current Day 1-30 learning program contains 186 sentence targets. With four voice characters and two speeds, `generated_manifest.json` should contain 1,488 entries.
 
 Plan the 20-sentence MeloTTS/Qwen3 comparison pack:
 
@@ -117,7 +117,7 @@ public/audio/day-1/haneul/rescue-slow.wav
 
 ## Audition Pack
 
-`sentences.json` includes the Day 1-14 program targets plus audition probes that check:
+`sentences.json` includes the Day 1-30 program targets plus audition probes that check:
 
 - plain, tense, and aspirated consonants
 - batchim and linking

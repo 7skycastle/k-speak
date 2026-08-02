@@ -32,14 +32,15 @@ npm run build
 - Vite, React 19, TypeScript.
 - Country onboarding for US, Japan, China, Vietnam, and Mexico/Spanish.
 - Tutor characters: Haneul, Jun, Mina, Taeho.
-- Day 1 to Day 14 lesson data.
+- Day 1 to Day 30 lesson data.
 - Lesson flow includes listening, repeating, recording, comparing, quiz, roleplay, and summary.
-- Day 15 to Day 30 continuation program guidance is shown by learning goal after the first 14-day path.
+- Day 15 to Day 30 lessons are playable through the same listening, recording, roleplay, and review flow.
+- Day 15 to Day 30 continuation program guidance is still shown by learning goal after the first 14-day path.
 - Day 15 to Day 30 continuation sample phrases can be previewed at natural and slow browser-TTS speeds from the home screen.
 - Day 15 to Day 30 continuation sample phrases can be saved into the saved phrase box and filtered as `다음 코스`.
 - Review screen includes due count, hard-review count, high-priority count, next due timing, and priority context.
 - Home and settings show country-specific learning guidance for pronunciation, structure, review, and offline practice.
-- Home shows static/offline audio readiness for the compact Day 1 to Day 14 audio pack.
+- Home shows static/offline audio readiness for the compact Day 1 to Day 30 audio pack.
 - Review items are generated after completed lessons.
 - Local progress persistence is implemented.
 - Supabase email OTP and progress sync are ready when env vars are configured.
@@ -108,7 +109,7 @@ Supabase project creation was previously attempted through MCP but returned `INV
 ## Important Files
 
 - `src/App.tsx`: main screens and lesson flow.
-- `src/data/lessons.ts`: Day 1 to Day 14 lesson data.
+- `src/data/lessons.ts`: Day 1 to Day 30 lesson data.
 - `src/data/audioCatalog.ts`: audio slots and browser fallback metadata.
 - `src/utils/audioPlayback.ts`: static-first audio playback and browser fallback.
 - `scripts/audio/`: free TTS/audio manifest and validation tools.
@@ -122,7 +123,7 @@ Supabase project creation was previously attempted through MCP but returned `INV
 ## Remaining Work
 
 - Select a license-approved local Korean TTS model, generate audition files through `tools/tts`, then update `src/data/audioCatalog.ts`.
-- Replace the Day 15 to Day 30 continuation guidance with full playable lessons when the next curriculum is approved.
+- Review Day 15 to Day 30 copy with a native Korean curriculum reviewer before production launch.
 - Create/configure the dedicated Supabase project and add env vars in Vercel.
 - Apply `docs/supabase/schema.sql` and `docs/supabase/rls.sql`.
 - Run an end-to-end Supabase OTP/progress merge check after env vars are configured.

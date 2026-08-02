@@ -6,8 +6,8 @@ import { lessons } from "./lessons";
 import { tutorCharacters } from "./characters";
 
 describe("lesson catalog", () => {
-  it("contains reusable Day 1 through Day 14 lessons", () => {
-    expect(lessons.map((lesson) => lesson.day)).toEqual(Array.from({ length: 14 }, (_, index) => index + 1));
+  it("contains reusable Day 1 through Day 30 lessons", () => {
+    expect(lessons.map((lesson) => lesson.day)).toEqual(Array.from({ length: 30 }, (_, index) => index + 1));
 
     for (const lesson of lessons) {
       expect(lesson.steps.at(0)?.id).toBe("situation");
