@@ -110,8 +110,12 @@ export interface OnboardingProfile {
 
 export type LessonStepKind =
   | "situation"
+  | "dialogue"
   | "character"
   | "phrase"
+  | "structure"
+  | "swap"
+  | "scene-words"
   | "meaning"
   | "listen"
   | "repeat"
@@ -134,6 +138,39 @@ export interface LessonStep {
   reviewWeight?: number;
 }
 
+export interface LocalizedPhrase {
+  korean: string;
+  romanization?: string;
+  meaningByCountry: Record<CountryPackId, string>;
+}
+
+export interface LessonDialogueLine extends LocalizedPhrase {
+  speaker: string;
+}
+
+export interface LessonStructure {
+  pattern: string;
+  explanationByCountry: Record<CountryPackId, string>;
+}
+
+export interface LessonSwapSlot extends LocalizedPhrase {
+  label: string;
+}
+
+export interface LessonRoleplay {
+  prompt: LocalizedPhrase;
+  expected: LocalizedPhrase;
+  fallback: LocalizedPhrase;
+}
+
+export interface LessonReviewCard {
+  id: string;
+  kind: "listen" | "speak" | "roleplay";
+  promptByCountry: Record<CountryPackId, string>;
+  phrase: LocalizedPhrase;
+  reason: string;
+}
+
 export interface Lesson {
   id: string;
   day: number;
@@ -143,6 +180,15 @@ export interface Lesson {
   korean: string;
   romanization: string;
   meaningByCountry: Record<CountryPackId, string>;
+  dialogue: LessonDialogueLine[];
+  responsePhrase: LocalizedPhrase;
+  rescuePhrase: LocalizedPhrase;
+  structure: LessonStructure;
+  swapSlots: LessonSwapSlot[];
+  sceneWords: string[];
+  roleplay: LessonRoleplay;
+  reviewCards: LessonReviewCard[];
+  countryNotes: Record<CountryPackId, string>;
   steps: LessonStep[];
 }
 
@@ -164,6 +210,8 @@ export interface ReviewItem {
   phraseId: string;
   korean: string;
   meaning: string;
+  kind?: LessonReviewCard["kind"];
+  prompt?: string;
   reason: string;
   priority: number;
   dueAt: string;

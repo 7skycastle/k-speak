@@ -14,6 +14,15 @@ describe("lesson catalog", () => {
       expect(lesson.steps.some((step) => step.kind === "listen")).toBe(true);
       expect(lesson.steps.some((step) => step.kind === "record")).toBe(true);
       expect(lesson.steps.some((step) => step.kind === "compare")).toBe(true);
+      expect(lesson.steps.some((step) => step.kind === "dialogue")).toBe(true);
+      expect(lesson.steps.some((step) => step.kind === "structure")).toBe(true);
+      expect(lesson.dialogue.length).toBeGreaterThanOrEqual(3);
+      expect(lesson.responsePhrase.korean).toBeTruthy();
+      expect(lesson.rescuePhrase.korean).toBeTruthy();
+      expect(lesson.structure.pattern).toBeTruthy();
+      expect(lesson.swapSlots.length).toBeGreaterThanOrEqual(2);
+      expect(lesson.sceneWords).toHaveLength(3);
+      expect(lesson.reviewCards.map((card) => card.kind)).toEqual(["listen", "speak", "roleplay"]);
     }
   });
 

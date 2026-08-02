@@ -1,8 +1,12 @@
 import { getLesson } from "../data/lessons";
 import { reviewRules } from "../data/reviewRules";
-import type { LessonProgress, ReviewItem } from "../types";
+import type { CountryPackId, LessonProgress, ReviewItem } from "../types";
 
-export const buildReviewItems = (progress: LessonProgress, meaning: string): ReviewItem[] => {
+export const buildReviewItems = (
+  progress: LessonProgress,
+  meaning: string,
+  countryPackId: CountryPackId = "us-en"
+): ReviewItem[] => {
   const lesson = getLesson(progress.lessonId);
   if (progress.status !== "completed") return [];
 
@@ -38,18 +42,20 @@ export const buildReviewItems = (progress: LessonProgress, meaning: string): Rev
         ? "처음 배운 문장을 짧게 다시 확인해요."
         : "며칠 뒤 잊기 전에 다시 볼 표현이에요.";
 
-  return [
-    {
-      id: `${lesson.id}:${lesson.phraseId}`,
-      lessonId: lesson.id,
-      phraseId: lesson.phraseId,
-      korean: lesson.korean,
-      meaning,
-      reason,
-      priority: normalizedPriority,
-      dueAt: new Date(Date.now() + dueHours * 60 * 60 * 1000).toISOString()
-    }
-  ];
+  const dueAt = new Date(Date.now() + dueHours * 60 * 60 * 1000).toISOString();
+
+  return lesson.reviewCards.map((card) => ({
+    id: `${lesson.id}:${card.id}`,
+    lessonId: lesson.id,
+    phraseId: `${lesson.phraseId}:${card.kind}`,
+    korean: card.phrase.korean,
+    meaning: card.phrase.meaningByCountry[countryPackId] || meaning,
+    kind: card.kind,
+    prompt: card.promptByCountry[countryPackId],
+    reason: `${reason} ${card.reason}`,
+    priority: normalizedPriority,
+    dueAt
+  }));
 };
 
 export const getDueReviewItems = (items: ReviewItem[], at = new Date()) =>

@@ -4,7 +4,7 @@ import { buildReviewItems, getDueReviewItems } from "./reviewEngine";
 import { getLesson } from "../data/lessons";
 
 describe("reviewEngine", () => {
-  it("creates one deduplicated review item after Day 1 is completed", () => {
+  it("creates three program review cards after Day 1 is completed", () => {
     const lesson = getLesson("day-1");
     const completed = lesson.steps.reduce(
       (progress, step) =>
@@ -20,9 +20,24 @@ describe("reviewEngine", () => {
 
     const reviews = buildReviewItems(completed, "Hello. Nice to meet you.");
 
-    expect(reviews).toHaveLength(1);
-    expect(reviews[0].id).toBe("day-1:hello-nice-meet-you");
-    expect(reviews[0].priority).toBeGreaterThanOrEqual(18);
+    expect(reviews).toHaveLength(3);
+    expect(reviews.map((review) => review.kind)).toEqual(["listen", "speak", "roleplay"]);
+    expect(reviews[0].id).toBe("day-1:listen");
+    expect(reviews.every((review) => review.priority >= 18)).toBe(true);
+    expect(reviews.every((review) => review.prompt)).toBe(true);
+  });
+
+  it("localizes review prompts and meanings for the active country pack", () => {
+    const lesson = getLesson("day-1");
+    const completed = lesson.steps.reduce(
+      (progress, step) => completeStep(progress, step.id),
+      createLessonProgress("day-1")
+    );
+
+    const reviews = buildReviewItems(completed, "こんにちは。お会いできてうれしいです。", "jp-ja");
+
+    expect(reviews[0].meaning).toBe("こんにちは。お会いできてうれしいです。");
+    expect(reviews[0].prompt).toContain("聞いて");
   });
 
   it("orders due review items by priority", () => {

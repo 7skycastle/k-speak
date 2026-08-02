@@ -514,7 +514,7 @@ const LessonScreen = ({
   };
 
   const playOriginal = async (rate: number) => {
-    const result = await playLessonAudio(audioSlot, lesson.korean, rate < 1 ? "slow" : "natural");
+    const result = await playLessonAudio(audioSlot, step.korean ?? lesson.korean, rate < 1 ? "slow" : "natural");
     setAudioStatus(result);
     const metricKey = rate < 1 ? "slowPlayCount" : "naturalPlayCount";
     const currentMetric = activeProgress.metrics[step.id];
@@ -604,7 +604,7 @@ const LessonScreen = ({
     }
 
     if (nextProgress.status === "completed") {
-      const reviews = buildReviewItems(nextProgress, meaning);
+      const reviews = buildReviewItems(nextProgress, meaning, countryPack.id);
       nextState = upsertReviewItems(nextState, reviews);
       nextState = trackEvent(nextState, { name: "day_1_completed", lessonId: lesson.id, success: true });
       onPersist(nextState);
@@ -621,6 +621,8 @@ const LessonScreen = ({
       <Panel title={step.title} kicker={`튜터 ${character.name}`}>
         <LessonStepBody
           step={step}
+          lesson={lesson}
+          countryPackId={countryPack.id}
           meaning={meaning}
           countryCulture={countryPack.cultureNote}
           roleplaySituation={countryPack.roleplaySituation}
@@ -686,6 +688,8 @@ const LessonScreen = ({
 
 const LessonStepBody = ({
   step,
+  lesson,
+  countryPackId,
   meaning,
   countryCulture,
   roleplaySituation,
@@ -695,6 +699,8 @@ const LessonStepBody = ({
   setSelectedChoice
 }: {
   step: LessonStep;
+  lesson: ReturnType<typeof getLesson>;
+  countryPackId: CountryPackId;
   meaning: string;
   countryCulture: string;
   roleplaySituation: string;
@@ -706,8 +712,59 @@ const LessonStepBody = ({
   <div className="lesson-step">
     {step.kind === "character" && <p className="speech-bubble">{characterLine}</p>}
     <p>{step.body}</p>
+    {step.kind === "dialogue" && (
+      <div className="dialogue-box">
+        {lesson.dialogue.map((line, index) => (
+          <div key={`${line.speaker}-${index}`} className={line.speaker === "학습자" ? "dialogue-line learner" : "dialogue-line"}>
+            <span>{line.speaker}</span>
+            <strong>{line.korean}</strong>
+          </div>
+        ))}
+      </div>
+    )}
+    {step.kind === "structure" && (
+      <div className="structure-box">
+        <strong>{lesson.structure.pattern}</strong>
+        <p>{lesson.structure.explanationByCountry[countryPackId]}</p>
+        <small>{lesson.countryNotes[countryPackId]}</small>
+      </div>
+    )}
+    {step.kind === "swap" && (
+      <div className="stack">
+        {lesson.swapSlots.map((slot) => (
+          <div className="row-choice read-only" key={slot.korean}>
+            <strong>{slot.korean}</strong>
+            <small>{slot.meaningByCountry[countryPackId]}</small>
+          </div>
+        ))}
+      </div>
+    )}
+    {step.kind === "scene-words" && (
+      <div className="word-chip-row">
+        {lesson.sceneWords.map((word) => (
+          <span key={word}>{word}</span>
+        ))}
+      </div>
+    )}
     {step.kind === "meaning" && <p className="culture-note">{countryCulture}</p>}
-    {step.kind === "roleplay" && <p className="culture-note">{roleplaySituation}</p>}
+    {step.kind === "roleplay" && (
+      <div className="roleplay-card">
+        <p className="culture-note">{roleplaySituation}</p>
+        <div className="dialogue-line">
+          <span>상대</span>
+          <strong>{lesson.roleplay.prompt.korean}</strong>
+          <small>{lesson.roleplay.prompt.meaningByCountry[countryPackId]}</small>
+        </div>
+        <div className="dialogue-line learner">
+          <span>내 답</span>
+          <strong>{lesson.roleplay.expected.korean}</strong>
+        </div>
+        <div className="dialogue-line">
+          <span>구출</span>
+          <strong>{lesson.roleplay.fallback.korean}</strong>
+        </div>
+      </div>
+    )}
     {step.korean && (
       <div className="korean-phrase">
         <strong>{step.korean}</strong>
@@ -833,6 +890,7 @@ const ReviewScreen = ({
     <section className="flow">
       <ProgressHeader current={activeIndex + 1} total={dueReviews.length} title="3분 복습" />
       <Panel title={active.reason}>
+        {active.prompt && <p className="culture-note">{active.prompt}</p>}
         <div className="korean-phrase">
           <strong>{active.korean}</strong>
           <small>{active.meaning}</small>
