@@ -652,7 +652,7 @@ const LessonScreen = ({
     if (nextProgress.status === "completed") {
       const reviews = buildReviewItems(nextProgress, meaning, countryPack.id);
       nextState = upsertReviewItems(nextState, reviews);
-      nextState = trackEvent(nextState, { name: "day_1_completed", lessonId: lesson.id, success: true });
+      nextState = trackEvent(nextState, { name: "lesson_completed", lessonId: lesson.id, success: true });
       onPersist(nextState);
       onComplete();
       return;

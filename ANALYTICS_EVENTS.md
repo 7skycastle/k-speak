@@ -4,7 +4,7 @@
 
 - `app_first_open`
 - `onboarding_completed`
-- `day_1_start`
+- `lesson_start`
 - `lesson_resume`
 - `first_audio_played`
 - `slow_audio_played`
@@ -15,7 +15,7 @@
 - `wrong_answer_continue`
 - `lesson_step_completed`
 - `lesson_paused`
-- `day_1_completed`
+- `lesson_completed`
 - `review_completed`
 - `signup_or_login`
 
@@ -38,7 +38,7 @@
 ## 주요 지표 계산 방식
 
 - 온보딩 완료율: `onboarding_completed / app_first_open`
-- 첫 음성 재생률: `first_audio_played / day_1_start`
-- Day 1 완료율: `day_1_completed / day_1_start`
+- 첫 음성 재생률: `first_audio_played / lesson_start`
+- Day 1 완료율: `lesson_completed where lessonId=day-1 / lesson_start where lessonId=day-1`
 - 녹음 권한 거절률: `recording_permission_denied / first_recording_attempt`
-- 복습 전환율: `review_completed / day_1_completed`
+- 복습 전환율: `review_completed / lesson_completed`

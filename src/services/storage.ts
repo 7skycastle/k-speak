@@ -188,7 +188,15 @@ export const mergeUserStates = (account: UserState, guest: UserState, email?: st
 
   const reviewItems = new Map(account.reviewItems.map((item) => [item.id, item]));
   for (const item of guest.reviewItems) {
-    if (!reviewItems.has(item.id)) reviewItems.set(item.id, item);
+    const current = reviewItems.get(item.id);
+    if (!current) {
+      reviewItems.set(item.id, item);
+      continue;
+    }
+
+    if (item.priority > current.priority) {
+      reviewItems.set(item.id, item);
+    }
   }
 
   const savedPhrases = new Map((account.savedPhrases ?? []).map((item) => [item.id, item]));

@@ -1,6 +1,6 @@
 # TEST_REPORT
 
-Date: 2026-08-01
+Date: 2026-08-02
 
 ## Latest Verification
 
@@ -8,31 +8,37 @@ Passed:
 
 - `npm audit --audit-level=moderate`
 - `npm run audio:validate`
-- `npm run audio:manifest`
+- `npm run tts:validate`
 - paid-provider blocking check with `ALLOW_PAID_TTS=true AUDIO_PROVIDER=openai npm run audio:manifest`
 - `npm run supabase:validate`
 - `npm run supabase:bundle`
 - `npm run lint`
 - `npm run test`
 - `npm run build`
-- Playwright local render check: 390x844 and 1280x900
-- Playwright local lesson audio check: two audio controls and fallback status message visible
+- `npm run qa:mobile`
 
 Current unit test result:
 
 - 8 test files passed
-- 23 tests passed
+- 28 tests passed
 
 Build result:
 
 - Vite production build passed
-- Output JS gzip size: 80.87 kB
+- Output JS gzip size: 90.61 kB
 
 Audio validation result:
 
-- 56 lesson/character audio slots checked
+- 336 lesson/character audio slots checked
 - 0 validation errors
-- 52 generated browser-TTS fallback slot warnings
+- 312 generated browser-TTS fallback slot warnings
+
+TTS metadata validation result:
+
+- 90 sentence targets checked
+- 720 generated manifest entries checked
+- 80 comparison audio entries checked
+- 80 listening review audio entries checked
 
 Supabase SQL validation result:
 

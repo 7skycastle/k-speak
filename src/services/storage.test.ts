@@ -78,6 +78,25 @@ describe("storage account merge", () => {
     expect(merged.reviewItems.find((item) => item.id === "day-1:hello-nice-meet-you")?.priority).toBe(70);
   });
 
+  it("keeps the higher-priority duplicate review item during account merge", () => {
+    const account: UserState = {
+      ...createInitialState(),
+      accountEmail: "learner@example.com",
+      reviewItems: [reviewItem("day-1:hello-nice-meet-you", 20)]
+    };
+    localStorage.setItem("korean-first-talk:cloud-profile:learner@example.com", JSON.stringify(account));
+
+    const guest: UserState = {
+      ...createInitialState(),
+      reviewItems: [reviewItem("day-1:hello-nice-meet-you", 80)]
+    };
+
+    const merged = mergeGuestIntoAccount(guest, "learner@example.com");
+
+    expect(merged.reviewItems).toHaveLength(1);
+    expect(merged.reviewItems[0].priority).toBe(80);
+  });
+
   it("merges saved phrases and keeps the latest duplicate", () => {
     const account: UserState = {
       ...createInitialState(),
