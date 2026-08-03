@@ -1000,12 +1000,79 @@ const lessonSeeds = [
   }
 ] as const;
 
+const extraDialogueMeanings: Record<string, Record<CountryPackId, string>> = {
+  "안녕하세요. 주문하시겠어요?": localized(
+    "Hello, may I take your order?",
+    "いらっしゃいませ。ご注文はお決まりですか。",
+    "您好，请问要点什么？",
+    "Xin chào, bạn muốn gọi món gì?",
+    "Hola, ¿qué desea ordenar?"
+  ),
+  "여기로 가시면 돼요.": localized(
+    "You can go this way.",
+    "こちらへ行けばいいですよ。",
+    "往这边走就行了。",
+    "Đi lối này là được.",
+    "Puede ir por aquí."
+  ),
+  "아니요, 가까워요.": localized(
+    "No, it is close.",
+    "いいえ、近いですよ。",
+    "不，很近的。",
+    "Không, ở gần thôi.",
+    "No, está cerca."
+  ),
+  "네, 돼요.": localized(
+    "Yes, you can.",
+    "はい、使えますよ。",
+    "可以的。",
+    "Được ạ.",
+    "Sí, se puede."
+  ),
+  "죄송해요. 조금 천천히 말해 주세요.": localized(
+    "I'm sorry. Could you please speak a little more slowly?",
+    "すみません。もう少しゆっくり話してください。",
+    "对不起，请说慢一点。",
+    "Xin lỗi. Bạn có thể nói chậm hơn không?",
+    "Lo siento. ¿Podría hablar un poco más despacio?"
+  ),
+  "죄송해요. 조금 늦었어요.": localized(
+    "I'm sorry. I'm a little late.",
+    "すみません。少し遅れました。",
+    "对不起，我有点晚了。",
+    "Xin lỗi. Tôi đến hơi muộn.",
+    "Lo siento. Llegué un poco tarde."
+  ),
+  "저도요.": localized(
+    "Me too.",
+    "私もです。",
+    "我也是。",
+    "Tôi cũng vậy.",
+    "Yo también."
+  ),
+  "다음에는 뭘 하고 싶어요?": localized(
+    "What do you want to do next?",
+    "次は何をしたいですか。",
+    "下一步你想做什么？",
+    "Lần sau bạn muốn làm gì?",
+    "¿Qué quieres hacer después?"
+  )
+};
+
 const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
+  const phraseByKorean: Record<string, Record<CountryPackId, string>> = {};
+  for (const p of [seed.core, seed.response, seed.rescue, seed.roleplayPrompt, ...seed.swapSlots]) {
+    phraseByKorean[p.korean] = p.meaningByCountry;
+  }
+
   const dialogue = seed.dialogue.map((line) => ({
     speaker: line.speaker,
     speakerRole: line.speakerRole,
     korean: line.text,
-    meaningByCountry: localized(line.text, line.text, line.text, line.text, line.text)
+    meaningByCountry:
+      phraseByKorean[line.text] ??
+      extraDialogueMeanings[line.text] ??
+      localized(line.text, line.text, line.text, line.text, line.text)
   }));
 
   return {
