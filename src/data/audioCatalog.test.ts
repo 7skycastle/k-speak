@@ -7,7 +7,7 @@ const paidProviderPattern = /elevenlabs|typecast|openai|azure|google|aws|polly|n
 
 describe("audio catalog", () => {
   it("defines required free TTS metadata for explicit audio slots", () => {
-    expect(audioCatalog).toHaveLength(4);
+    expect(audioCatalog).toHaveLength(120);
 
     for (const slot of audioCatalog) {
       expect(slot.provider).toBe("browser_speech_synthesis");

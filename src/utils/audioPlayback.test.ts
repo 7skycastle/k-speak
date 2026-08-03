@@ -95,6 +95,6 @@ describe("playLessonAudio", () => {
     expect(result.ok).toBe(true);
     expect(result.hasKoreanVoice).toBe(false);
     expect(result.source).toBe("browser_speech_synthesis");
-    expect(result.message).toContain("계속 진행");
+    expect(result.messageKey).toBe("audio.status.noKoreanVoice");
   });
 });

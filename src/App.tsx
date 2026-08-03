@@ -53,6 +53,7 @@ import {
   syncWithSupabase
 } from "./services/cloudSync";
 import { playLessonAudio, type AudioPlaybackResult } from "./utils/audioPlayback";
+import { recognizeKorean, isRecognitionSupported, scoreMatch, type RecognitionResult } from "./utils/speechRecognition";
 import { speakKorean } from "./utils/speech";
 import { t, createTranslator, type UiKey } from "./i18n";
 import type {
@@ -720,6 +721,8 @@ const LessonScreen = ({
   const [audioStatus, setAudioStatus] = useState<AudioPlaybackResult | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const [recognitionResult, setRecognitionResult] = useState<RecognitionResult | null>(null);
+  const stopRecognitionRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (!progress) {
@@ -731,6 +734,7 @@ const LessonScreen = ({
     setSelectedChoice("");
     setHintVisible(false);
     setAudioStatus(null);
+    setRecognitionResult(null);
     setStartMs(Date.now());
   }, [step.id]);
 
@@ -767,7 +771,7 @@ const LessonScreen = ({
       });
     }
     onPersist(nextState);
-    if (!result.ok) onError(result.message);
+    if (!result.ok) onError(tr(result.messageKey));
   };
 
   const saveCurrentPhrase = () => {
@@ -815,6 +819,14 @@ const LessonScreen = ({
       recorderRef.current = recorder;
       recorder.start();
       setRecorderState("recording");
+      setRecognitionResult(null);
+      if (isRecognitionSupported()) {
+        stopRecognitionRef.current = recognizeKorean(
+          (result) => setRecognitionResult(result),
+          () => {},
+          () => { stopRecognitionRef.current = null; }
+        );
+      }
       onPersist(trackEvent(state, { name: "first_recording_attempt", lessonId: lesson.id, stepId: step.id }));
     } catch {
       setRecorderState("denied");
@@ -824,6 +836,8 @@ const LessonScreen = ({
 
   const stopRecording = () => {
     recorderRef.current?.stop();
+    stopRecognitionRef.current?.();
+    stopRecognitionRef.current = null;
     saveProgress(updateStepMetrics(activeProgress, step.id, {}), "recording_finished");
   };
 
@@ -837,6 +851,7 @@ const LessonScreen = ({
     );
     setRecordedUrl("");
     setRecorderState("idle");
+    setRecognitionResult(null);
   };
 
   const advance = () => {
@@ -899,7 +914,7 @@ const LessonScreen = ({
             </button>
           </div>
         )}
-        {audioStatus && <p className="audio-status">{audioStatus.message}</p>}
+        {audioStatus && <p className="audio-status">{tr(audioStatus.messageKey)}</p>}
         {(step.kind === "record" || step.kind === "compare") && (
           <RecorderControls
             recorderState={recorderState}
@@ -908,6 +923,8 @@ const LessonScreen = ({
             onStop={stopRecording}
             onRetry={retryRecording}
             packId={packId}
+            recognitionResult={recognitionResult}
+            targetKorean={audioTarget.korean}
           />
         )}
         {step.kind === "quiz" && step.hint && (
@@ -1066,7 +1083,9 @@ const RecorderControls = ({
   onStart,
   onStop,
   onRetry,
-  packId
+  packId,
+  recognitionResult,
+  targetKorean
 }: {
   recorderState: RecorderState;
   recordedUrl: string;
@@ -1074,8 +1093,13 @@ const RecorderControls = ({
   onStop: () => void;
   onRetry: () => void;
   packId: CountryPackId;
+  recognitionResult?: RecognitionResult | null;
+  targetKorean?: string;
 }) => {
   const tr = createTranslator(packId);
+  const score = recognitionResult && targetKorean ? scoreMatch(recognitionResult.text, targetKorean) : null;
+  const scorePercent = score !== null ? Math.round(score * 100) : null;
+  const scoreTone = scorePercent === null ? "" : scorePercent >= 75 ? "good" : scorePercent >= 40 ? "ok" : "low";
   return (
     <div className="recorder-box">
       {recorderState === "recording" ? (
@@ -1096,6 +1120,18 @@ const RecorderControls = ({
             <RotateCcw />
             {tr("recorder.retry")}
           </button>
+        </div>
+      )}
+      {recognitionResult && (
+        <div className="recognition-result">
+          <p className="muted">
+            <strong>{tr("recorder.recognized")}</strong> {recognitionResult.text}
+          </p>
+          {scorePercent !== null && (
+            <span className={`review-badge score-${scoreTone}`}>
+              {tr("recorder.matchScore")} {scorePercent}%
+            </span>
+          )}
         </div>
       )}
       {recorderState === "denied" && (

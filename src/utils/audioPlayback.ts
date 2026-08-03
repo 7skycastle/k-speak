@@ -3,13 +3,18 @@ import { hasKoreanSpeechVoice, speakKorean } from "./speech";
 
 export type AudioPlaybackMode = "natural" | "slow";
 export type AudioPlaybackSource = "static-file" | "browser_speech_synthesis" | "unavailable";
+export type AudioStatusKey =
+  | "audio.status.staticOk"
+  | "audio.status.ttsFallback"
+  | "audio.status.noKoreanVoice"
+  | "audio.status.unavailable";
 
 export interface AudioPlaybackResult {
   ok: boolean;
   source: AudioPlaybackSource;
   usedFallback: boolean;
   hasKoreanVoice: boolean;
-  message: string;
+  messageKey: AudioStatusKey;
   errorCode?: string;
   url?: string;
 }
@@ -39,7 +44,7 @@ export const playLessonAudio = async (
       source: "static-file",
       usedFallback: false,
       hasKoreanVoice,
-      message: "저장된 무료 음원을 재생하고 있어요.",
+      messageKey: "audio.status.staticOk",
       url: staticUrl
     };
   }
@@ -53,9 +58,7 @@ export const playLessonAudio = async (
       usedFallback: true,
       hasKoreanVoice,
       errorCode: staticUrl ? "static_audio_failed" : "static_audio_missing",
-      message: hasKoreanVoice
-        ? "저장된 무료 음원이 없어 브라우저 TTS로 재생하고 있어요."
-        : "기기에 한국어 TTS 음성이 없어도 수업은 계속 진행할 수 있어요."
+      messageKey: hasKoreanVoice ? "audio.status.ttsFallback" : "audio.status.noKoreanVoice"
     };
   }
 
@@ -65,6 +68,6 @@ export const playLessonAudio = async (
     usedFallback: true,
     hasKoreanVoice,
     errorCode: "browser_tts_unavailable",
-    message: "이 브라우저에서는 음성 재생을 사용할 수 없습니다. 다음 단계로 계속 진행할 수 있어요."
+    messageKey: "audio.status.unavailable"
   };
 };

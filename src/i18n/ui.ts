@@ -484,6 +484,8 @@ export const uiCatalog = {
     "Trình duyệt của bạn không hỗ trợ ghi âm. Bạn vẫn có thể hoàn thành bài học.",
     "Tu navegador no admite la grabación. Aún puedes completar la lección."
   ),
+  "recorder.recognized": localized("You said:", "認識結果：", "识别结果：", "Bạn nói:", "Dijiste:"),
+  "recorder.matchScore": localized("Match", "一致度", "匹配度", "Độ khớp", "Coincidencia"),
 
   // Review screen
   "review.empty.title": localized(
@@ -666,6 +668,36 @@ export const uiCatalog = {
     "暂无记录的事件。",
     "Chưa có sự kiện nào được ghi lại.",
     "Aún no se han registrado eventos."
+  ),
+
+  // Audio playback runtime status
+  "audio.status.staticOk": localized(
+    "Playing saved free audio.",
+    "保存された無料音源を再生しています。",
+    "正在播放已保存的免费音频。",
+    "Đang phát âm thanh miễn phí đã lưu.",
+    "Reproduciendo audio gratuito guardado."
+  ),
+  "audio.status.ttsFallback": localized(
+    "No free audio saved — using browser speech.",
+    "無料の保存音声がないため、ブラウザ音声を使用しています。",
+    "没有保存免费音频，正在使用浏览器语音。",
+    "Chưa có âm thanh miễn phí — đang dùng giọng trình duyệt.",
+    "Sin audio gratuito guardado — usando voz del navegador."
+  ),
+  "audio.status.noKoreanVoice": localized(
+    "No Korean voice on this device. Lesson continues as normal.",
+    "このデバイスに韓国語音声がありません。レッスンは通常通り続きます。",
+    "此设备上没有韩语语音。课程正常继续。",
+    "Thiết bị này không có giọng tiếng Hàn. Bài học tiếp tục bình thường.",
+    "Sin voz coreana en este dispositivo. La lección continúa con normalidad."
+  ),
+  "audio.status.unavailable": localized(
+    "Audio not available in this browser. You can continue to the next step.",
+    "このブラウザでは音声再生が使用できません。次のステップに進めます。",
+    "此浏览器不支持音频播放。可以继续下一步。",
+    "Âm thanh không khả dụng trên trình duyệt này. Bạn có thể tiếp tục bước tiếp theo.",
+    "Audio no disponible en este navegador. Puedes continuar al siguiente paso."
   ),
 
   // Storage message
