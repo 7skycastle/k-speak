@@ -58,21 +58,21 @@ const day14StructureOverrides: Partial<Record<number, Record<CountryPackId, stri
     "Use `N hana juseyo` for a simple order. Put the item name first, then finish with `juseyo` as one polite chunk.",
     "`N 하나 주세요`は一番使いやすい注文の形です。品目を先に言って、最後の`주세요`をひとかたまりで出します。",
     "`N 하나 주세요` 是最常用的点单句型。先说东西，再把 `주세요` 连起来说完整。",
-    "`N 하나 주세요` la mau cau goi mon co ban nhat. Noi mon truoc, roi noi `주세요` thanh mot cum lich su.",
+    "`N 하나 주세요` là mẫu câu gọi món cơ bản nhất. Nói món trước, rồi nói `주세요` thành một cụm lịch sự.",
     "`N 하나 주세요` es una forma muy util para pedir. Primero di el producto y luego `주세요` como un solo bloque cortés."
   ),
   3: localized(
     "Pair `thank you` with a short result such as `that helped`. It sounds warmer than stopping after only `gamsahamnida`.",
     "`ありがとうございます`だけで終わらず、`助かりました`まで添えると気持ちがもっと自然に伝わります。",
     "不要只说“谢谢”，再加一句“真的帮到我了”会更自然、更有温度。",
-    "Dung khong chi noi cam on. Them mot cau nhu `viec do da giup toi` se nghe tu nhien va am ap hon.",
-    "No te quedes solo con `gracias`. Si anades `me ayudo mucho`, la frase suena mas natural y cercana."
+    "Đừng chỉ nói cảm ơn. Thêm một câu như `việc đó đã giúp tôi` sẽ nghe tự nhiên và ấm áp hơn.",
+    "No te quedes solo con `gracias`. Si añades `me ayudó mucho`, la frase suena más natural y cercana."
   ),
   4: localized(
     "Use `N-i eodiyeyo?` to ask where a place is. The topic is the place, so say it clearly before `eodiyeyo`.",
     "`N이/가 어디예요?`は場所をたずねる基本形です。知りたい場所を先にはっきり言ってから`어디예요`につなげます。",
     "`N이/가 어디예요?` 是最基础的问路句型。先清楚说出地点，再接 `어디예요`。",
-    "`N-i/ga eodiyeyo?` la mau cau co ban de hoi dia diem. Noi ro noi can tim truoc, roi moi noi `어디예요`.",
+    "`N-i/ga eodiyeyo?` là mẫu câu cơ bản để hỏi địa điểm. Nói rõ nơi cần tìm trước, rồi mới nói `어디예요`.",
     "`N-i/ga eodiyeyo?` sirve para preguntar por un lugar. Nombra primero el sitio y luego cierra con `어디예요`."
   ),
   5: localized(
@@ -86,64 +86,64 @@ const day14StructureOverrides: Partial<Record<number, Record<CountryPackId, stri
     "Add `jogeum` before the request to sound softer. You are not refusing the conversation, only asking for a slower pace.",
     "`조금`を入れるとお願いがやわらかくなります。会話を断るのでなく、速度だけを下げてほしい気持ちが伝わります。",
     "前面加 `조금` 会更委婉，意思不是拒绝交流，而是请对方说慢一点。",
-    "Them `조금` se lam cau nhe hon. Ban khong tu choi cuoc noi chuyen, chi xin doi phuong noi cham lai.",
-    "Anadir `조금` suaviza la peticion. No rechazas la conversacion; solo pides que hablen un poco mas despacio."
+    "Thêm `조금` sẽ làm câu nhẹ hơn. Bạn không từ chối cuộc nói chuyện, chỉ xin đối phương nói chậm lại.",
+    "Añadir `조금` suaviza la petición. No rechazas la conversación; solo pides que hablen un poco más despacio."
   ),
   7: localized(
     "`Dasi han beon` means `one more time`. It sounds more polite and complete than saying only `dasi`.",
     "`다시 한 번`は`もう一度`を丁寧に言う形です。`다시`だけより、お願いとして自然に聞こえます。",
     "`다시 한 번` 就是“再一次”，比只说 `다시` 更完整、更礼貌。",
-    "`다시 한 번` nghia la `mot lan nua`. Cach noi nay lich su va day du hon chi noi `다시`.",
-    "`다시 한 번` significa `una vez mas`. Suena mas completo y amable que decir solo `다시`."
+    "`다시 한 번` nghĩa là `một lần nữa`. Cách nói này lịch sự và đầy đủ hơn chỉ nói `다시`.",
+    "`다시 한 번` significa `una vez más`. Suena más completo y amable que decir solo `다시`."
   ),
   8: localized(
     "Use `mwo-yeyo?` when asking what the recommended option is. It keeps the question open instead of naming one dish first.",
     "`뭐예요?`でたずねると、相手におすすめを広く任せられます。最初から一品に絞らない聞き方です。",
     "用 `뭐예요?` 来问时，对方可以自由推荐，不需要你先点出某一道菜。",
-    "Dung `뭐예요?` de hoi mo rong hon, de doi phuong tu nhien goi y ma khong can ban chi dinh mon truoc.",
+    "Dùng `뭐예요?` để hỏi mở rộng hơn, để đối phương tự nhiên gợi ý mà không cần bạn chỉ định trước.",
     "Con `뭐예요?` dejas la pregunta abierta para que la otra persona recomiende con libertad."
   ),
   9: localized(
     "Use `-go sipeoyo` to say what you want politely. It is useful when checking, changing, or making a reservation.",
     "`-고 싶어요`は自分の希望をやわらかく伝える形です。予約の確認・変更・作成のどれにも使えます。",
     "`-고 싶어요` 用来礼貌表达“我想……”。确认、修改、预约时都很常用。",
-    "`-고 싶어요` dung de noi dieu ban muon mot cach lich su. Mau nay dung tot khi xac nhan, doi, hoac dat cho.",
+    "`-고 싶어요` dùng để nói điều bạn muốn một cách lịch sự. Mẫu này dùng tốt khi xác nhận, đổi, hoặc đặt chỗ.",
     "`-고 싶어요` expresa lo que quieres de manera cortés. Sirve para confirmar, cambiar o hacer una reservacion."
   ),
   10: localized(
     "Two short calming lines together sound natural here: `It's okay` plus `there's no problem`. The second line removes doubt.",
     "`괜찮아요`だけでも通じますが、`문제없어요`を足すと相手はもっと安心します。",
     "只说 `괜찮아요` 也可以，但再加上 `문제없어요`，更能让对方放心。",
-    "Chi noi `괜찮아요` da duoc, nhung them `문제없어요` se lam doi phuong yen tam hon.",
-    "Solo con `괜찮아요` ya funciona, pero `문제없어요` ayuda a tranquilizar mas a la otra persona."
+    "Chỉ nói `괜찮아요` đã được, nhưng thêm `문제없어요` sẽ làm đối phương yên tâm hơn.",
+    "Solo con `괜찮아요` ya funciona, pero `문제없어요` ayuda a tranquilizar más a la otra persona."
   ),
   11: localized(
     "`-ju-sil su isseoyo?` is a polite way to ask a favor. It sounds gentler than a direct command because it asks about possibility.",
     "`-주실 수 있어요?`は可能かどうかをたずねるので、命令っぽくならず丁寧です。",
     "`-주실 수 있어요?` 是在问“您能不能帮我”，所以比直接要求更礼貌。",
-    "`-주실 수 있어요?` hoi ve kha nang giup do, nen nghe lich su hon mot loi yeu cau truc tiep.",
-    "`-주실 수 있어요?` pregunta si la otra persona puede ayudarte, por eso suena mas amable que una orden directa."
+    "`-주실 수 있어요?` hỏi về khả năng giúp đỡ, nên nghe lịch sự hơn một lời yêu cầu trực tiếp.",
+    "`-주실 수 있어요?` pregunta si la otra persona puede ayudarte, por eso suena más amable que una orden directa."
   ),
   12: localized(
     "`Eodie isseoyo?` asks where something is located right now. It fits fixed places such as a restroom, elevator, or exit.",
     "`어디에 있어요?`は今その場所がどこにあるかを聞く形です。トイレや出口のような固定された場所によく合います。",
     "`어디에 있어요?` 是在问某样东西或某个地点现在在哪里，特别适合厕所、电梯、出口这类固定地点。",
-    "`어디에 있어요?` dung de hoi mot thu hoac mot noi dang o dau. Rat hop voi nha ve sinh, thang may, loi ra.",
+    "`어디에 있어요?` dùng để hỏi một thứ hoặc một nơi đang ở đâu. Rất hợp với nhà vệ sinh, thang máy, lối ra.",
     "`어디에 있어요?` pregunta donde esta algo en ese momento. Va muy bien con lugares fijos como bano, ascensor o salida."
   ),
   13: localized(
     "`V-aseyo/juseyo` is the short request shape you will use constantly in shops. Here it works because the action is simple and clear.",
     "`-아/어 주세요`は店で何度も使う短い依頼の形です。動作が一つでわかりやすい場面に特によく合います。",
     "`-아/어 주세요` 是店里非常常用的请求句型，动作简单明确时最自然。",
-    "`-아/어 주세요` la mau nho va rat hay dung o cua hang. No hop nhat khi hanh dong can yeu cau don gian, ro rang.",
+    "`-아/어 주세요` là mẫu nhỏ và rất hay dùng ở cửa hàng. Nó hợp nhất khi hành động cần yêu cầu đơn giản, rõ ràng.",
     "`-아/어 주세요` es una forma corta y muy util para pedir cosas en tiendas. Funciona mejor cuando la accion es simple."
   ),
   14: localized(
     "`Daeume tto` sets up a warm closing: `next time, again`. It sounds friendlier than ending the conversation with only goodbye.",
     "`다음에 또`を入れると、ただ別れるよりも`また会いたい`気持ちがやわらかく伝わります。",
     "`다음에 또` 会让结束语听起来更有人情味，不只是单纯说再见，而是表示还想再见面。",
-    "`다음에 또` lam cau ket thuc am ap hon, khong chi la tam biet ma con la hen gap lai.",
-    "`다음에 또` hace que el cierre suene mas cercano: no solo te despides, tambien dejas abierta la proxima vez."
+    "`다음에 또` làm câu kết thúc ấm áp hơn, không chỉ là tạm biệt mà còn là hẹn gặp lại.",
+    "`다음에 또` hace que el cierre suene más cercano: no solo te despides, también dejas abierta la próxima vez."
   )
 };
 
@@ -152,99 +152,329 @@ const day14PronunciationOverrides: Partial<Record<number, Record<CountryPackId, 
     "Keep `안녕하세요` in one flow and listen for the soft final `-yo`. In `만나서`, the `nn` sound is longer than in English.",
     "`안녕하세요`は区切らず一息で。最後の`요`をやわらかく下げ、`만나서`の`ㄴ`は少し長めに重ねます。",
     "`안녕하세요` 尽量一口气说完，句尾 `요` 轻轻落下。`만나서` 里的 `ㄴ` 要连得更顺一些。",
-    "Noi `안녕하세요` lien mach, ha nhe o `요`. Trong `만나서`, am `n` duoc giu dai hon mot chut.",
-    "Di `안녕하세요` de corrido y baja suave en `-yo`. En `만나서`, la `n` se sostiene un poco mas."
+    "Nói `안녕하세요` liền mạch, hạ nhẹ ở `요`. Trong `만나서`, âm `n` được giữ dài hơn một chút.",
+    "Di `안녕하세요` de corrido y baja suave en `-yo`. En `만나서`, la `n` se sostiene un poco más."
   ),
   2: localized(
     "Stress the item, not `juseyo`. In `아이스`, the first syllable is clean and short, and `하나` should not become `hanaa`.",
     "`주세요`より品名をはっきり。`아이스`の最初は短く、`하나`は母音を引きのばしすぎないのがコツです。",
     "重点放在饮品名，不要把 `주세요` 读得太重。`아이스` 开头要干净，`하나` 不要拖长。",
-    "Nhan vao ten do uong hon la `주세요`. `아이스` mo dau gon, va `하나` khong can keo dai nguyen am.",
-    "Marca mas el nombre del producto que `주세요`. `아이스` empieza corto y limpio, y `하나` no se alarga."
+    "Nhấn vào tên đồ uống hơn là `주세요`. `아이스` mở đầu gọn, và `하나` không cần kéo dài nguyên âm.",
+    "Marca más el nombre del producto que `주세요`. `아이스` empieza corto y limpio, y `하나` no se alarga."
   ),
   3: localized(
     "In `감사합니다`, keep the middle crisp instead of flattening every syllable. `도움이` links smoothly as `doumi` in fast speech.",
     "`감사합니다`は全部を同じ強さで読まず、真ん中をはっきり。`도움이`は速いと`도우미`に近くつながります。",
     "`감사합니다` 中间音节要清楚，不要每个字都一样重。`도움이` 连读时会更接近 `도우미`。",
-    "Trong `감사합니다`, giu nhip ro o giua cau. `도움이` thuong noi lien muot, nghe gan nhu `doumi`.",
-    "En `감사합니다`, no aplanes todas las silabas. `도움이` suele enlazarse y sonar mas fluido, casi como `doumi`."
+    "Trong `감사합니다`, giữ nhịp rõ ở giữa câu. `도움이` thường nói liền mượt, nghe gần như `doumi`.",
+    "En `감사합니다`, no aplanes todas las sílabas. `도움이` suele enlazarse y sonar más fluido, casi como `doumi`."
   ),
   4: localized(
     "Hold the `yeok` ending in `지하철역` cleanly. `어디예요` should rise slightly at the end because it is a question.",
     "`지하철역`の最後の`역`をあいまいにしないのが大事です。`어디예요`は質問なので語尾を少し上げます。",
     "`지하철역` 最后的 `역` 要收得清楚。`어디예요` 因为是问句，结尾可以轻微上扬。",
-    "Ket thuc `역` trong `지하철역` can gon ro. `어디예요` la cau hoi nen cuoi cau hoi nhac len nhe.",
+    "Kết thúc `역` trong `지하철역` cần gọn rõ. `어디예요` là câu hỏi nên cuối câu nhấc lên nhẹ.",
     "Cierra bien `yeok` en `지하철역`. Como `어디예요` es pregunta, el final sube un poco."
   ),
   5: localized(
     "`얼마예요` often sounds connected, almost like `eolmayeyo`. Keep the `won` in `만 원` short and firm.",
     "`얼마예요`は切らずに`얼마예요`と流します。`만 원`の`원`は短くはっきり止めます。",
     "`얼마예요` 通常连着说，不要一字一顿。`만 원` 里的 `원` 要短而清楚。",
-    "`얼마예요` thuong duoc noi lien. Trong `만 원`, am `원` nen ngan va ro.",
+    "`얼마예요` thường được nói liền. Trong `만 원`, âm `원` nên ngắn và rõ.",
     "`얼마예요` suele salir enlazado. En `만 원`, `won` va corto y claro."
   ),
   6: localized(
     "Stretch `천` and `히` just a little in `천천히`, but keep the sentence moving. `말해 주세요` should sound like one request, not three separate words.",
     "`천천히`は`천`と`히`を少しだけ意識すると聞き取りやすくなります。`말해 주세요`は三つに切らずお願いとしてまとめます。",
     "`천천히` 里的 `천` 和 `히` 可以稍微拉开一点，但整句不要断。`말해 주세요` 要像一个完整请求一起说。",
-    "Trong `천천히`, co the keo nhe `천` va `히`, nhung nhip cau van phai lien. `말해 주세요` nen nghe nhu mot loi nhờ tron ven.",
-    "En `천천히`, alarga un poco `cheon` y `hi`, pero sin romper el ritmo. `말해 주세요` debe sonar como una sola peticion."
+    "Trong `천천히`, có thể kéo nhẹ `천` và `히`, nhưng nhịp câu vẫn phải liền. `말해 주세요` nên nghe như một lời nhờ trọn vẹn.",
+    "En `천천히`, alarga un poco `cheon` y `hi`, pero sin romper el ritmo. `말해 주세요` debe sonar como una sola petición."
   ),
   7: localized(
     "The `han beon` part carries the key meaning `one more time`. Keep `한` short and make the `beon` ending neat, not nasalized too much.",
     "意味の中心は`한 번`です。`한`は短く、`번`の終わりはにごらせすぎず整えて出します。",
     "重点在 `한 번`，表示“再一次”。`한` 要短，`번` 的结尾要收干净。",
-    "Phan quan trong nhat la `한 번`, nghia la `mot lan nua`. `한` noi gon, va cuoi `번` dong am ro rang.",
-    "La parte clave es `한 번`, que significa `una vez mas`. `한` va corto y el final de `번` debe cerrarse limpio."
+    "Phần quan trọng nhất là `한 번`, nghĩa là `một lần nữa`. `한` nói gọn, và cuối `번` đóng âm rõ ràng.",
+    "La parte clave es `한 번`, que significa `una vez más`. `한` va corto y el final de `번` debe cerrarse limpio."
   ),
   8: localized(
     "In `추천`, the first syllable is tense and clear. Let `뭐예요` rise at the end so it sounds curious, not flat.",
     "`추천`の最初は少ししっかりめに。`뭐예요`は平たく読まず、最後を軽く上げると自然です。",
     "`추천` 开头要清楚有力。`뭐예요` 结尾轻轻上扬，会更像自然提问。",
-    "Am dau cua `추천` can ro va chac. Cuoi `뭐예요` nhac len nhe de nghe dung la cau hoi.",
-    "En `추천`, la primera silaba sale firme. Sube un poco al final de `뭐예요` para que suene realmente a pregunta."
+    "Âm đầu của `추천` cần rõ và chắc. Cuối `뭐예요` nhấc lên nhẹ để nghe đúng là câu hỏi.",
+    "En `추천`, la primera sílaba sale firme. Sube un poco al final de `뭐예요` para que suene realmente a pregunta."
   ),
   9: localized(
     "In `확인하고`, the `gi` sound links into the next syllable smoothly. `싶어요` should end softly, not too strongly.",
     "`확인하고`は途中を切らずにつなげます。`싶어요`は言い切りすぎず、やわらかく終えると自然です。",
     "`확인하고` 中间连读更自然。`싶어요` 句尾不要太重，轻轻收尾更像韩语口气。",
-    "`확인하고` nen noi lien muot. `싶어요` ket thuc nhe se nghe tu nhien hon.",
+    "`확인하고` nên nói liền mượt. `싶어요` kết thúc nhẹ sẽ nghe tự nhiên hơn.",
     "`확인하고` suena mejor enlazado. `싶어요` debe cerrar suave, no con demasiada fuerza."
   ),
   10: localized(
     "Say `괜찮아요` with a calm falling tone. In `문제없어요`, keep the break after `문제` very small so the phrase stays reassuring.",
     "`괜찮아요`は落ち着いて下げます。`문제없어요`は`문제`のあとを空けすぎないと、安心させる流れが保てます。",
     "`괜찮아요` 用平稳下行语调说更自然。`문제없어요` 不要把中间停得太开，整句会更安抚人。",
-    "Noi `괜찮아요` voi giong diu va ha xuong. Trong `문제없어요`, dung nghi qua lau sau `문제` de cau van liền va tran an.",
-    "Di `괜찮아요` con tono tranquilo y descendente. En `문제없어요`, no hagas una pausa grande despues de `문제`."
+    "Nói `괜찮아요` với giọng dịu và hạ xuống. Trong `문제없어요`, đừng nghỉ quá lâu sau `문제` để câu vẫn liền và trấn an.",
+    "Di `괜찮아요` con tono tranquilo y descendente. En `문제없어요`, no hagas una pausa grande después de `문제`."
   ),
   11: localized(
     "The polite lift is in `주실 수 있어요?`. Keep `사진 좀` light, then let the request part carry the softness.",
     "丁寧さの中心は`주실 수 있어요?`にあります。`사진 좀`は軽く置いて、お願い部分をやわらかく出します。",
     "真正礼貌的感觉在 `주실 수 있어요?`。`사진 좀` 可以轻一点，后半句要更柔和。",
-    "Do lich su nam o phan `주실 수 있어요?`. `사진 좀` co the noi nhe, roi de phan nhờ vat mang su mem mai.",
-    "La cortesía está sobre todo en `주실 수 있어요?`. Di `사진 좀` mas ligero y deja que la segunda parte haga la peticion amable."
+    "Độ lịch sự nằm ở phần `주실 수 있어요?`. `사진 좀` có thể nói nhẹ, rồi để phần nhờ vận mang sự mềm mại.",
+    "La cortesía está sobre todo en `주실 수 있어요?`. Di `사진 좀` más ligero y deja que la segunda parte haga la petición amable."
   ),
   12: localized(
     "`어디에 있어요` should flow without big pauses. In `오른쪽`, the `jjok` ending is short and clipped.",
     "`어디에 있어요`は一続きで流します。`오른쪽`の最後の`쪽`は短く切ると韓国語らしく聞こえます。",
     "`어디에 있어요` 尽量连着说。`오른쪽` 最后的 `쪽` 要短促收住。",
-    "`어디에 있어요` nen noi liền. Trong `오른쪽`, am cuoi `쪽` ngan va gon.",
+    "`어디에 있어요` nên nói liền. Trong `오른쪽`, âm cuối `쪽` ngắn và gọn.",
     "Di `어디에 있어요` sin pausas grandes. En `오른쪽`, el final `jjok` va corto y bien cerrado."
   ),
   13: localized(
     "In `포장해`, the `jang` should stay clear before moving to `hae`. `부탁드려요` sounds best when the middle is smooth, not overly segmented.",
     "`포장해`では`장`をはっきり出してから`해`へつなげます。`부탁드려요`は細かく切らず、なめらかに流すと自然です。",
     "`포장해` 里的 `장` 要清楚，再顺着接到 `해`。`부탁드려요` 不要切得太碎，连起来更自然。",
-    "Trong `포장해`, giu ro am `jang` roi moi chuyen sang `hae`. `부탁드려요` nghe tu nhien hon khi noi muot, khong cat nho.",
+    "Trong `포장해`, giữ rõ âm `jang` rồi mới chuyển sang `hae`. `부탁드려요` nghe tự nhiên hơn khi nói mượt, không cắt nhỏ.",
     "En `포장해`, marca bien `jang` antes de pasar a `hae`. `부탁드려요` suena mejor enlazado y no demasiado cortado."
   ),
   14: localized(
     "Give `다음에 또` a warm rhythm, then soften the ending in `만나요`. The sentence should sound inviting, not abrupt.",
     "`다음에 또`は少し弾むように、`만나요`はやわらかく下げます。ぶつ切りにせず、また会いたい気持ちを乗せます。",
     "`다음에 또` 可以带一点轻快节奏，`만나요` 结尾柔和地下去。整句要像在真心邀请再见面。",
-    "Noi `다음에 또` voi nhip am ap, roi ha mem o `만나요`. Cau nay nen nghe than thien, khong cuc loc.",
-    "Dale a `다음에 또` un ritmo calido y baja suave en `만나요`. La frase debe sonar acogedora, no brusca."
+    "Nói `다음에 또` với nhịp ấm áp, rồi hạ mềm ở `만나요`. Câu này nên nghe thân thiện, không cộc lốc.",
+    "Dale a `다음에 또` un ritmo cálido y baja suave en `만나요`. La frase debe sonar acogedora, no brusca."
+  )
+};
+
+const day15To30StructureOverrides: Partial<Record<number, Record<CountryPackId, string>>> = {
+  15: localized(
+    "The destination goes first, then `-로 가 주세요` wraps it into a polite request. The driver hears the place name first, so say it clearly.",
+    "行き先を先に言い、`-로 가 주세요`でまとめます。運転手は最初の地名を聞くので、はっきり言うことが大事です。",
+    "先说目的地，再用 `-로 가 주세요` 包成礼貌请求。司机首先听到的是地名，所以要说清楚。",
+    "Địa điểm đặt trước, rồi `-로 가 주세요` bao thành lời nhờ lịch sự. Tài xế nghe tên nơi đến trước, nên hãy nói rõ.",
+    "El destino va primero; luego `-로 가 주세요` lo convierte en una petición cortés. El conductor escucha el lugar primero, así que dilo con claridad."
+  ),
+  16: localized(
+    "`몇 번` asks which number it is. Place the thing being numbered right after — `출구` for exit, `버스` for bus, `방` for room. The structure works for any numbered item.",
+    "`몇 번`は番号を聞く形です。出口・バス・部屋など、番号を聞きたいものをすぐ後に置きます。",
+    "`몇 번` 用来问号码。直接把要问号码的东西放在后面——出口、公交车、房间都可以用这个句型。",
+    "`몇 번` để hỏi số mấy. Đặt thứ cần hỏi số ngay sau — `출구` cho cửa ra, `버스` cho xe buýt, `방` cho phòng.",
+    "`몇 번` pregunta cuál es el número. Pon lo que quieres numerar justo después: salida, autobús, habitación. Funciona para cualquier cosa numerada."
+  ),
+  17: localized(
+    "`여기서` pins the action to this spot. Any verb can follow: `내려 주세요` to get off, `세워 주세요` to stop, `기다려 주세요` to wait. The place marker stays the same.",
+    "`여기서`はここという場所を示します。降りる・止める・待つなど、どんな動詞とも組み合わせられます。場所の部分は変わりません。",
+    "`여기서` 把动作定在这个位置。后面可以跟任何动词：下车、停车、等候。表示地点的部分不变。",
+    "`여기서` ghim hành động vào nơi này. Bất kỳ động từ nào cũng dùng được: xuống xe, dừng lại, chờ đây.",
+    "`여기서` fija la acción en este lugar. Cualquier verbo puede seguir: bajar, parar, esperar. La marca de lugar no cambia."
+  ),
+  18: localized(
+    "`얼마나` opens questions about quantity or extent. The verb that follows tells what you are measuring: `걸려요` for time, `멀어요` for distance, `비싸요` for price. The question word leads, unlike in English.",
+    "`얼마나`は量や程度を聞く疑問語です。後に続く動詞が何を測るかを決めます。英語と違い、疑問語が先に来ます。",
+    "`얼마나` 用来问数量或程度。后面的动词决定你在问什么——时间用 `걸려요`，距离用 `멀어요`。疑问词放在最前面，与英语语序不同。",
+    "`얼마나` mở đầu câu hỏi về lượng hoặc mức độ. Động từ theo sau cho biết bạn đang đo gì: thời gian dùng `걸려요`, khoảng cách dùng `멀어요`.",
+    "`얼마나` abre preguntas sobre cantidad o grado. El verbo que sigue indica qué mides: `걸려요` para tiempo, `멀어요` para distancia. La palabra interrogativa va primero, al contrario que en español."
+  ),
+  19: localized(
+    "`-지 않게` turns any adjective into a \"please make it not X\" request. The adjective comes first: `맵지 않게` (not spicy), `짜지 않게` (not salty), `달지 않게` (not sweet). Then `해 주세요` closes it.",
+    "`-지 않게`で「そうならないように」という依頼が作れます。形容詞を先に置き、`해 주세요`で閉じます。辛さ・塩気・甘さなど何にでも使えます。",
+    "`-지 않게` 让任何形容词变成'请别做成那样'的请求。形容词放在前面，最后用 `해 주세요` 收尾。辣、咸、甜都能套用。",
+    "`-지 않게` biến tính từ thành lời nhờ 'xin đừng làm thành X'. Tính từ đặt trước: `맵지 않게`, `짜지 않게`, rồi `해 주세요` kết thúc.",
+    "`-지 않게` convierte cualquier adjetivo en una petición de \"que no quede así\". El adjetivo va primero: `맵지 않게`, `짜지 않게`; luego `해 주세요` cierra."
+  ),
+  20: localized(
+    "`저는` marks you as the subject. `N 알레르기가 있어요` states the allergy. Swap in any ingredient for N — `땅콩` (peanut), `우유` (milk), `밀가루` (flour). Staff understand this pattern immediately.",
+    "`저는`が主語を示します。`N 알레르기가 있어요`でアレルギーを伝えます。Nには`땅콩`・`우유`・`밀가루`など任意の食材を入れます。",
+    "`저는` 表示主语是你。`N 알레르기가 있어요` 说明过敏原。把 N 换成任意食材——花生、牛奶、面粉。工作人员一听就明白。",
+    "`저는` đánh dấu bạn là chủ thể. `N 알레르기가 있어요` nêu dị ứng. Thay N bằng bất kỳ nguyên liệu nào — đậu phộng, sữa, bột mì.",
+    "`저는` marca que tú eres el sujeto. `N 알레르기가 있어요` declara la alergia. Sustituye N por cualquier ingrediente: cacahuate, leche, harina."
+  ),
+  21: localized(
+    "`따로` means separately or apart. It floats in front of any verb: `따로 담아 주세요` (pack separately), `따로 계산해 주세요` (bill separately). The verb changes; `따로` stays.",
+    "`따로`は「別々に」という意味で、どんな動詞の前にも置けます。詰める・計算するなど動詞を替えるだけで使えます。",
+    "`따로` 意思是'分开'，可以放在任何动词前面——分开打包、分开结账。动词换，`따로` 不变。",
+    "`따로` nghĩa là riêng hoặc tách biệt. Đặt trước bất kỳ động từ nào: `따로 담아 주세요`, `따로 계산해 주세요`. Động từ thay đổi, `따로` giữ nguyên.",
+    "`따로` significa por separado. Va delante de cualquier verbo: `따로 담아 주세요` (envuélvelo aparte), `따로 계산해 주세요` (cóbralo aparte). El verbo cambia; `따로` queda."
+  ),
+  22: localized(
+    "Add `-로/-으로` after the payment method to say how you are paying: `카드로 계산해 주세요` or `현금으로 계산해 주세요`. Without a method, `계산해 주세요` alone is enough.",
+    "支払い方法のあとに`-로/-으로`をつけてどう払うかを示します。方法を言わない場合は`계산해 주세요`だけで通じます。",
+    "在付款方式后加 `-로/-으로` 表示用什么方式付款：刷卡或付现金。不说方式的话，直接 `계산해 주세요` 就够了。",
+    "Thêm `-로/-으로` sau phương thức thanh toán: `카드로 계산해 주세요` hoặc `현금으로 계산해 주세요`. Không cần nói cách, chỉ `계산해 주세요` cũng đủ.",
+    "Añade `-로/-으로` al método de pago: `카드로 계산해 주세요` o `현금으로 계산해 주세요`. Sin especificar método, solo `계산해 주세요` es suficiente."
+  ),
+  23: localized(
+    "Name what was lost with the object marker `-을/를`, then end with `잃어버렸어요`. The compound verb `잃어버리다` implies the loss is complete — stronger than just `잃다`.",
+    "失くしたものを目的格の`-을/를`で示し、`잃어버렸어요`で締めます。`잃어버리다`は「完全になくしてしまった」というニュアンスで、`잃다`より強い表現です。",
+    "用宾语助词 `-을/를` 说明丢了什么，再用 `잃어버렸어요` 收尾。复合动词 `잃어버리다` 表示已经完全丢失，语气比 `잃다` 更强。",
+    "Nêu thứ bị mất với trợ từ `-을/를`, rồi kết bằng `잃어버렸어요`. Động từ ghép `잃어버리다` ngụ ý mất hoàn toàn, mạnh hơn chỉ `잃다`.",
+    "Nombra lo perdido con la marca de objeto `-을/를`, luego cierra con `잃어버렸어요`. El verbo compuesto `잃어버리다` implica pérdida total, más fuerte que solo `잃다`."
+  ),
+  24: localized(
+    "Use `바꾸고 싶어요` to say what you want to change. Put the target before it: `예약을 바꾸고 싶어요`. For the new time or date, add `-(으)로` after it.",
+    "`바꾸고 싶어요`で変えたいことを伝えます。何を変えたいかを先に言い、新しい日時には`-(으)로`をつけて示します。",
+    "用 `바꾸고 싶어요` 表达想改变的内容。把目标放在前面：`예약을 바꾸고 싶어요`。新的时间或日期用 `-(으)로` 来表示。",
+    "Dùng `바꾸고 싶어요` để nói bạn muốn thay đổi gì. Đặt đối tượng trước: `예약을 바꾸고 싶어요`. Thời gian/ngày mới thêm `-(으)로`.",
+    "Usa `바꾸고 싶어요` para decir qué quieres cambiar. Pon el objeto antes: `예약을 바꾸고 싶어요`. La nueva hora o fecha va con `-(으)로`."
+  ),
+  25: localized(
+    "`-네요` adds a soft reaction to something you just noticed. `춥네요` means \"wow, it is cold\" — not just stating a fact but sharing a feeling. It works for anything you observe in the moment.",
+    "`-네요`は今気づいたことをやわらかく伝える語尾です。「寒いですね」のように、単に事実を言うより感想を添える感覚です。",
+    "`-네요` 是对刚注意到的事物做出温和反应的语尾。`춥네요` 不只是陈述事实，更是分享当下的感受。",
+    "`-네요` thêm phản ứng nhẹ về điều bạn vừa nhận ra. `춥네요` không chỉ là sự thật mà còn chia sẻ cảm xúc hiện tại.",
+    "`-네요` añade una reacción suave a algo que acabas de notar. `춥네요` no solo constata el frío — comparte la sensación. Sirve para cualquier cosa observada en el momento."
+  ),
+  26: localized(
+    "`-ㄹ까요?` proposes something to do together — \"shall we?\" Put the time or action before it: `두 시에 만날까요?` (shall we meet at two?). It invites the other person to agree.",
+    "`-ㄹ까요?`は一緒に何かをする提案です。時間や動詞の前に置くだけで「〜しましょうか?」と聞けます。相手に同意を促す形です。",
+    "`-ㄹ까요?` 是一起做某事的提议——'我们要不要……？' 把时间或动作放在前面就行：`두 시에 만날까요?`",
+    "`-ㄹ까요?` đề xuất cùng làm gì đó. Đặt thời gian hoặc hành động trước: `두 시에 만날까요?`. Nó mời đối phương đồng ý.",
+    "`-ㄹ까요?` propone hacer algo juntos — \"¿nos...?\" Pon el tiempo o la acción antes: `두 시에 만날까요?`. Invita al otro a estar de acuerdo."
+  ),
+  27: localized(
+    "`좋아해요` covers general preferences — food, activities, content. For a noun alone, `N이/가 좋아요` is simpler. Both are natural. Use `좋아해요` when you also want to express the habit of liking something.",
+    "`좋아해요`は食べ物や趣味など幅広い好みを表します。名詞だけなら`N이/가 좋아요`が簡単です。習慣的に好きなことを言うときは`좋아해요`が自然です。",
+    "`좋아해요` 表达对食物、活动、内容等的喜好。对于单独的名词，`N이/가 좋아요` 更简单。想表达习惯性喜欢某事时，用 `좋아해요` 更自然。",
+    "`좋아해요` diễn đạt sở thích chung — thức ăn, hoạt động, nội dung. Với danh từ đơn, `N이/가 좋아요` đơn giản hơn. Khi muốn nói thói quen thích, dùng `좋아해요`.",
+    "`좋아해요` expresa preferencias generales: comida, actividades, contenido. Para un sustantivo solo, `N이/가 좋아요` es más sencillo. Usa `좋아해요` cuando quieras expresar el hábito de gustar."
+  ),
+  28: localized(
+    "Body part first, then `아파요`. This is the simplest way to report pain. Add `조금` before `아파요` to soften the intensity, or `많이` to emphasize it.",
+    "体の部分を先に言い、`아파요`で締めます。これが痛みを伝える最もシンプルな形です。`조금`で程度を柔らげ、`많이`で強調できます。",
+    "先说身体部位，再接 `아파요`。这是报告疼痛的最简单方式。`조금` 放在 `아파요` 前面可以减弱程度，`많이` 则可以加重。",
+    "Bộ phận cơ thể đặt trước, rồi `아파요`. Đây là cách đơn giản nhất để nói đau. Thêm `조금` trước `아파요` để nhẹ hơn, hoặc `많이` để nhấn mạnh.",
+    "La parte del cuerpo va primero, luego `아파요`. Esta es la forma más simple de reportar dolor. Añade `조금` antes de `아파요` para suavizar, o `많이` para enfatizar."
+  ),
+  29: localized(
+    "`뭐가 필요해요?` asks what is needed. At a counter, it is polite and direct. If you want to ask whether a specific document is needed, switch to `N이/가 필요해요?` with the document name.",
+    "`뭐가 필요해요?`は何が必要かを聞く形です。窓口では丁寧で直接的です。特定の書類について聞くなら`N이/가 필요해요?`に変えられます。",
+    "`뭐가 필요해요?` 用来问需要什么。在柜台这样问既礼貌又直接。如果要问特定文件，把 N 换成文件名：`N이/가 필요해요?`",
+    "`뭐가 필요해요?` hỏi cần gì. Tại quầy, câu này lịch sự và thẳng thắn. Nếu muốn hỏi tài liệu cụ thể, đổi sang `N이/가 필요해요?`.",
+    "`뭐가 필요해요?` pregunta qué se necesita. En una ventanilla, es directo y cortés. Si quieres preguntar por un documento específico, cambia a `N이/가 필요해요?`."
+  ),
+  30: localized(
+    "`다음에는` sets the time frame: next time, after this. Then `V-고 싶어요` expresses the wish. Together they make a warm, forward-looking close to any conversation.",
+    "`다음에는`で「次回・この次」という時間軸を示し、`V-고 싶어요`で願いを続けます。会話の締めくくりとして前向きな気持ちが伝わります。",
+    "`다음에는` 设定时间框架——下次、之后。再加上 `V-고 싶어요` 表达愿望。两者合在一起，为对话画上温暖又期待的句号。",
+    "`다음에는` đặt khung thời gian: lần sau, sau đây. Rồi `V-고 싶어요` bày tỏ mong muốn. Cùng nhau tạo cái kết ấm áp, hướng tới tương lai.",
+    "`다음에는` fija el marco de tiempo: la próxima vez, después de esto. Luego `V-고 싶어요` expresa el deseo. Juntos forman un cierre cálido y esperanzador."
+  )
+};
+
+const day15To30PronunciationOverrides: Partial<Record<number, Record<CountryPackId, string>>> = {
+  15: localized(
+    "Say the destination name first and clearly — the driver listens for it. Then `로 가 주세요` follows as one smooth unit. `로` links directly into `가` without a pause.",
+    "行き先をまず明確に言います。運転手が真っ先に聞くからです。その後`로 가 주세요`をひとつながりで続けます。`로`は`가`に直接つなげます。",
+    "先清楚说出目的地——司机首先听的是这个。然后 `로 가 주세요` 连成一体跟上，`로` 直接接 `가`，不要停顿。",
+    "Nói tên điểm đến trước và rõ ràng — tài xế nghe vào đó. Rồi `로 가 주세요` theo sau liền mạch. `로` nối thẳng vào `가` không ngắt.",
+    "Di el destino primero y con claridad — el conductor lo escucha primero. Luego `로 가 주세요` sigue como una unidad fluida. `로` conecta directo a `가` sin pausa."
+  ),
+  16: localized(
+    "`몇` ends in a closed `t` sound that links straight into `번`: say `myeot-beon` without a gap. `출구예요` falls at the end as a statement, not a question.",
+    "`몇`は閉じた`t`音で終わり、`번`に直接つながります。`myeot-beon`と続けて言います。`출구예요`は文末を下げて述べる形です。",
+    "`몇` 以闭塞的 `t` 音结尾，直接连到 `번`：说成 `myeot-beon`，中间不要停顿。`출구예요` 末尾语调下降，是陈述句。",
+    "`몇` kết thúc bằng âm `t` đóng nối thẳng vào `번`: nói `myeot-beon` liền mạch. `출구예요` hạ xuống ở cuối như câu trần thuật.",
+    "`몇` termina en un `t` cerrado que enlaza directo a `번`: di `myeot-beon` sin pausa. `출구예요` baja al final como una afirmación."
+  ),
+  17: localized(
+    "Lead with `여기서` so the driver catches the location signal. `내려` has two syllables: `nae-ryeo`. Keep the `r` light — a quick tap, not an English `r`. `주세요` closes softly.",
+    "まず`여기서`をはっきり言います。`내려`は「ネリョ」と二音節です。`ㄹ`は軽くはじく音で、英語の`r`と違います。`주세요`はやわらかく締めます。",
+    "先说 `여기서` 让司机捕捉到位置信号。`내려` 有两个音节：`nae-ryeo`。`ㄹ` 是轻弹音，不是英语的 `r`。`주세요` 轻轻收尾。",
+    "Dẫn đầu bằng `여기서` để tài xế nhận tín hiệu vị trí. `내려` có hai âm tiết: `nae-ryeo`. Giữ `r` nhẹ — gõ nhanh, không phải `r` tiếng Anh. `주세요` kết nhẹ.",
+    "Empieza con `여기서` para que el conductor capte la señal de lugar. `내려` tiene dos sílabas: `nae-ryeo`. La `r` es suave, un toque rápido, no la `r` española."
+  ),
+  18: localized(
+    "`걸려요` is the key verb. Its `ㄹㄹ` makes a double-`l` sound: `geol-lyeo-yo`. Say it with a slight roll at `려`. Let the sentence rise at the end — it is a question.",
+    "`걸려요`が中心の動詞です。`ㄹㄹ`は二重`l`音で`geol-lyeo-yo`と発音します。文末は質問なので少し上げます。",
+    "`걸려요` 是关键动词。`ㄹㄹ` 发成双 `l` 音：`geol-lyeo-yo`。`려` 处稍微带一点弹舌感。句尾上扬，因为这是疑问句。",
+    "`걸려요` là động từ chính. `ㄹㄹ` tạo âm đôi `l`: `geol-lyeo-yo`. Nói với chút lăn nhẹ ở `려`. Cuối câu nhấc lên — đây là câu hỏi.",
+    "`걸려요` es el verbo clave. Su `ㄹㄹ` suena como `l` doble: `geol-lyeo-yo`. Deja que la oración suba al final — es una pregunta."
+  ),
+  19: localized(
+    "The phrase is long: split naturally after `않게` and before `해 주세요`. `않게` should not be swallowed. `맵지` has a tense initial — the `ㅈ` starts firm.",
+    "フレーズが長いので、`않게`の後で自然に区切り、`해 주세요`へ続けます。`않게`を飲み込まないよう注意します。`맵지`の`ㅈ`は緊張音なので、しっかりと始めます。",
+    "这句话很长：在 `않게` 后自然停顿，再接 `해 주세요`。`않게` 不要吞掉。`맵지` 的 `ㅈ` 是紧音，起音要有力。",
+    "Câu này dài: ngắt tự nhiên sau `않게` trước `해 주세요`. Đừng nuốt `않게`. `맵지` có phụ âm đầu căng — `ㅈ` bắt đầu chắc.",
+    "La frase es larga: divide naturalmente después de `않게` y antes de `해 주세요`. No te tragues `않게`. `맵지` tiene una consonante tensa: `ㅈ` empieza firme."
+  ),
+  20: localized(
+    "`알레르기` is a loanword — say it in four Korean syllables: `al-le-reu-gi`. Korean `르` is softer than an English `r`; it is a light tongue tap, not a curl.",
+    "`알레르기`は外来語です。韓国語の4音節で「알·레·르·기」と発音します。`르`は英語の`r`より軽く、舌を弾くイメージです。",
+    "`알레르기` 是外来词，按韩语四个音节说：`al-le-reu-gi`。韩语的 `르` 比英语的 `r` 要轻，是轻弹舌尖，不是卷舌音。",
+    "`알레르기` là từ vay mượn — nói bốn âm tiết tiếng Hàn: `al-le-reu-gi`. `르` tiếng Hàn nhẹ hơn `r` tiếng Anh; là gõ lưỡi nhẹ, không cuộn.",
+    "`알레르기` es un préstamo — dilo en cuatro sílabas coreanas: `al-le-reu-gi`. El `르` coreano es más suave que la `r` inglesa: es un toque ligero de lengua, no un enroscamiento."
+  ),
+  21: localized(
+    "`따` has a tense initial — say it with a firm stop. `담아` links straight into `주세요`, almost as `damaajuseyo` in fast speech. The phrase feels quick: two beats — `따로` then `담아 주세요`.",
+    "`따`は緊張音で始めます。`담아`は速いと`주세요`に直接つながります。「따로」と「담아 주세요」の二拍でリズムを取るとよいです。",
+    "`따` 以紧音开头，要有力。`담아` 快说时直接连到 `주세요`，几乎像 `damaajuseyo`。整句节奏感强：两拍——`따로` 然后 `담아 주세요`。",
+    "`따` có phụ âm đầu căng — nói chắc. `담아` nối thẳng vào `주세요`, gần như `damaajuseyo` trong nói nhanh. Câu nhanh gọn: hai nhịp — `따로` rồi `담아 주세요`.",
+    "`따` tiene una consonante tensa — dila firme. `담아` enlaza directo a `주세요`, casi como `damaajuseyo` al hablar rápido. La frase es ágil: dos tiempos — `따로` luego `담아 주세요`."
+  ),
+  22: localized(
+    "`계산해 주세요` — `계` sounds like `gye`, not `gay`. Say all six syllables evenly: `gye-san-hae-ju-se-yo`. The stress falls on `계산`, and `해 주세요` follows lightly.",
+    "`계`は「ゲ」に近い音です。`gye-san-hae-ju-se-yo`と6音節を均等に言います。`계산`に軽く強調を置き、`해 주세요`は流れるように続けます。",
+    "`계` 读作 `gye`，不是 `gay`。六个音节均匀说出：`gye-san-hae-ju-se-yo`。重音落在 `계산`，`해 주세요` 轻轻跟上。",
+    "`계` nghe như `gye`, không phải `gay`. Nói đều sáu âm tiết: `gye-san-hae-ju-se-yo`. Trọng âm rơi vào `계산`, `해 주세요` theo sau nhẹ nhàng.",
+    "`계` suena como `gye`, no como `gay`. Di las seis sílabas de manera uniforme: `gye-san-hae-ju-se-yo`. El énfasis cae en `계산`; `해 주세요` sigue suave."
+  ),
+  23: localized(
+    "`잃어버렸어요` has six syllables: `il-leo-beo-ryeo-sseo-yo`. Practice in two halves: `잃어` then `버렸어요`. The `르` causes the `ㄹ` to double at the `버렸` boundary.",
+    "`잃어버렸어요`は6音節：`il-leo-beo-ryeo-sseo-yo`。「잃어」と「버렸어요」の二つに分けて練習すると覚えやすいです。`버렸`の境目でㄹが重なります。",
+    "`잃어버렸어요` 有六个音节：`il-leo-beo-ryeo-sseo-yo`。分两段练习：`잃어` 然后 `버렸어요`。`버렸` 的交界处 `ㄹ` 发生双化。",
+    "`잃어버렸어요` có sáu âm tiết: `il-leo-beo-ryeo-sseo-yo`. Luyện theo hai nửa: `잃어` rồi `버렸어요`. `ㄹ` nhân đôi tại ranh giới `버렸`.",
+    "`잃어버렸어요` tiene seis sílabas: `il-leo-beo-ryeo-sseo-yo`. Practica en dos mitades: `잃어` luego `버렸어요`. La `ㄹ` se duplica en el límite de `버렸`."
+  ),
+  24: localized(
+    "`바꾸고` — the `꾸` is tense: a hard, short `kk`. `싶어요` ends with a soft falling tone. That softness turns the sentence from a demand into a polite wish.",
+    "`바꾸고`の`꾸`は緊張音で短く強く出します。`싶어요`はやわらかく下げることで、要求ではなく丁寧な希望として聞こえます。",
+    "`바꾸고` 里的 `꾸` 是紧音：短促有力的 `kk`。`싶어요` 末尾轻轻下落，这种柔和感让句子听起来是礼貌的愿望，而非要求。",
+    "`바꾸고` — `꾸` là âm căng: `kk` ngắn và chắc. `싶어요` kết thúc với giọng hạ nhẹ, biến câu từ yêu cầu thành mong muốn lịch sự.",
+    "`바꾸고` — la `꾸` es tensa: una `kk` corta y firme. `싶어요` cierra con un tono suave descendente, convirtiendo la frase de demanda en deseo cortés."
+  ),
+  25: localized(
+    "`-네요` rises gently at the end — it should sound like a soft discovery, not a flat statement. `춥네요`: the `춥` lands firm, then `-네요` lifts slightly.",
+    "`-네요`は語尾をやわらかく上げます。「発見した」という感じで、平坦に読まないのがポイントです。`춥네요`では`춥`をしっかり出し、`-네요`を軽く上げます。",
+    "`-네요` 结尾轻轻上扬——要像温和地发现了什么，不要读成平调。`춥네요`：`춥` 落得有力，再把 `-네요` 微微上扬。",
+    "`-네요` nhấc lên nhẹ ở cuối — nên nghe như một khám phá nhẹ, không phải câu trần thuật phẳng. `춥네요`: `춥` chắc, rồi `-네요` nhấc nhẹ.",
+    "`-네요` sube suavemente al final — debe sonar como un descubrimiento suave, no como una afirmación plana. `춥네요`: `춥` aterriza firme, luego `-네요` sube un poco."
+  ),
+  26: localized(
+    "The invitation lives in `-까요?` — it rises clearly at the end. Say the time or action before it firmly so the listener knows what is being proposed before the question comes.",
+    "提案の核心は`-까요?`の上がり語尾にあります。時間や動詞を先にはっきり言うことで、質問が来る前に何を提案しているかが伝わります。",
+    "邀请的语气在 `-까요?` 的上扬尾音中。先把时间或动作说清楚，让听者在问句到来前就知道你在提议什么。",
+    "Lời mời nằm ở `-까요?` — nhấc rõ cuối câu. Nói thời gian hoặc hành động trước chắc chắn để người nghe biết bạn đề xuất gì trước khi câu hỏi đến.",
+    "La invitación vive en `-까요?` — sube claramente al final. Di el tiempo o la acción antes con firmeza para que el oyente sepa qué se propone antes de que llegue la pregunta."
+  ),
+  27: localized(
+    "`좋아해요` — `좋` starts tense. The `ㅎ` in `좋아` links across: `jo-a-hae-yo`. Do not pause between `좋아` and `해요`. The four syllables should flow as one word.",
+    "`좋아해요`の`좋`は緊張音です。`좋아`の`ㅎ`は`해요`に流れ込み、`jo-a-hae-yo`と4音節でつながります。途中で区切らないことが大事です。",
+    "`좋아해요`：`좋` 以紧音起头。`좋아` 里的 `ㅎ` 连到 `해요`：`jo-a-hae-yo`，四个音节流畅相连。`좋아` 和 `해요` 之间不要停顿。",
+    "`좋아해요` — `좋` bắt đầu căng. `ㅎ` trong `좋아` nối sang `해요`: `jo-a-hae-yo`. Đừng ngắt giữa `좋아` và `해요`. Bốn âm tiết chảy như một từ.",
+    "`좋아해요` — `좋` empieza tensa. La `ㅎ` de `좋아` enlaza con `해요`: `jo-a-hae-yo`. No hagas pausa entre `좋아` y `해요`. Las cuatro sílabas fluyen como una sola palabra."
+  ),
+  28: localized(
+    "`아파요` — the `파` is aspirated: put a small puff of air on it. Compare `아바요` (wrong, no breath) with `아파요` (right, with the breath). The difference is that one breath.",
+    "`아파요`の`파`は激音で、息を出して発音します。`아바요`（息なし）と`아파요`（息あり）を比べると違いがわかります。その一息が大切です。",
+    "`아파요` 里的 `파` 是送气音：发音时要有一小股气。比较 `아바요`（错，无气）和 `아파요`（对，有气）——区别就在那一口气。",
+    "`아파요` — `파` là âm bật hơi: thêm chút hơi thở vào. So sánh `아바요` (sai, không thở) với `아파요` (đúng, có hơi). Sự khác biệt chỉ là một hơi thở.",
+    "`아파요` — la `파` es aspirada: suéltale un pequeño soplo de aire. Compara `아바요` (incorrecto, sin aire) con `아파요` (correcto, con aire). La diferencia es ese soplo."
+  ),
+  29: localized(
+    "`필요해요` — `필` is `pil`, not `fil`. Korean has no `f` sound; it is a lightly aspirated `p`. Say `pil-lyo-hae-yo` with a slight pause between `필` and `요` to keep it clear.",
+    "`필`は`pil`で、`fil`ではありません。韓国語に`f`音はなく、軽い激音の`p`です。`pil-lyo-hae-yo`と発音し、`필`と`요`の間に軽い区切りを入れます。",
+    "`필` 是 `pil`，不是 `fil`。韩语没有 `f` 音，是轻送气的 `p`。说 `pil-lyo-hae-yo`，在 `필` 和 `요` 之间稍微区分一下，让整体更清晰。",
+    "`필` là `pil`, không phải `fil`. Tiếng Hàn không có âm `f`; đây là `p` bật hơi nhẹ. Nói `pil-lyo-hae-yo` với ngắt nhẹ giữa `필` và `요` cho rõ.",
+    "`필` es `pil`, no `fil`. El coreano no tiene sonido `f`; es una `p` levemente aspirada. Di `pil-lyo-hae-yo` con una leve separación entre `필` y `요` para mayor claridad."
+  ),
+  30: localized(
+    "Give `다음에는` a little weight — it sets the whole sentence forward in time. Then let `고 싶어요` land gently with a slightly rising, hopeful tone. The ending should feel open, not closed.",
+    "`다음에는`にしっかり重みを置きます。未来に向けて文全体のトーンを決めるからです。`고 싶어요`はやわらかく、少し上向きの希望のトーンで締めます。",
+    "`다음에는` 要稍微加重——它把整句话推向未来。然后 `고 싶어요` 轻轻落下，语调微微上扬，带着希望感。结尾要开放，不要封闭。",
+    "Cho `다음에는` thêm chút trọng lượng — nó đẩy cả câu về phía tương lai. Rồi `고 싶어요` hạ nhẹ với giọng hơi nhấc lên, đầy hy vọng. Kết thúc nên mở, không đóng.",
+    "Dale un poco de peso a `다음에는` — sitúa toda la frase en el futuro. Luego `고 싶어요` aterriza suave con un tono levemente ascendente y esperanzador. El final debe sentirse abierto, no cerrado."
   )
 };
 
@@ -1089,7 +1319,7 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
     rescuePhrase: seed.rescue,
     structure: {
       pattern: seed.structurePattern,
-      explanationByCountry: day14StructureOverrides[seed.day] ?? seed.structureExplanation
+      explanationByCountry: day14StructureOverrides[seed.day] ?? day15To30StructureOverrides[seed.day] ?? seed.structureExplanation
     },
     swapSlots: seed.swapSlots.map((slot, index) => ({ ...slot, label: `Swap ${index + 1}` })),
     sceneWords: [...seed.sceneWords],
@@ -1100,7 +1330,7 @@ const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
     },
     reviewCards: reviewCards(seed.day, seed.core, seed.roleplayPrompt),
     countryNotes: commonCountryNotes,
-    pronunciationByCountry: day14PronunciationOverrides[seed.day] ?? commonPronunciationNotes,
+    pronunciationByCountry: day14PronunciationOverrides[seed.day] ?? day15To30PronunciationOverrides[seed.day] ?? commonPronunciationNotes,
     audioTargets: {
       core: seed.core,
       response: seed.response,
