@@ -527,7 +527,7 @@ const HomeScreen = ({
         <div className="lesson-preview">
           <div>
             <strong>
-              Day {lesson.day}. {lesson.title}
+              Day {lesson.day}. {lesson.title[countryPack.id]}
             </strong>
             <p className="muted">
               {tr("home.lesson.meta", { percent, dailyGoal: state.onboarding?.dailyGoalMinutes ?? 5 })}
@@ -867,7 +867,7 @@ const LessonScreen = ({
 
   return (
     <section className="flow">
-      <ProgressHeader current={activeProgress.completedStepIds.length + 1} total={lesson.steps.length} title={lesson.title} />
+      <ProgressHeader current={activeProgress.completedStepIds.length + 1} total={lesson.steps.length} title={lesson.title[countryPack.id]} />
       <Panel title={step.title} kicker={tr("lesson.tutorKicker", { name: character.name })}>
         <LessonStepBody
           step={step}

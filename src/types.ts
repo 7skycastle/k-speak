@@ -188,8 +188,8 @@ export interface LessonReviewCard {
 export interface Lesson {
   id: string;
   day: number;
-  title: string;
-  situation: string;
+  title: Record<CountryPackId, string>;
+  situation: Record<CountryPackId, string>;
   phraseId: string;
   korean: string;
   romanization: string;
