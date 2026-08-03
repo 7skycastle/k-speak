@@ -155,8 +155,11 @@ export interface LocalizedPhrase {
   meaningByCountry: Record<CountryPackId, string>;
 }
 
+export type SpeakerRole = "learner" | "partner" | "staff" | "driver" | "friend" | "tutor";
+
 export interface LessonDialogueLine extends LocalizedPhrase {
   speaker: string;
+  speakerRole: SpeakerRole;
 }
 
 export interface LessonStructure {

@@ -972,7 +972,7 @@ const LessonStepBody = ({
     {step.kind === "dialogue" && (
       <div className="dialogue-box">
         {lesson.dialogue.map((line, index) => (
-          <div key={`${line.speaker}-${index}`} className={line.speaker === "학습자" ? "dialogue-line learner" : "dialogue-line"}>
+          <div key={`${line.speaker}-${index}`} className={line.speakerRole === "learner" ? "dialogue-line learner" : "dialogue-line"}>
             <span>{line.speaker}</span>
             <strong>{line.korean}</strong>
           </div>

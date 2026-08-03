@@ -1,4 +1,4 @@
-import type { CountryPackId, Lesson, LessonReviewCard, LocalizedPhrase } from "../types";
+﻿import type { CountryPackId, Lesson, LessonReviewCard, LocalizedPhrase } from "../types";
 
 const localized = (
   en: string,
@@ -300,10 +300,10 @@ const lessonSeeds = [
     response: phrase("네, 저도 반가워요.", "Ne, jeodo bangawoyo.", "Yes, nice to meet you too.", "はい、私もうれしいです。", "我也很高兴。", "Vâng, tôi cũng rất vui.", "Sí, igualmente."),
     rescue: phrase("이름이 뭐예요?", "Ireumi mwoyeyo?", "What is your name?", "お名前は何ですか。", "你叫什么名字？", "Bạn tên là gì?", "¿Cómo te llamas?"),
     dialogue: [
-      { speaker: "상대", text: "안녕하세요." },
-      { speaker: "학습자", text: "안녕하세요. 만나서 반가워요." },
-      { speaker: "상대", text: "네, 저도 반가워요." },
-      { speaker: "학습자", text: "이름이 뭐예요?" }
+      { speaker: "상대", speakerRole: "partner", text: "안녕하세요." },
+      { speaker: "학습자", speakerRole: "learner", text: "안녕하세요. 만나서 반가워요." },
+      { speaker: "상대", speakerRole: "partner", text: "네, 저도 반가워요." },
+      { speaker: "학습자", speakerRole: "learner", text: "이름이 뭐예요?" }
     ],
     structurePattern: "안녕하세요 + -요",
     structureExplanation: localized(
@@ -329,10 +329,10 @@ const lessonSeeds = [
     response: phrase("드시고 가세요?", "Deusigo gaseyo?", "For here?", "店内で召し上がりますか。", "在店里喝吗？", "Bạn dùng tại đây không?", "¿Para tomar aquí?"),
     rescue: phrase("포장해 주세요.", "Pojanghae juseyo.", "Please make it to go.", "持ち帰りにしてください。", "请打包。", "Làm ơn gói mang đi.", "Para llevar, por favor."),
     dialogue: [
-      { speaker: "직원", text: "안녕하세요. 주문하시겠어요?" },
-      { speaker: "학습자", text: "아이스 아메리카노 하나 주세요." },
-      { speaker: "직원", text: "드시고 가세요?" },
-      { speaker: "학습자", text: "포장해 주세요." }
+      { speaker: "직원", speakerRole: "staff", text: "안녕하세요. 주문하시겠어요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "아이스 아메리카노 하나 주세요." },
+      { speaker: "직원", speakerRole: "staff", text: "드시고 가세요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "포장해 주세요." }
     ],
     structurePattern: "N 하나 주세요",
     structureExplanation: localized("Use `N 하나 주세요` to ask for one item politely.", "`N 하나 주세요`で一つ注文できます。", "用 `N 하나 주세요` 可以礼貌地点一个东西。", "Dùng `N 하나 주세요` để gọi một món.", "Usa `N 하나 주세요` para pedir una unidad."),
@@ -352,9 +352,9 @@ const lessonSeeds = [
     response: phrase("아니에요. 괜찮아요.", "Anieyo. Gwaenchanayo.", "No problem. It is okay.", "いいえ、大丈夫です。", "没事。没关系。", "Không có gì. Không sao.", "No pasa nada. Está bien."),
     rescue: phrase("죄송해요.", "Joesonghaeyo.", "I am sorry.", "すみません。", "对不起。", "Xin lỗi.", "Lo siento."),
     dialogue: [
-      { speaker: "상대", text: "여기로 가시면 돼요." },
-      { speaker: "학습자", text: "감사합니다. 정말 도움이 됐어요." },
-      { speaker: "상대", text: "아니에요. 괜찮아요." }
+      { speaker: "상대", speakerRole: "partner", text: "여기로 가시면 돼요." },
+      { speaker: "학습자", speakerRole: "learner", text: "감사합니다. 정말 도움이 됐어요." },
+      { speaker: "상대", speakerRole: "partner", text: "아니에요. 괜찮아요." }
     ],
     structurePattern: "감사합니다 + 도움이 됐어요",
     structureExplanation: localized("Pair a simple thank-you with why it helped.", "感謝の言葉に、助かった理由を短く足します。", "先感谢，再简单说这很有帮助。", "Nói cảm ơn rồi thêm rằng điều đó có ích.", "Agradece y añade que te ayudó."),
@@ -374,10 +374,10 @@ const lessonSeeds = [
     response: phrase("저쪽이에요.", "Jeojjogiyeyo.", "It is over there.", "あちらです。", "在那边。", "Ở phía kia.", "Está por allí."),
     rescue: phrase("여기서 멀어요?", "Yeogiseo meoreoyo?", "Is it far from here?", "ここから遠いですか。", "离这里远吗？", "Có xa đây không?", "¿Está lejos de aquí?"),
     dialogue: [
-      { speaker: "학습자", text: "지하철역이 어디예요?" },
-      { speaker: "상대", text: "저쪽이에요." },
-      { speaker: "학습자", text: "여기서 멀어요?" },
-      { speaker: "상대", text: "아니요, 가까워요." }
+      { speaker: "학습자", speakerRole: "learner", text: "지하철역이 어디예요?" },
+      { speaker: "상대", speakerRole: "partner", text: "저쪽이에요." },
+      { speaker: "학습자", speakerRole: "learner", text: "여기서 멀어요?" },
+      { speaker: "상대", speakerRole: "partner", text: "아니요, 가까워요." }
     ],
     structurePattern: "N이/가 어디예요?",
     structureExplanation: localized("Use this pattern to ask where a place is.", "場所を聞くときの基本形です。", "这是询问地点在哪里的基本句型。", "Dùng mẫu này để hỏi địa điểm ở đâu.", "Usa este patrón para preguntar dónde está un lugar."),
@@ -397,10 +397,10 @@ const lessonSeeds = [
     response: phrase("만 원이에요.", "Man woniyeyo.", "It is ten thousand won.", "一万ウォンです。", "一万韩元。", "Mười nghìn won.", "Son diez mil wones."),
     rescue: phrase("카드 돼요?", "Kadeu dwaeyo?", "Can I pay by card?", "カードは使えますか。", "可以刷卡吗？", "Có dùng thẻ được không?", "¿Aceptan tarjeta?"),
     dialogue: [
-      { speaker: "학습자", text: "이거 얼마예요?" },
-      { speaker: "직원", text: "만 원이에요." },
-      { speaker: "학습자", text: "카드 돼요?" },
-      { speaker: "직원", text: "네, 돼요." }
+      { speaker: "학습자", speakerRole: "learner", text: "이거 얼마예요?" },
+      { speaker: "직원", speakerRole: "staff", text: "만 원이에요." },
+      { speaker: "학습자", speakerRole: "learner", text: "카드 돼요?" },
+      { speaker: "직원", speakerRole: "staff", text: "네, 돼요." }
     ],
     structurePattern: "이거 얼마예요?",
     structureExplanation: localized("`이거` means this item near you.", "`이거`は自分の近くにある物を指します。", "`이거` 指你附近的这个东西。", "`이거` nghĩa là món này ở gần bạn.", "`이거` significa este objeto cerca de ti."),
@@ -420,9 +420,9 @@ const lessonSeeds = [
     response: phrase("네, 천천히 말할게요.", "Ne, cheoncheonhi malhalgeyo.", "Sure, I will speak slowly.", "はい、ゆっくり話します。", "好的，我慢慢说。", "Vâng, tôi sẽ nói chậm.", "Sí, hablaré despacio."),
     rescue: phrase("한국어를 조금 배웠어요.", "Hangugeoreul jogeum baewosseoyo.", "I learned a little Korean.", "韓国語を少し勉強しました。", "我学了一点韩语。", "Tôi đã học một chút tiếng Hàn.", "Aprendí un poco de coreano."),
     dialogue: [
-      { speaker: "상대", text: "여기에서 오른쪽으로 가세요." },
-      { speaker: "학습자", text: "죄송해요. 조금 천천히 말해 주세요." },
-      { speaker: "상대", text: "네, 천천히 말할게요." }
+      { speaker: "상대", speakerRole: "partner", text: "여기에서 오른쪽으로 가세요." },
+      { speaker: "학습자", speakerRole: "learner", text: "죄송해요. 조금 천천히 말해 주세요." },
+      { speaker: "상대", speakerRole: "partner", text: "네, 천천히 말할게요." }
     ],
     structurePattern: "조금 + 천천히 + V-아/어 주세요",
     structureExplanation: localized("This is a polite rescue phrase when Korean feels too fast.", "速すぎるときに使える丁寧な救助表現です。", "听不清时可以礼貌地请对方慢一点。", "Đây là câu cứu nguy lịch sự khi tiếng Hàn quá nhanh.", "Es una frase de rescate cuando hablan demasiado rápido."),
@@ -442,10 +442,10 @@ const lessonSeeds = [
     response: phrase("네, 다시 말할게요.", "Ne, dasi malhalgeyo.", "Sure, I will say it again.", "はい、もう一度言います。", "好的，我再说一遍。", "Vâng, tôi sẽ nói lại.", "Sí, lo diré otra vez."),
     rescue: phrase("잘 못 들었어요.", "Jal mot deureosseoyo.", "I could not hear well.", "よく聞き取れませんでした。", "我没听清。", "Tôi nghe không rõ.", "No escuché bien."),
     dialogue: [
-      { speaker: "상대", text: "예약 번호를 말씀해 주세요." },
-      { speaker: "학습자", text: "잘 못 들었어요." },
-      { speaker: "학습자", text: "다시 한 번 말해 주세요." },
-      { speaker: "상대", text: "네, 다시 말할게요." }
+      { speaker: "상대", speakerRole: "partner", text: "예약 번호를 말씀해 주세요." },
+      { speaker: "학습자", speakerRole: "learner", text: "잘 못 들었어요." },
+      { speaker: "학습자", speakerRole: "learner", text: "다시 한 번 말해 주세요." },
+      { speaker: "상대", speakerRole: "partner", text: "네, 다시 말할게요." }
     ],
     structurePattern: "다시 한 번 + V-아/어 주세요",
     structureExplanation: localized("Use it when you missed what someone said.", "聞き取れなかったときに使います。", "没听清时使用。", "Dùng khi bạn chưa nghe rõ.", "Úsalo cuando no escuchaste bien."),
@@ -465,9 +465,9 @@ const lessonSeeds = [
     response: phrase("이 메뉴가 인기 있어요.", "I menyuga ingi isseoyo.", "This menu item is popular.", "このメニューが人気です。", "这个菜很受欢迎。", "Món này được ưa chuộng.", "Este plato es popular."),
     rescue: phrase("맵지 않은 거 있어요?", "Maepji aneun geo isseoyo?", "Do you have something not spicy?", "辛くないものはありますか。", "有不辣的吗？", "Có món nào không cay không?", "¿Tiene algo que no sea picante?"),
     dialogue: [
-      { speaker: "학습자", text: "추천 메뉴가 뭐예요?" },
-      { speaker: "직원", text: "이 메뉴가 인기 있어요." },
-      { speaker: "학습자", text: "맵지 않은 거 있어요?" }
+      { speaker: "학습자", speakerRole: "learner", text: "추천 메뉴가 뭐예요?" },
+      { speaker: "직원", speakerRole: "staff", text: "이 메뉴가 인기 있어요." },
+      { speaker: "학습자", speakerRole: "learner", text: "맵지 않은 거 있어요?" }
     ],
     structurePattern: "N이/가 뭐예요?",
     structureExplanation: localized("Use this to ask what something is or what option is recommended.", "何かを尋ねるときに使う形です。", "用来询问是什么或推荐什么。", "Dùng để hỏi đó là gì hoặc nên chọn gì.", "Sirve para preguntar qué es o qué recomiendan."),
@@ -487,9 +487,9 @@ const lessonSeeds = [
     response: phrase("성함이 어떻게 되세요?", "Seonghami eotteoke doeseyo?", "May I have your name?", "お名前は何ですか。", "请问您的姓名？", "Tên của bạn là gì ạ?", "¿Cuál es su nombre?"),
     rescue: phrase("제 이름은 ...예요.", "Je ireumeun ...yeyo.", "My name is ...", "私の名前は...です。", "我的名字是……", "Tên tôi là ...", "Mi nombre es ..."),
     dialogue: [
-      { speaker: "학습자", text: "예약 확인하고 싶어요." },
-      { speaker: "직원", text: "성함이 어떻게 되세요?" },
-      { speaker: "학습자", text: "제 이름은 ...예요." }
+      { speaker: "학습자", speakerRole: "learner", text: "예약 확인하고 싶어요." },
+      { speaker: "직원", speakerRole: "staff", text: "성함이 어떻게 되세요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "제 이름은 ...예요." }
     ],
     structurePattern: "V-고 싶어요",
     structureExplanation: localized("Use `-고 싶어요` to say what you want to do politely.", "`-고 싶어요`で「したいです」と言えます。", "`-고 싶어요` 表示“想做”。", "Dùng `-고 싶어요` để nói muốn làm gì.", "Usa `-고 싶어요` para decir que quieres hacer algo."),
@@ -509,9 +509,9 @@ const lessonSeeds = [
     response: phrase("다행이에요.", "Dahaengiyeyo.", "That is a relief.", "よかったです。", "那就好。", "May quá.", "Qué alivio."),
     rescue: phrase("천천히 해도 돼요.", "Cheoncheonhi haedo dwaeyo.", "It is okay to do it slowly.", "ゆっくりでも大丈夫です。", "慢慢来也可以。", "Làm chậm cũng được.", "Puede hacerlo despacio."),
     dialogue: [
-      { speaker: "상대", text: "죄송해요. 조금 늦었어요." },
-      { speaker: "학습자", text: "괜찮아요. 문제없어요." },
-      { speaker: "상대", text: "다행이에요." }
+      { speaker: "상대", speakerRole: "partner", text: "죄송해요. 조금 늦었어요." },
+      { speaker: "학습자", speakerRole: "learner", text: "괜찮아요. 문제없어요." },
+      { speaker: "상대", speakerRole: "partner", text: "다행이에요." }
     ],
     structurePattern: "괜찮아요 + 문제없어요",
     structureExplanation: localized("This reassures the other person politely.", "相手を安心させる丁寧な表現です。", "这是让对方安心的礼貌表达。", "Câu này giúp người khác yên tâm.", "Esta frase tranquiliza a la otra persona."),
@@ -531,9 +531,9 @@ const lessonSeeds = [
     response: phrase("네, 찍어 드릴게요.", "Ne, jjigeo deurilgeyo.", "Sure, I will take it for you.", "はい、撮りますね。", "可以，我帮您拍。", "Vâng, tôi sẽ chụp giúp.", "Sí, se la tomo."),
     rescue: phrase("여기 눌러 주세요.", "Yeogi nulleo juseyo.", "Please press here.", "ここを押してください。", "请按这里。", "Vui lòng bấm ở đây.", "Presione aquí, por favor."),
     dialogue: [
-      { speaker: "학습자", text: "사진 좀 찍어 주실 수 있어요?" },
-      { speaker: "상대", text: "네, 찍어 드릴게요." },
-      { speaker: "학습자", text: "여기 눌러 주세요." }
+      { speaker: "학습자", speakerRole: "learner", text: "사진 좀 찍어 주실 수 있어요?" },
+      { speaker: "상대", speakerRole: "partner", text: "네, 찍어 드릴게요." },
+      { speaker: "학습자", speakerRole: "learner", text: "여기 눌러 주세요." }
     ],
     structurePattern: "V-아/어 주실 수 있어요?",
     structureExplanation: localized("This is a polite way to ask someone for help.", "誰かにお願いするときの丁寧な形です。", "这是礼貌地请求帮助的表达。", "Đây là cách nhờ ai đó giúp một cách lịch sự.", "Es una forma cortés de pedir ayuda."),
@@ -553,9 +553,9 @@ const lessonSeeds = [
     response: phrase("오른쪽에 있어요.", "Oreunjjoge isseoyo.", "It is on the right.", "右側にあります。", "在右边。", "Ở bên phải.", "Está a la derecha."),
     rescue: phrase("감사합니다.", "Gamsahamnida.", "Thank you.", "ありがとうございます。", "谢谢。", "Cảm ơn.", "Gracias."),
     dialogue: [
-      { speaker: "학습자", text: "화장실이 어디에 있어요?" },
-      { speaker: "상대", text: "오른쪽에 있어요." },
-      { speaker: "학습자", text: "감사합니다." }
+      { speaker: "학습자", speakerRole: "learner", text: "화장실이 어디에 있어요?" },
+      { speaker: "상대", speakerRole: "partner", text: "오른쪽에 있어요." },
+      { speaker: "학습자", speakerRole: "learner", text: "감사합니다." }
     ],
     structurePattern: "N이/가 어디에 있어요?",
     structureExplanation: localized("This asks where something is located.", "物や場所の位置を聞く形です。", "用于询问某物或地点在哪里。", "Dùng để hỏi vị trí của một nơi hoặc đồ vật.", "Pregunta dónde se encuentra algo."),
@@ -575,10 +575,10 @@ const lessonSeeds = [
     response: phrase("봉투 필요하세요?", "Bongtu piryo haseyo?", "Do you need a bag?", "袋は必要ですか。", "需要袋子吗？", "Bạn có cần túi không?", "¿Necesita bolsa?"),
     rescue: phrase("네, 부탁드려요.", "Ne, butakdeuryeoyo.", "Yes, please.", "はい、お願いします。", "需要，麻烦您。", "Vâng, làm ơn.", "Sí, por favor."),
     dialogue: [
-      { speaker: "직원", text: "드시고 가세요?" },
-      { speaker: "학습자", text: "포장해 주세요." },
-      { speaker: "직원", text: "봉투 필요하세요?" },
-      { speaker: "학습자", text: "네, 부탁드려요." }
+      { speaker: "직원", speakerRole: "staff", text: "드시고 가세요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "포장해 주세요." },
+      { speaker: "직원", speakerRole: "staff", text: "봉투 필요하세요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "네, 부탁드려요." }
     ],
     structurePattern: "V-아/어 주세요",
     structureExplanation: localized("A short polite request pattern for stores and cafes.", "店やカフェで使いやすい短い依頼表現です。", "在店里或咖啡馆常用的礼貌请求。", "Mẫu nhờ vả ngắn, lịch sự ở quán và cửa hàng.", "Una petición corta y cortés para tiendas y cafés."),
@@ -598,10 +598,10 @@ const lessonSeeds = [
     response: phrase("네, 연락할게요.", "Ne, yeollakhalgeyo.", "Yes, I will contact you.", "はい、連絡します。", "好的，我会联系你。", "Vâng, tôi sẽ liên lạc.", "Sí, le escribiré."),
     rescue: phrase("오늘 즐거웠어요.", "Oneul jeulgeowosseoyo.", "I had fun today.", "今日は楽しかったです。", "今天很开心。", "Hôm nay tôi rất vui.", "Hoy me divertí."),
     dialogue: [
-      { speaker: "친구", text: "오늘 어땠어요?" },
-      { speaker: "학습자", text: "오늘 즐거웠어요." },
-      { speaker: "친구", text: "저도요." },
-      { speaker: "학습자", text: "다음에 또 만나요." }
+      { speaker: "친구", speakerRole: "friend", text: "오늘 어땠어요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "오늘 즐거웠어요." },
+      { speaker: "친구", speakerRole: "friend", text: "저도요." },
+      { speaker: "학습자", speakerRole: "learner", text: "다음에 또 만나요." }
     ],
     structurePattern: "다음에 또 + V-아요/어요",
     structureExplanation: localized("Use it to close a friendly short conversation.", "短い会話を自然に締める表現です。", "用于自然结束一段友好的简短对话。", "Dùng để kết thúc cuộc trò chuyện ngắn một cách tự nhiên.", "Sirve para cerrar una conversación breve de forma amable."),
@@ -621,10 +621,10 @@ const lessonSeeds = [
     response: phrase("네, 알겠습니다.", "Ne, algesseumnida.", "Okay, I understand.", "はい、わかりました。", "好的，明白了。", "Vâng, tôi hiểu rồi.", "Sí, entendido."),
     rescue: phrase("주소를 보여 드릴게요.", "Jusoreul boyeo deurilgeyo.", "I will show you the address.", "住所をお見せします。", "我给您看地址。", "Tôi sẽ cho bạn xem địa chỉ.", "Le muestro la dirección."),
     dialogue: [
-      { speaker: "기사", text: "어디로 가세요?" },
-      { speaker: "학습자", text: "여기로 가 주세요." },
-      { speaker: "기사", text: "네, 알겠습니다." },
-      { speaker: "학습자", text: "주소를 보여 드릴게요." }
+      { speaker: "기사", speakerRole: "driver", text: "어디로 가세요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "여기로 가 주세요." },
+      { speaker: "기사", speakerRole: "driver", text: "네, 알겠습니다." },
+      { speaker: "학습자", speakerRole: "learner", text: "주소를 보여 드릴게요." }
     ],
     structurePattern: "장소 + 로 가 주세요",
     structureExplanation: localized("Use `-로 가 주세요` to ask someone to go toward a place.", "`-로 가 주세요`で行き先を丁寧に伝えます。", "用 `-로 가 주세요` 礼貌地说明目的地。", "Dùng `-로 가 주세요` để nói điểm đến.", "Usa `-로 가 주세요` para indicar el destino."),
@@ -644,9 +644,9 @@ const lessonSeeds = [
     response: phrase("삼 번 출구예요.", "Sam beon chulguyeyo.", "It is exit three.", "三番出口です。", "三号出口。", "Cửa ra số ba.", "Es la salida tres."),
     rescue: phrase("지도에서 보여 주세요.", "Jidoeseo boyeo juseyo.", "Please show me on the map.", "地図で見せてください。", "请在地图上给我看。", "Hãy chỉ trên bản đồ giúp tôi.", "Muéstremelo en el mapa."),
     dialogue: [
-      { speaker: "학습자", text: "몇 번 출구예요?" },
-      { speaker: "상대", text: "삼 번 출구예요." },
-      { speaker: "학습자", text: "지도에서 보여 주세요." }
+      { speaker: "학습자", speakerRole: "learner", text: "몇 번 출구예요?" },
+      { speaker: "상대", speakerRole: "partner", text: "삼 번 출구예요." },
+      { speaker: "학습자", speakerRole: "learner", text: "지도에서 보여 주세요." }
     ],
     structurePattern: "몇 번 + N예요?",
     structureExplanation: localized("Use `몇 번` when asking for a number like an exit or bus.", "`몇 번`は出口やバス番号を聞くときに使います。", "`몇 번` 用来问出口、公交等号码。", "Dùng `몇 번` để hỏi số cửa ra hoặc xe buýt.", "Usa `몇 번` para preguntar un número."),
@@ -666,9 +666,9 @@ const lessonSeeds = [
     response: phrase("네, 여기서 세울게요.", "Ne, yeogiseo seulkkeyo.", "Okay, I will stop here.", "はい、ここで止めます。", "好的，我在这里停。", "Vâng, tôi sẽ dừng ở đây.", "Sí, paro aquí."),
     rescue: phrase("조금 더 가 주세요.", "Jogeum deo ga juseyo.", "Please go a little farther.", "もう少し進んでください。", "请再往前一点。", "Đi thêm một chút giúp tôi.", "Avance un poco más, por favor."),
     dialogue: [
-      { speaker: "학습자", text: "여기서 내려 주세요." },
-      { speaker: "기사", text: "네, 여기서 세울게요." },
-      { speaker: "학습자", text: "조금 더 가 주세요." }
+      { speaker: "학습자", speakerRole: "learner", text: "여기서 내려 주세요." },
+      { speaker: "기사", speakerRole: "driver", text: "네, 여기서 세울게요." },
+      { speaker: "학습자", speakerRole: "learner", text: "조금 더 가 주세요." }
     ],
     structurePattern: "여기서 + V-아/어 주세요",
     structureExplanation: localized("Use `여기서` to mark the place where an action happens.", "`여기서`は動作をする場所を示します。", "`여기서` 表示动作发生的地方。", "`여기서` chỉ nơi hành động diễn ra.", "`여기서` marca el lugar de la acción."),
@@ -688,9 +688,9 @@ const lessonSeeds = [
     response: phrase("십 분 정도 걸려요.", "Sip bun jeongdo geollyeoyo.", "It takes about ten minutes.", "10分くらいかかります。", "大概要十分钟。", "Mất khoảng mười phút.", "Tarda unos diez minutos."),
     rescue: phrase("급하지 않아요.", "Geuphaji anayo.", "I am not in a hurry.", "急いでいません。", "我不着急。", "Tôi không vội.", "No tengo prisa."),
     dialogue: [
-      { speaker: "학습자", text: "얼마나 걸려요?" },
-      { speaker: "상대", text: "십 분 정도 걸려요." },
-      { speaker: "학습자", text: "급하지 않아요." }
+      { speaker: "학습자", speakerRole: "learner", text: "얼마나 걸려요?" },
+      { speaker: "상대", speakerRole: "partner", text: "십 분 정도 걸려요." },
+      { speaker: "학습자", speakerRole: "learner", text: "급하지 않아요." }
     ],
     structurePattern: "얼마나 + V-아요/어요?",
     structureExplanation: localized("Use `얼마나` to ask about amount, time, or degree.", "`얼마나`は時間や量を聞くときに使います。", "`얼마나` 用来问时间、数量或程度。", "Dùng `얼마나` để hỏi thời gian hoặc mức độ.", "Usa `얼마나` para preguntar cantidad o tiempo."),
@@ -710,9 +710,9 @@ const lessonSeeds = [
     response: phrase("네, 안 맵게 해 드릴게요.", "Ne, an maepge hae deurilgeyo.", "Okay, I will make it not spicy.", "はい、辛くないようにします。", "好的，我给您做不辣。", "Vâng, tôi sẽ làm không cay.", "Sí, lo preparo sin picante."),
     rescue: phrase("조금만 맵게 해 주세요.", "Jogeumman maepge hae juseyo.", "Please make it only a little spicy.", "少しだけ辛くしてください。", "请做得微辣。", "Làm cay một chút thôi.", "Solo un poco picante, por favor."),
     dialogue: [
-      { speaker: "직원", text: "맵게 해 드릴까요?" },
-      { speaker: "학습자", text: "맵지 않게 해 주세요." },
-      { speaker: "직원", text: "네, 안 맵게 해 드릴게요." }
+      { speaker: "직원", speakerRole: "staff", text: "맵게 해 드릴까요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "맵지 않게 해 주세요." },
+      { speaker: "직원", speakerRole: "staff", text: "네, 안 맵게 해 드릴게요." }
     ],
     structurePattern: "A-지 않게 해 주세요",
     structureExplanation: localized("Use this to ask for something to be made in a certain way.", "`-지 않게`で「そうならないように」と頼めます。", "用 `-지 않게` 表示“不要变成那样”。", "Dùng `-지 않게` để yêu cầu tránh trạng thái đó.", "Usa `-지 않게` para pedir que no quede de cierta forma."),
@@ -732,9 +732,9 @@ const lessonSeeds = [
     response: phrase("알겠습니다. 빼 드릴게요.", "Algesseumnida. Ppae deurilgeyo.", "Understood. I will leave it out.", "わかりました。抜きますね。", "明白了。我会去掉。", "Tôi hiểu. Tôi sẽ bỏ ra.", "Entendido. Lo quitamos."),
     rescue: phrase("이거 들어가요?", "Igeo deureogayo?", "Does this contain it?", "これは入っていますか。", "这里面有吗？", "Món này có không?", "¿Esto lo contiene?"),
     dialogue: [
-      { speaker: "학습자", text: "저는 땅콩 알레르기가 있어요." },
-      { speaker: "직원", text: "알겠습니다. 빼 드릴게요." },
-      { speaker: "학습자", text: "이거 들어가요?" }
+      { speaker: "학습자", speakerRole: "learner", text: "저는 땅콩 알레르기가 있어요." },
+      { speaker: "직원", speakerRole: "staff", text: "알겠습니다. 빼 드릴게요." },
+      { speaker: "학습자", speakerRole: "learner", text: "이거 들어가요?" }
     ],
     structurePattern: "저는 + N 알레르기가 있어요",
     structureExplanation: localized("Use this to clearly state an allergy or food restriction.", "アレルギーや食べられない物をはっきり伝えます。", "用来清楚说明过敏或忌口。", "Dùng để nói rõ dị ứng hoặc món không ăn được.", "Úsalo para decir una alergia claramente."),
@@ -754,9 +754,9 @@ const lessonSeeds = [
     response: phrase("네, 따로 해 드릴게요.", "Ne, ttaro hae deurilgeyo.", "Okay, I will do it separately.", "はい、別々にします。", "好的，我给您分开。", "Vâng, tôi sẽ làm riêng.", "Sí, lo separo."),
     rescue: phrase("봉투 하나 더 주세요.", "Bongtu hana deo juseyo.", "Please give me one more bag.", "袋をもう一つください。", "请再给我一个袋子。", "Cho tôi thêm một túi.", "Deme una bolsa más, por favor."),
     dialogue: [
-      { speaker: "학습자", text: "따로 포장해 주세요." },
-      { speaker: "직원", text: "네, 따로 해 드릴게요." },
-      { speaker: "학습자", text: "봉투 하나 더 주세요." }
+      { speaker: "학습자", speakerRole: "learner", text: "따로 포장해 주세요." },
+      { speaker: "직원", speakerRole: "staff", text: "네, 따로 해 드릴게요." },
+      { speaker: "학습자", speakerRole: "learner", text: "봉투 하나 더 주세요." }
     ],
     structurePattern: "따로 + V-아/어 주세요",
     structureExplanation: localized("Use `따로` when asking to separate items or actions.", "`따로`は別々にしてほしい時に使います。", "`따로` 表示分开、另外。", "Dùng `따로` khi muốn tách riêng.", "Usa `따로` para pedir algo separado."),
@@ -776,9 +776,9 @@ const lessonSeeds = [
     response: phrase("카드로 하세요?", "Kadeuro haseyo?", "Will you pay by card?", "カードで払いますか。", "您刷卡吗？", "Bạn trả bằng thẻ không?", "¿Paga con tarjeta?"),
     rescue: phrase("영수증 주세요.", "Yeongsujeung juseyo.", "Please give me a receipt.", "レシートをください。", "请给我收据。", "Cho tôi hóa đơn.", "Deme el recibo, por favor."),
     dialogue: [
-      { speaker: "학습자", text: "계산해 주세요." },
-      { speaker: "직원", text: "카드로 하세요?" },
-      { speaker: "학습자", text: "영수증 주세요." }
+      { speaker: "학습자", speakerRole: "learner", text: "계산해 주세요." },
+      { speaker: "직원", speakerRole: "staff", text: "카드로 하세요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "영수증 주세요." }
     ],
     structurePattern: "N으로 하세요?",
     structureExplanation: localized("Use `-으로` to ask or say the method, like card or cash.", "`-으로`は支払い方法などを表します。", "`-으로` 表示方式，比如刷卡或现金。", "Dùng `-으로` để nói phương thức.", "Usa `-으로` para el método de pago."),
@@ -798,9 +798,9 @@ const lessonSeeds = [
     response: phrase("어디에서 잃어버리셨어요?", "Eodieseo ireobeorisyeosseoyo?", "Where did you lose it?", "どこでなくしましたか。", "你在哪里丢的？", "Bạn mất ở đâu?", "¿Dónde la perdió?"),
     rescue: phrase("도와주실 수 있어요?", "Dowajusil su isseoyo?", "Could you help me?", "手伝っていただけますか。", "可以帮我吗？", "Bạn có thể giúp tôi không?", "¿Podría ayudarme?"),
     dialogue: [
-      { speaker: "학습자", text: "지갑을 잃어버렸어요." },
-      { speaker: "상대", text: "어디에서 잃어버리셨어요?" },
-      { speaker: "학습자", text: "도와주실 수 있어요?" }
+      { speaker: "학습자", speakerRole: "learner", text: "지갑을 잃어버렸어요." },
+      { speaker: "상대", speakerRole: "partner", text: "어디에서 잃어버리셨어요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "도와주실 수 있어요?" }
     ],
     structurePattern: "N을/를 잃어버렸어요",
     structureExplanation: localized("Use this when something is lost and you need help.", "物をなくした時に使う表現です。", "丢东西时使用。", "Dùng khi bạn làm mất đồ.", "Úsalo cuando perdiste algo."),
@@ -820,9 +820,9 @@ const lessonSeeds = [
     response: phrase("언제로 바꾸시겠어요?", "Eonjero bakkusigesseoyo?", "When would you like to change it to?", "いつに変更しますか。", "想改到什么时候？", "Bạn muốn đổi sang khi nào?", "¿Para cuándo quiere cambiarla?"),
     rescue: phrase("내일로 가능해요?", "Naeillo ganeunghaeyo?", "Is tomorrow possible?", "明日にできますか。", "明天可以吗？", "Ngày mai được không?", "¿Es posible mañana?"),
     dialogue: [
-      { speaker: "학습자", text: "예약을 바꾸고 싶어요." },
-      { speaker: "직원", text: "언제로 바꾸시겠어요?" },
-      { speaker: "학습자", text: "내일로 가능해요?" }
+      { speaker: "학습자", speakerRole: "learner", text: "예약을 바꾸고 싶어요." },
+      { speaker: "직원", speakerRole: "staff", text: "언제로 바꾸시겠어요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "내일로 가능해요?" }
     ],
     structurePattern: "N을/를 바꾸고 싶어요",
     structureExplanation: localized("Use this when you want to change a reservation, time, or plan.", "予約や時間を変更したい時に使います。", "想更改预约、时间或计划时使用。", "Dùng khi muốn đổi lịch hoặc kế hoạch.", "Úsalo para cambiar una reserva o plan."),
@@ -842,9 +842,9 @@ const lessonSeeds = [
     response: phrase("그러게요. 정말 좋네요.", "Geureogeyo. Jeongmal joneyo.", "Yes, it really is nice.", "そうですね。本当にいいですね。", "是啊，真的很好。", "Đúng vậy. Rất đẹp.", "Sí, está muy bien."),
     rescue: phrase("조금 추워요.", "Jogeum chuwoyo.", "It is a little cold.", "少し寒いです。", "有点冷。", "Hơi lạnh.", "Hace un poco de frío."),
     dialogue: [
-      { speaker: "학습자", text: "오늘 날씨 좋네요." },
-      { speaker: "상대", text: "그러게요. 정말 좋네요." },
-      { speaker: "학습자", text: "조금 추워요." }
+      { speaker: "학습자", speakerRole: "learner", text: "오늘 날씨 좋네요." },
+      { speaker: "상대", speakerRole: "partner", text: "그러게요. 정말 좋네요." },
+      { speaker: "학습자", speakerRole: "learner", text: "조금 추워요." }
     ],
     structurePattern: "N 좋네요",
     structureExplanation: localized("Use `-네요` for a soft reaction to what you notice.", "`-네요`は気づいたことをやわらかく言う表現です。", "`-네요` 用来柔和地表达发现或感受。", "Dùng `-네요` để nhận xét nhẹ nhàng.", "Usa `-네요` para una observación suave."),
@@ -864,9 +864,9 @@ const lessonSeeds = [
     response: phrase("세 시에 만나요.", "Se sie mannayo.", "Let us meet at three.", "3時に会いましょう。", "三点见。", "Gặp lúc ba giờ nhé.", "Nos vemos a las tres."),
     rescue: phrase("조금 늦을 것 같아요.", "Jogeum neujeul geot gatayo.", "I think I will be a little late.", "少し遅れそうです。", "我可能会晚一点。", "Tôi nghĩ sẽ trễ một chút.", "Creo que llegaré un poco tarde."),
     dialogue: [
-      { speaker: "학습자", text: "몇 시에 만날까요?" },
-      { speaker: "친구", text: "세 시에 만나요." },
-      { speaker: "학습자", text: "조금 늦을 것 같아요." }
+      { speaker: "학습자", speakerRole: "learner", text: "몇 시에 만날까요?" },
+      { speaker: "친구", speakerRole: "friend", text: "세 시에 만나요." },
+      { speaker: "학습자", speakerRole: "learner", text: "조금 늦을 것 같아요." }
     ],
     structurePattern: "몇 시에 + V-ㄹ까요?",
     structureExplanation: localized("Use `-ㄹ까요?` to suggest or ask what to do together.", "`-ㄹ까요?`は一緒に決める時に使います。", "`-ㄹ까요?` 用来一起商量。", "Dùng `-ㄹ까요?` khi cùng quyết định.", "Usa `-ㄹ까요?` para proponer juntos."),
@@ -886,9 +886,9 @@ const lessonSeeds = [
     response: phrase("저도 좋아해요.", "Jeodo joahaeyo.", "I like it too.", "私も好きです。", "我也喜欢。", "Tôi cũng thích.", "A mí también me gusta."),
     rescue: phrase("추천해 주세요.", "Chucheonhae juseyo.", "Please recommend something.", "おすすめしてください。", "请推荐一下。", "Hãy gợi ý giúp tôi.", "Recomiéndeme algo, por favor."),
     dialogue: [
-      { speaker: "학습자", text: "이거 정말 좋아해요." },
-      { speaker: "친구", text: "저도 좋아해요." },
-      { speaker: "학습자", text: "추천해 주세요." }
+      { speaker: "학습자", speakerRole: "learner", text: "이거 정말 좋아해요." },
+      { speaker: "친구", speakerRole: "friend", text: "저도 좋아해요." },
+      { speaker: "학습자", speakerRole: "learner", text: "추천해 주세요." }
     ],
     structurePattern: "N을/를 좋아해요",
     structureExplanation: localized("Use `좋아해요` for preferences, not only romantic liking.", "`좋아해요`は好みを表す時にも使えます。", "`좋아해요` 可用于表达喜好。", "Dùng `좋아해요` để nói sở thích.", "Usa `좋아해요` para gustos."),
@@ -908,9 +908,9 @@ const lessonSeeds = [
     response: phrase("언제부터 아팠어요?", "Eonjebuteo apasseoyo?", "Since when has it hurt?", "いつから痛いですか。", "从什么时候开始疼？", "Đau từ khi nào?", "¿Desde cuándo le duele?"),
     rescue: phrase("약을 사고 싶어요.", "Yageul sago sipeoyo.", "I want to buy medicine.", "薬を買いたいです。", "我想买药。", "Tôi muốn mua thuốc.", "Quiero comprar medicina."),
     dialogue: [
-      { speaker: "학습자", text: "머리가 아파요." },
-      { speaker: "직원", text: "언제부터 아팠어요?" },
-      { speaker: "학습자", text: "약을 사고 싶어요." }
+      { speaker: "학습자", speakerRole: "learner", text: "머리가 아파요." },
+      { speaker: "직원", speakerRole: "staff", text: "언제부터 아팠어요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "약을 사고 싶어요." }
     ],
     structurePattern: "몸 + 이/가 아파요",
     structureExplanation: localized("Use body part + `아파요` to explain symptoms simply.", "体の部分に`아파요`をつけて症状を言います。", "身体部位加 `아파요` 可说明症状。", "Dùng bộ phận cơ thể + `아파요` để nói triệu chứng.", "Usa parte del cuerpo + `아파요` para síntomas."),
@@ -930,9 +930,9 @@ const lessonSeeds = [
     response: phrase("네, 필요해요.", "Ne, piryohaeyo.", "Yes, you need it.", "はい、必要です。", "是的，需要。", "Vâng, cần.", "Sí, lo necesita."),
     rescue: phrase("확인해 주세요.", "Hwaginhae juseyo.", "Please check it.", "確認してください。", "请确认。", "Hãy kiểm tra giúp tôi.", "Revíselo, por favor."),
     dialogue: [
-      { speaker: "학습자", text: "이 서류가 필요해요?" },
-      { speaker: "직원", text: "네, 필요해요." },
-      { speaker: "학습자", text: "확인해 주세요." }
+      { speaker: "학습자", speakerRole: "learner", text: "이 서류가 필요해요?" },
+      { speaker: "직원", speakerRole: "staff", text: "네, 필요해요." },
+      { speaker: "학습자", speakerRole: "learner", text: "확인해 주세요." }
     ],
     structurePattern: "N이/가 필요해요?",
     structureExplanation: localized("Use `필요해요` to ask whether something is required.", "`필요해요`で必要かどうかを確認します。", "用 `필요해요` 确认是否需要。", "Dùng `필요해요` để hỏi có cần không.", "Usa `필요해요` para preguntar si hace falta."),
@@ -952,10 +952,10 @@ const lessonSeeds = [
     response: phrase("좋아요. 계속 연습해요.", "Joayo. Gyesok yeonseuphaeyo.", "Good. Let us keep practicing.", "いいですね。続けて練習しましょう。", "好。继续练习吧。", "Tốt. Hãy tiếp tục luyện tập.", "Bien. Sigamos practicando."),
     rescue: phrase("오늘 배운 문장을 다시 말할게요.", "Oneul baeun munjangeul dasi malhalgeyo.", "I will say today's sentence again.", "今日習った文をもう一度言います。", "我再说一遍今天学的句子。", "Tôi sẽ nói lại câu hôm nay.", "Diré otra vez la frase de hoy."),
     dialogue: [
-      { speaker: "튜터", text: "다음에는 뭘 하고 싶어요?" },
-      { speaker: "학습자", text: "다음에는 더 길게 말하고 싶어요." },
-      { speaker: "튜터", text: "좋아요. 계속 연습해요." },
-      { speaker: "학습자", text: "오늘 배운 문장을 다시 말할게요." }
+      { speaker: "튜터", speakerRole: "tutor", text: "다음에는 뭘 하고 싶어요?" },
+      { speaker: "학습자", speakerRole: "learner", text: "다음에는 더 길게 말하고 싶어요." },
+      { speaker: "튜터", speakerRole: "tutor", text: "좋아요. 계속 연습해요." },
+      { speaker: "학습자", speakerRole: "learner", text: "오늘 배운 문장을 다시 말할게요." }
     ],
     structurePattern: "다음에는 + V-고 싶어요",
     structureExplanation: localized("Use this to say what you want to do next.", "次にしたいことを言う形です。", "用来表达下一步想做什么。", "Dùng để nói điều bạn muốn làm tiếp theo.", "Usa esto para decir qué quieres hacer después."),
@@ -971,6 +971,7 @@ const lessonSeeds = [
 const createLesson = (seed: (typeof lessonSeeds)[number]): Lesson => {
   const dialogue = seed.dialogue.map((line) => ({
     speaker: line.speaker,
+    speakerRole: line.speakerRole,
     korean: line.text,
     meaningByCountry: localized(line.text, line.text, line.text, line.text, line.text)
   }));
