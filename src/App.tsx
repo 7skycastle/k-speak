@@ -153,6 +153,10 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
+    document.documentElement.lang = countryPack.id.split("-")[1];
+  }, [countryPack.id]);
+
+  useEffect(() => {
     setState((current) => trackEvent(current, { name: "app_first_open" }));
   }, []);
 
