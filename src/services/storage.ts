@@ -1,4 +1,12 @@
-import type { LessonProgress, OnboardingProfile, ReviewItem, SavedPhrase, UserState } from "../types";
+import type {
+  LessonProgress,
+  OnboardingProfile,
+  ReviewItem,
+  SavedPhrase,
+  SavedPhraseTombstone,
+  SyncChange,
+  UserState
+} from "../types";
 
 const STATE_KEY = "korean-first-talk:user-state:v1";
 const CLOUD_PREFIX = "korean-first-talk:cloud-profile:";
@@ -9,15 +17,130 @@ const createId = (prefix: string) => `${prefix}-${crypto.randomUUID?.() ?? Math.
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
+const compareIso = (left?: string, right?: string) => {
+  const leftTime = left ? new Date(left).getTime() : 0;
+  const rightTime = right ? new Date(right).getTime() : 0;
+  return leftTime - rightTime;
+};
+
+const normalizeReviewItem = (item: ReviewItem): ReviewItem => ({
+  ...item,
+  successCount: item.successCount ?? (item.lastResult === "success" ? 1 : 0),
+  hardCount: item.hardCount ?? (item.lastResult === "hard" ? 1 : 0),
+  lastReviewedAt: item.lastReviewedAt,
+  updatedAt: item.updatedAt ?? item.lastReviewedAt ?? item.dueAt
+});
+
+const normalizeSavedPhrase = (phrase: SavedPhrase): SavedPhrase => ({
+  ...phrase,
+  updatedAt: phrase.updatedAt ?? phrase.lastPlayedAt ?? phrase.savedAt
+});
+
+const normalizeSavedPhraseTombstone = (phrase: SavedPhraseTombstone): SavedPhraseTombstone => ({
+  ...normalizeSavedPhrase(phrase),
+  deletedAt: phrase.deletedAt,
+  updatedAt: phrase.updatedAt ?? phrase.deletedAt
+});
+
+const mergeSyncChanges = (base: SyncChange[] = [], incoming: SyncChange[] = []) => {
+  const merged = new Map<string, SyncChange>();
+  for (const change of [...base, ...incoming]) {
+    const key = `${change.entity}:${change.entityId}`;
+    const current = merged.get(key);
+    if (!current || compareIso(current.changedAt, change.changedAt) <= 0) {
+      merged.set(key, change);
+    }
+  }
+  return Array.from(merged.values()).sort((left, right) => compareIso(left.changedAt, right.changedAt));
+};
+
+const withPendingChanges = (state: UserState, changes: SyncChange[]) => ({
+  ...state,
+  sync: {
+    ...state.sync,
+    pending: state.sync.mode === "supabase-ready" ? true : state.sync.pending,
+    messageKey: state.sync.mode === "supabase-ready" ? "sync.pendingRetry" : state.sync.messageKey,
+    message:
+      state.sync.mode === "supabase-ready"
+        ? "Changes are saved on this device and ready to retry syncing."
+        : state.sync.message,
+    pendingChanges: mergeSyncChanges(state.sync.pendingChanges, changes)
+  }
+});
+
+const mergeReviewItem = (current: ReviewItem, incoming: ReviewItem): ReviewItem => {
+  const normalizedCurrent = normalizeReviewItem(current);
+  const normalizedIncoming = normalizeReviewItem(incoming);
+  const incomingWins = compareIso(normalizedCurrent.updatedAt, normalizedIncoming.updatedAt) <= 0;
+  const latest = incomingWins ? normalizedIncoming : normalizedCurrent;
+  const fallback = incomingWins ? normalizedCurrent : normalizedIncoming;
+  const currentReviewedAt = normalizedCurrent.lastReviewedAt ?? normalizedCurrent.updatedAt;
+  const incomingReviewedAt = normalizedIncoming.lastReviewedAt ?? normalizedIncoming.updatedAt;
+  const incomingScheduleWins = compareIso(currentReviewedAt, incomingReviewedAt) <= 0;
+  const scheduleSource = incomingScheduleWins ? normalizedIncoming : normalizedCurrent;
+
+  return {
+    ...fallback,
+    ...latest,
+    priority: Math.max(normalizedCurrent.priority, normalizedIncoming.priority),
+    dueAt: scheduleSource.dueAt,
+    lastResult: scheduleSource.lastResult,
+    lastReviewedAt: scheduleSource.lastReviewedAt,
+    successCount: Math.max(normalizedCurrent.successCount ?? 0, normalizedIncoming.successCount ?? 0),
+    hardCount: Math.max(normalizedCurrent.hardCount ?? 0, normalizedIncoming.hardCount ?? 0),
+    updatedAt: latest.updatedAt
+  };
+};
+
+const mergeSavedPhraseRecord = (current: SavedPhrase, incoming: SavedPhrase): SavedPhrase =>
+  compareIso(current.updatedAt, incoming.updatedAt) > 0 ? current : incoming;
+
+const resolveSavedPhraseState = (
+  phrases: SavedPhrase[],
+  tombstones: SavedPhraseTombstone[]
+): Pick<UserState, "savedPhrases" | "savedPhraseTombstones"> => {
+  const active = new Map<string, SavedPhrase>();
+  const deleted = new Map<string, SavedPhraseTombstone>();
+
+  for (const phrase of phrases.map(normalizeSavedPhrase)) {
+    const current = active.get(phrase.id);
+    active.set(phrase.id, current ? mergeSavedPhraseRecord(current, phrase) : phrase);
+  }
+
+  for (const tombstone of tombstones.map(normalizeSavedPhraseTombstone)) {
+    const current = deleted.get(tombstone.id);
+    if (!current || compareIso(current.updatedAt, tombstone.updatedAt) <= 0) {
+      deleted.set(tombstone.id, tombstone);
+    }
+  }
+
+  for (const [id, phrase] of active.entries()) {
+    const tombstone = deleted.get(id);
+    if (!tombstone) continue;
+    if (compareIso(phrase.updatedAt, tombstone.updatedAt) <= 0) {
+      active.delete(id);
+    } else {
+      deleted.delete(id);
+    }
+  }
+
+  return {
+    savedPhrases: Array.from(active.values()),
+    savedPhraseTombstones: Array.from(deleted.values())
+  };
+};
+
 export const createInitialState = (): UserState => ({
   anonymousId: createId("guest"),
   lessonProgress: {},
   reviewItems: [],
   savedPhrases: [],
+  savedPhraseTombstones: [],
   analyticsEvents: [],
   sync: {
     mode: hasSupabaseEnvironment() ? "supabase-ready" : "local-only",
     pending: false,
+    messageKey: hasSupabaseEnvironment() ? "sync.readyToConnect" : "sync.localOnly",
     message: hasSupabaseEnvironment()
       ? "Supabase environment variables are present. Cloud sync can be connected."
       : "Saved safely on this device. Sync will be available once a Supabase project is configured." // A3: localize via sync.localOnly
@@ -33,7 +156,21 @@ export const loadState = (): UserState => {
   if (!raw) return createInitialState();
 
   try {
-    return { ...createInitialState(), ...JSON.parse(raw) } as UserState;
+    const parsed = { ...createInitialState(), ...JSON.parse(raw) } as UserState;
+    const resolvedSavedPhrases = resolveSavedPhraseState(
+      parsed.savedPhrases ?? [],
+      parsed.savedPhraseTombstones ?? []
+    );
+    return {
+      ...parsed,
+      reviewItems: (parsed.reviewItems ?? []).map(normalizeReviewItem),
+      savedPhrases: resolvedSavedPhrases.savedPhrases,
+      savedPhraseTombstones: resolvedSavedPhrases.savedPhraseTombstones,
+      sync: {
+        ...parsed.sync,
+        pendingChanges: parsed.sync.pendingChanges ?? []
+      }
+    };
   } catch {
     return createInitialState();
   }
@@ -72,48 +209,140 @@ export const upsertLessonProgress = (
   });
 
 export const upsertReviewItems = (state: UserState, items: ReviewItem[]): UserState => {
-  const existing = new Map(state.reviewItems.map((item) => [item.id, item]));
-  for (const item of items) {
+  const existing = new Map(state.reviewItems.map((item) => [item.id, normalizeReviewItem(item)]));
+  const changes: SyncChange[] = [];
+  for (const item of items.map(normalizeReviewItem)) {
     const current = existing.get(item.id);
-    existing.set(item.id, current && current.priority > item.priority ? current : item);
+    const merged = current ? mergeReviewItem(current, item) : item;
+    existing.set(item.id, merged);
+    changes.push({
+      entity: "review-item",
+      entityId: item.id,
+      operation: "upsert",
+      changedAt: merged.updatedAt ?? now()
+    });
   }
-  return saveState({ ...state, reviewItems: Array.from(existing.values()) });
+  return saveState(
+    withPendingChanges(
+      {
+        ...state,
+        reviewItems: Array.from(existing.values())
+      },
+      changes
+    )
+  );
 };
 
 export const completeReviewItem = (state: UserState, reviewItemId: string, result: "success" | "hard"): UserState =>
-  saveState({
-    ...state,
-    reviewItems: state.reviewItems.map((item) =>
-      item.id === reviewItemId
-        ? {
-            ...item,
-            lastResult: result,
-            dueAt: new Date(Date.now() + (result === "success" ? 72 : 12) * 60 * 60 * 1000).toISOString()
+  {
+    const changedAt = now();
+    const reviewItems = state.reviewItems.map((item) => {
+      if (item.id !== reviewItemId) return normalizeReviewItem(item);
+      const normalized = normalizeReviewItem(item);
+      return {
+        ...normalized,
+        lastResult: result,
+        dueAt: new Date(Date.now() + (result === "success" ? 72 : 12) * 60 * 60 * 1000).toISOString(),
+        successCount: (normalized.successCount ?? 0) + (result === "success" ? 1 : 0),
+        hardCount: (normalized.hardCount ?? 0) + (result === "hard" ? 1 : 0),
+        lastReviewedAt: changedAt,
+        updatedAt: changedAt
+      };
+    });
+
+    return saveState(
+      withPendingChanges(
+        {
+          ...state,
+          reviewItems
+        },
+        [
+          {
+            entity: "review-item",
+            entityId: reviewItemId,
+            operation: "upsert",
+            changedAt
           }
-        : item
-    )
-  });
+        ]
+      )
+    );
+  };
 
 export const upsertSavedPhrase = (state: UserState, phrase: SavedPhrase): UserState => {
-  const existing = new Map((state.savedPhrases ?? []).map((item) => [item.id, item]));
-  const current = existing.get(phrase.id);
-  existing.set(phrase.id, current && current.savedAt > phrase.savedAt ? current : phrase);
-  return saveState({ ...state, savedPhrases: Array.from(existing.values()) });
+  const normalized = normalizeSavedPhrase(phrase);
+  const existing = new Map((state.savedPhrases ?? []).map((item) => [item.id, normalizeSavedPhrase(item)]));
+  const current = existing.get(normalized.id);
+  existing.set(normalized.id, current ? mergeSavedPhraseRecord(current, normalized) : normalized);
+  const tombstones = new Map((state.savedPhraseTombstones ?? []).map((item) => [item.id, normalizeSavedPhraseTombstone(item)]));
+  const tombstone = tombstones.get(normalized.id);
+  if (tombstone && compareIso(tombstone.updatedAt, normalized.updatedAt) <= 0) {
+    tombstones.delete(normalized.id);
+  }
+
+  return saveState(
+    withPendingChanges(
+      {
+        ...state,
+        savedPhrases: Array.from(existing.values()),
+        savedPhraseTombstones: Array.from(tombstones.values())
+      },
+      [
+        {
+          entity: "saved-phrase",
+          entityId: normalized.id,
+          operation: "upsert",
+          changedAt: normalized.updatedAt ?? now()
+        }
+      ]
+    )
+  );
 };
 
 export const markSavedPhrasePlayed = (state: UserState, phraseId: string): UserState =>
   saveState({
     ...state,
     savedPhrases: (state.savedPhrases ?? []).map((item) =>
-      item.id === phraseId ? { ...item, lastPlayedAt: now() } : item
+      item.id === phraseId ? { ...item, lastPlayedAt: now(), updatedAt: now() } : item
     )
   });
 
-export const removeSavedPhrase = (state: UserState, phraseId: string): UserState =>
-  saveState({
-    ...state,
-    savedPhrases: (state.savedPhrases ?? []).filter((item) => item.id !== phraseId)
-  });
+export const removeSavedPhrase = (state: UserState, phraseId: string): UserState => {
+  const changedAt = now();
+  const existing = (state.savedPhrases ?? []).find((item) => item.id === phraseId);
+  const savedPhrases = (state.savedPhrases ?? []).filter((item) => item.id !== phraseId);
+  const tombstones = new Map((state.savedPhraseTombstones ?? []).map((item) => [item.id, normalizeSavedPhraseTombstone(item)]));
+
+  if (existing) {
+    tombstones.set(
+      phraseId,
+      normalizeSavedPhraseTombstone({
+        ...normalizeSavedPhrase(existing),
+        deletedAt: changedAt,
+        updatedAt: changedAt
+      })
+    );
+  }
+
+  return saveState(
+    withPendingChanges(
+      {
+        ...state,
+        savedPhrases,
+        savedPhraseTombstones: Array.from(tombstones.values())
+      },
+      existing
+        ? [
+            {
+              entity: "saved-phrase",
+              entityId: phraseId,
+              operation: "delete",
+              changedAt
+            }
+          ]
+        : []
+    )
+  );
+};
 
 export const mergeGuestIntoAccount = (state: UserState, email: string): UserState => {
   const normalizedEmail = normalizeEmail(email);
@@ -128,6 +357,7 @@ export const mergeGuestIntoAccount = (state: UserState, email: string): UserStat
     sync: {
       ...merged.sync,
       pending: hasSupabaseEnvironment(),
+      messageKey: hasSupabaseEnvironment() ? "sync.accountMergedCloudReady" : "sync.accountMergedLocal",
       message: hasSupabaseEnvironment()
         ? "Account and local progress merged. Cloud save can be run after Supabase is connected." // A3: localize
         : "Account and local progress merged into this browser's account storage." // A3: localize
@@ -141,6 +371,7 @@ export const logoutLocalAccount = (state: UserState): UserState =>
     accountEmail: undefined,
     sync: {
       ...state.sync,
+      messageKey: "sync.loggedOutLocal",
       message: "Logged out. Guest progress continues to be stored on this device." // A3: localize
     }
   });
@@ -186,24 +417,21 @@ export const mergeUserStates = (account: UserState, guest: UserState, email?: st
     };
   }
 
-  const reviewItems = new Map(account.reviewItems.map((item) => [item.id, item]));
-  for (const item of guest.reviewItems) {
+  const reviewItems = new Map(account.reviewItems.map((item) => [item.id, normalizeReviewItem(item)]));
+  for (const item of guest.reviewItems.map(normalizeReviewItem)) {
     const current = reviewItems.get(item.id);
     if (!current) {
       reviewItems.set(item.id, item);
       continue;
     }
 
-    if (item.priority > current.priority) {
-      reviewItems.set(item.id, item);
-    }
+    reviewItems.set(item.id, mergeReviewItem(current, item));
   }
 
-  const savedPhrases = new Map((account.savedPhrases ?? []).map((item) => [item.id, item]));
-  for (const item of guest.savedPhrases ?? []) {
-    const current = savedPhrases.get(item.id);
-    savedPhrases.set(item.id, current && current.savedAt > item.savedAt ? current : item);
-  }
+  const resolvedSavedPhrases = resolveSavedPhraseState(
+    [...(account.savedPhrases ?? []), ...(guest.savedPhrases ?? [])],
+    [...(account.savedPhraseTombstones ?? []), ...(guest.savedPhraseTombstones ?? [])]
+  );
 
   return {
     ...account,
@@ -212,8 +440,15 @@ export const mergeUserStates = (account: UserState, guest: UserState, email?: st
     onboarding: guest.onboarding ?? account.onboarding,
     lessonProgress,
     reviewItems: Array.from(reviewItems.values()),
-    savedPhrases: Array.from(savedPhrases.values()),
+    savedPhrases: resolvedSavedPhrases.savedPhrases,
+    savedPhraseTombstones: resolvedSavedPhrases.savedPhraseTombstones,
     analyticsEvents: [...account.analyticsEvents, ...guest.analyticsEvents],
+    sync: {
+      ...account.sync,
+      ...guest.sync,
+      pending: account.sync.pending || guest.sync.pending,
+      pendingChanges: mergeSyncChanges(account.sync.pendingChanges, guest.sync.pendingChanges)
+    },
     updatedAt: now()
   };
 };

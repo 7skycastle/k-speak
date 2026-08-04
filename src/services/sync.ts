@@ -8,9 +8,11 @@ export const markSyncAttempt = async (state: UserState): Promise<UserState> => {
     return saveState({
       ...state,
       sync: {
+        ...state.sync,
         mode: "local-only",
         pending: false,
-        message: "새 Supabase 프로젝트 정보가 없어 로컬 저장만 사용 중입니다."
+        messageKey: "sync.localOnly",
+        message: "Supabase project settings are missing, so only local storage is available."
       }
     });
   }

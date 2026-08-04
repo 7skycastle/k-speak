@@ -39,6 +39,9 @@ create table if not exists public.review_items (
   priority integer not null,
   due_at timestamptz not null,
   last_result text,
+  success_count integer not null default 0,
+  hard_count integer not null default 0,
+  last_reviewed_at timestamptz,
   updated_at timestamptz not null default now(),
   primary key (id, user_id)
 );
@@ -55,6 +58,7 @@ create table if not exists public.saved_phrases (
   source text not null,
   saved_at timestamptz not null,
   last_played_at timestamptz,
+  deleted_at timestamptz,
   updated_at timestamptz not null default now(),
   primary key (id, user_id)
 );

@@ -232,6 +232,10 @@ export interface ReviewItem {
   priority: number;
   dueAt: string;
   lastResult?: "success" | "hard";
+  successCount?: number;
+  hardCount?: number;
+  lastReviewedAt?: string;
+  updatedAt?: string;
 }
 
 export interface SavedPhrase {
@@ -245,6 +249,12 @@ export interface SavedPhrase {
   source: "core" | "response" | "rescue" | "swap" | "review" | "continuation";
   savedAt: string;
   lastPlayedAt?: string;
+  updatedAt?: string;
+}
+
+export interface SavedPhraseTombstone extends SavedPhrase {
+  deletedAt: string;
+  updatedAt: string;
 }
 
 export interface LessonProgress {
@@ -264,6 +274,7 @@ export interface UserState {
   lessonProgress: Record<string, LessonProgress>;
   reviewItems: ReviewItem[];
   savedPhrases: SavedPhrase[];
+  savedPhraseTombstones: SavedPhraseTombstone[];
   analyticsEvents: AnalyticsEvent[];
   sync: SyncState;
   updatedAt: string;
@@ -294,4 +305,13 @@ export interface SyncState {
   lastSyncedAt?: string;
   pending: boolean;
   message: string;
+  messageKey?: string;
+  pendingChanges?: SyncChange[];
+}
+
+export interface SyncChange {
+  entity: "review-item" | "saved-phrase";
+  entityId: string;
+  operation: "upsert" | "delete";
+  changedAt: string;
 }

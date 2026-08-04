@@ -37,6 +37,10 @@ interface ReviewItemRow {
   priority: number;
   due_at: string;
   last_result?: ReviewItem["lastResult"] | null;
+  success_count?: number | null;
+  hard_count?: number | null;
+  last_reviewed_at?: string | null;
+  updated_at?: string | null;
 }
 
 interface SavedPhraseRow {
@@ -50,10 +54,20 @@ interface SavedPhraseRow {
   source: SavedPhrase["source"];
   saved_at: string;
   last_played_at?: string | null;
+  updated_at?: string | null;
+  deleted_at?: string | null;
 }
 
+type SavedPhraseRecord = SavedPhrase | UserState["savedPhraseTombstones"][number];
+
 export const requestEmailSignIn = async (email: string) => {
-  if (!isSupabaseConfigured()) return { sent: false, message: "Supabase 환경 변수가 없어 로컬 계정 병합만 사용합니다." };
+  if (!isSupabaseConfigured()) {
+    return {
+      sent: false,
+      messageKey: "sync.accountMergedLocal",
+      message: "Supabase environment variables are missing, so only local account merge is available."
+    };
+  }
 
   const supabase = getSupabaseClient();
   const { error } = await supabase.auth.signInWithOtp({
@@ -64,7 +78,11 @@ export const requestEmailSignIn = async (email: string) => {
   });
 
   if (error) throw error;
-  return { sent: true, message: "로그인 링크를 이메일로 보냈습니다. 링크를 열면 클라우드 진도 병합이 실행됩니다." };
+  return {
+    sent: true,
+    messageKey: "sync.authLinkSent",
+    message: "We sent a login link by email. Opening it will start cloud progress merge."
+  };
 };
 
 export const signOutFromSupabase = async () => {
@@ -91,9 +109,11 @@ export const syncWithSupabase = async (state: UserState, session?: Session | nul
     return saveState({
       ...state,
       sync: {
+        ...state.sync,
         mode: "local-only",
         pending: false,
-        message: "Supabase 환경 변수가 없어 로컬 저장만 사용 중입니다."
+        messageKey: "sync.localOnly",
+        message: "Supabase environment variables are missing, so only local storage is available."
       }
     });
   }
@@ -103,9 +123,11 @@ export const syncWithSupabase = async (state: UserState, session?: Session | nul
     return saveState({
       ...state,
       sync: {
+        ...state.sync,
         mode: "supabase-ready",
         pending: false,
-        message: "Supabase 연결 준비 완료. 이메일 링크 로그인 후 클라우드 동기화를 실행합니다."
+        messageKey: "sync.supabaseReady",
+        message: "Supabase is ready. Sign in with an email link to run cloud sync."
       }
     });
   }
@@ -123,7 +145,9 @@ export const syncWithSupabase = async (state: UserState, session?: Session | nul
       cloudUserId: activeSession.user.id,
       lastSyncedAt: new Date().toISOString(),
       pending: false,
-      message: "Supabase 클라우드 진도와 로컬 진도를 병합했습니다."
+      messageKey: "sync.merged",
+      pendingChanges: [],
+      message: "Cloud and local progress were merged successfully."
     }
   });
 };
@@ -147,7 +171,11 @@ const loadCloudState = async (supabase: SupabaseClient, user: User, anonymousId:
   cloud.onboarding = profileResult.data ? profileRowToOnboarding(profileResult.data) : undefined;
   cloud.lessonProgress = Object.fromEntries((progressResult.data ?? []).map((row) => [row.lesson_id, progressRowToState(row)]));
   cloud.reviewItems = (reviewResult.data ?? []).map(reviewRowToState);
-  cloud.savedPhrases = (savedPhraseResult.data ?? []).map(savedPhraseRowToState);
+  const savedPhraseRows = (savedPhraseResult.data ?? []).map(savedPhraseRowToState);
+  cloud.savedPhrases = savedPhraseRows.filter((row): row is SavedPhrase => !("deletedAt" in row));
+  cloud.savedPhraseTombstones = savedPhraseRows.filter(
+    (row): row is UserState["savedPhraseTombstones"][number] => "deletedAt" in row
+  );
   return cloud;
 };
 
@@ -171,11 +199,13 @@ const persistCloudState = async (supabase: SupabaseClient, user: User, state: Us
     if (error) throw error;
   }
 
-  if ((state.savedPhrases ?? []).length) {
-    const { error } = await supabase.from("saved_phrases").upsert(
-      state.savedPhrases.map((item) => savedPhraseToRow(user.id, item)),
-      { onConflict: "id,user_id" }
-    );
+  const savedPhraseRows = [
+    ...(state.savedPhrases ?? []).map((item) => savedPhraseToRow(user.id, item)),
+    ...(state.savedPhraseTombstones ?? []).map((item) => savedPhraseTombstoneToRow(user.id, item))
+  ];
+
+  if (savedPhraseRows.length) {
+    const { error } = await supabase.from("saved_phrases").upsert(savedPhraseRows, { onConflict: "id,user_id" });
     if (error) throw error;
   }
 
@@ -218,21 +248,37 @@ const reviewRowToState = (row: ReviewItemRow): ReviewItem => ({
   reason: row.reason,
   priority: row.priority,
   dueAt: row.due_at,
-  lastResult: row.last_result ?? undefined
+  lastResult: row.last_result ?? undefined,
+  successCount: row.success_count ?? undefined,
+  hardCount: row.hard_count ?? undefined,
+  lastReviewedAt: row.last_reviewed_at ?? undefined,
+  updatedAt: row.updated_at ?? undefined
 });
 
-const savedPhraseRowToState = (row: SavedPhraseRow): SavedPhrase => ({
-  id: row.id,
-  lessonId: row.lesson_id,
-  phraseId: row.phrase_id,
-  korean: row.korean,
-  romanization: row.romanization ?? undefined,
-  meaning: row.meaning,
-  tags: row.tags ?? [],
-  source: row.source,
-  savedAt: row.saved_at,
-  lastPlayedAt: row.last_played_at ?? undefined
-});
+const savedPhraseRowToState = (row: SavedPhraseRow): SavedPhraseRecord => {
+  const base = {
+    id: row.id,
+    lessonId: row.lesson_id,
+    phraseId: row.phrase_id,
+    korean: row.korean,
+    romanization: row.romanization ?? undefined,
+    meaning: row.meaning,
+    tags: row.tags ?? [],
+    source: row.source,
+    savedAt: row.saved_at,
+    lastPlayedAt: row.last_played_at ?? undefined,
+    updatedAt: row.updated_at ?? row.saved_at
+  };
+
+  if (row.deleted_at) {
+    return {
+      ...base,
+      deletedAt: row.deleted_at
+    };
+  }
+
+  return base;
+};
 
 const profileToRow = (userId: string, profile: OnboardingProfile): ProfileRow => ({
   id: userId,
@@ -269,7 +315,11 @@ const reviewToRow = (userId: string, item: ReviewItem) => ({
   reason: item.reason,
   priority: item.priority,
   due_at: item.dueAt,
-  last_result: item.lastResult
+  last_result: item.lastResult,
+  success_count: item.successCount,
+  hard_count: item.hardCount,
+  last_reviewed_at: item.lastReviewedAt,
+  updated_at: item.updatedAt
 });
 
 const savedPhraseToRow = (userId: string, item: SavedPhrase) => ({
@@ -283,7 +333,25 @@ const savedPhraseToRow = (userId: string, item: SavedPhrase) => ({
   tags: item.tags,
   source: item.source,
   saved_at: item.savedAt,
-  last_played_at: item.lastPlayedAt
+  last_played_at: item.lastPlayedAt,
+  updated_at: item.updatedAt,
+  deleted_at: null
+});
+
+const savedPhraseTombstoneToRow = (userId: string, item: UserState["savedPhraseTombstones"][number]) => ({
+  id: item.id,
+  user_id: userId,
+  lesson_id: item.lessonId,
+  phrase_id: item.phraseId,
+  korean: item.korean,
+  romanization: item.romanization,
+  meaning: item.meaning,
+  tags: item.tags,
+  source: item.source,
+  saved_at: item.savedAt,
+  last_played_at: item.lastPlayedAt,
+  updated_at: item.updatedAt,
+  deleted_at: item.deletedAt
 });
 
 const analyticsToRow = (userId: string, anonymousId: string, event: AnalyticsEvent) => ({

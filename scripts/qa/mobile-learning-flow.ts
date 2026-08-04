@@ -1,11 +1,15 @@
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize } from "node:path";
-import { chromium } from "playwright";
+import { chromium, type Page } from "playwright";
 
 const root = process.cwd();
 const distDir = join(root, "dist");
 const port = 5181;
+
+if (!existsSync(join(distDir, "index.html"))) {
+  throw new Error("dist/index.html is missing. Run `npm run build` before `npm run qa:mobile`.");
+}
 
 const mimeTypes: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -36,14 +40,46 @@ const state = {
     dailyGoalMinutes: 5,
     characterId: "haneul",
     reminderTime: "19:30",
-    completedAt: new Date().toISOString()
+    completedAt: "2026-08-04T09:00:00.000Z"
   },
   lessonProgress: {},
-  reviewItems: [],
-  savedPhrases: [],
+  reviewItems: [
+    {
+      id: "review-1",
+      lessonId: "day-1",
+      phraseId: "hello",
+      korean: "annyeonghaseyo",
+      meaning: "Hello",
+      reason: "Warm up your first greeting again.",
+      priority: 40,
+      dueAt: "2026-08-04T08:00:00.000Z",
+      updatedAt: "2026-08-04T08:00:00.000Z"
+    }
+  ],
+  savedPhrases: [
+    {
+      id: "day-1:core",
+      lessonId: "day-1",
+      phraseId: "core",
+      korean: "annyeonghaseyo",
+      romanization: "Annyeonghaseyo",
+      meaning: "Hello",
+      tags: ["core"],
+      source: "core",
+      savedAt: "2026-08-04T08:30:00.000Z",
+      updatedAt: "2026-08-04T08:30:00.000Z"
+    }
+  ],
+  savedPhraseTombstones: [],
   analyticsEvents: [],
-  sync: { mode: "local-only", pending: false, message: "qa" },
-  updatedAt: new Date().toISOString()
+  sync: {
+    mode: "local-only",
+    pending: false,
+    message: "qa",
+    messageKey: "sync.localOnly",
+    pendingChanges: []
+  },
+  updatedAt: "2026-08-04T09:00:00.000Z"
 };
 
 const viewports = [
@@ -51,40 +87,102 @@ const viewports = [
   { name: "desktop-1280", width: 1280, height: 900 }
 ];
 
+const assertNoOverflow = async (page: Page, name: string) => {
+  const hasOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+  if (hasOverflow) {
+    throw new Error(`${name}: horizontal overflow detected.`);
+  }
+};
+
+const assertBottomContentVisible = async (page: Page, name: string) => {
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  const occluded = await page.evaluate(() => {
+    const nav = document.querySelector(".bottom-nav");
+    const screen = document.querySelector(".screen");
+    const lastContent = screen?.lastElementChild as HTMLElement | null;
+    if (!nav || !lastContent) return false;
+    const navRect = nav.getBoundingClientRect();
+    const contentRect = lastContent.getBoundingClientRect();
+    return contentRect.bottom > navRect.top - 8;
+  });
+
+  if (occluded) {
+    throw new Error(`${name}: final action is hidden under the fixed navigation.`);
+  }
+};
+
+const assertStickyActionsVisible = async (page: Page, name: string) => {
+  const occluded = await page.evaluate(() => {
+    const nav = document.querySelector(".bottom-nav");
+    const sticky = document.querySelector(".sticky-actions");
+    if (!nav || !sticky) return false;
+    const navRect = nav.getBoundingClientRect();
+    const stickyRect = sticky.getBoundingClientRect();
+    return stickyRect.bottom > navRect.top - 8;
+  });
+
+  if (occluded) {
+    throw new Error(`${name}: sticky lesson actions overlap the fixed navigation.`);
+  }
+};
+
 await new Promise<void>((resolve) => server.listen(port, "127.0.0.1", resolve));
 
 try {
   const browser = await chromium.launch();
+
   for (const viewport of viewports) {
     const page = await browser.newPage({ viewport });
+    const consoleErrors: string[] = [];
+    const pageErrors: string[] = [];
+
+    page.on("console", (message) => {
+      if (message.type() === "error") {
+        consoleErrors.push(message.text());
+      }
+    });
+    page.on("pageerror", (error) => pageErrors.push(error.message));
+
     await page.addInitScript((value) => {
       localStorage.setItem("korean-first-talk:user-state:v1", JSON.stringify(value));
     }, state);
-    await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "domcontentloaded" });
-    await page.getByText("Day 14 이후 이어질 길").waitFor();
-    await page.getByText("Day 15-30 여행 생존 말하기").waitFor();
-    await page.getByText("여기로 가 주세요.").waitFor();
-    await page.getByRole("button", { name: "여기로 가 주세요. 듣기" }).waitFor();
-    await page.getByRole("button", { name: "여기로 가 주세요. 천천히" }).waitFor();
-    await page.getByRole("button", { name: "여기로 가 주세요. 저장" }).click();
-    await page.getByText("오프라인 저용량 음원 준비").waitFor();
-    await page.getByText("English 학습 설명").waitFor();
-    await page.getByRole("button", { name: /시작|이어하기/ }).click();
-    await page.getByRole("button", { name: "계속" }).click();
-    await page.getByRole("button", { name: "계속" }).click();
-    await page.getByRole("button", { name: "문장 저장" }).click();
-    await page.getByRole("button", { name: "복습" }).click();
-    await page.getByText("저장 문장함").waitFor();
-    await page.getByText("안녕하세요. 만나서 반가워요.").waitFor();
-    await page.getByText("여기로 가 주세요.").waitFor();
-    await page.getByRole("button", { name: "다음 코스" }).click();
-    await page.getByText("여기로 가 주세요.").waitFor();
-    await page.getByRole("button", { name: "핵심" }).click();
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
-    if (overflow) throw new Error(`${viewport.name} has horizontal overflow.`);
-    console.log(`${viewport.name}: home program and saved phrase review flow passed`);
+
+    await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
+
+    await page.getByText("What comes after Day 14").waitFor();
+    await page.getByText("Offline audio pack status").waitFor();
+    await page.getByText("Saved phrases").waitFor();
+
+    await assertNoOverflow(page, viewport.name);
+    await assertBottomContentVisible(page, viewport.name);
+
+    await page.getByRole("button", { name: "Settings" }).click();
+    await page.getByText("My learning settings").waitFor();
+    await page.getByText("Sync status").waitFor();
+    await assertNoOverflow(page, viewport.name);
+
+    await page.getByRole("button", { name: "Review" }).click();
+    await page.getByText("3-minute review").waitFor();
+    await page.locator(".korean-phrase strong").first().waitFor();
+    await page.getByRole("button", { name: "I remember" }).click();
+    await page.getByText("Today's review is complete").waitFor();
+
+    await page.getByRole("button", { name: "Home" }).click();
+    await page.getByRole("button", { name: /Start|Resume/ }).click();
+    await page.getByRole("button", { name: "Continue", exact: true }).waitFor();
+    await assertNoOverflow(page, viewport.name);
+    await assertStickyActionsVisible(page, viewport.name);
+
+    if (consoleErrors.length || pageErrors.length) {
+      throw new Error(
+        `${viewport.name}: runtime errors detected.\nconsole: ${consoleErrors.join(" | ")}\npage: ${pageErrors.join(" | ")}`
+      );
+    }
+
+    console.log(`${viewport.name}: passed home, settings, review, lesson, and layout checks`);
     await page.close();
   }
+
   await browser.close();
 } finally {
   server.close();

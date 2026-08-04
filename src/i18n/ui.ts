@@ -485,7 +485,41 @@ export const uiCatalog = {
     "Tu navegador no admite la grabación. Aún puedes completar la lección."
   ),
   "recorder.recognized": localized("You said:", "認識結果：", "识别结果：", "Bạn nói:", "Dijiste:"),
-  "recorder.matchScore": localized("Match", "一致度", "匹配度", "Độ khớp", "Coincidencia"),
+  "recorder.privacy": localized(
+    "Speech recognition starts only after you tap record. Your browser or device speech service may process audio for transcription.",
+    "音声認識は録音ボタンを押した後にだけ始まります。文字起こしのためにブラウザや端末の音声サービスが音声を処理する場合があります。",
+    "语音识别只会在你点按录音后开始。为了转写，浏览器或设备的语音服务可能会处理音频。",
+    "Nhận diện giọng nói chỉ bắt đầu sau khi bạn chạm ghi âm. Dịch vụ giọng nói của trình duyệt hoặc thiết bị có thể xử lý âm thanh để chép lại.",
+    "El reconocimiento de voz solo comienza después de tocar grabar. El navegador o el servicio de voz del dispositivo pueden procesar el audio para transcribirlo."
+  ),
+  "recorder.practiceNote": localized(
+    "Use this transcript as a rough practice hint, not as an exact pronunciation score.",
+    "この文字起こしは大まかな練習のヒントです。正確な発音点数ではありません。",
+    "把这段转写当作大致的练习提示，不要当作精确的发音分数。",
+    "Hãy xem bản chép lại này như gợi ý luyện tập gần đúng, không phải điểm phát âm chính xác.",
+    "Usa esta transcripción como una pista aproximada de práctica, no como una puntuación exacta de pronunciación."
+  ),
+  "recorder.recognitionUnsupported": localized(
+    "Speech recognition is not available in this browser, so only recording playback is provided.",
+    "このブラウザでは音声認識が使えないため、録音の再生だけ利用できます。",
+    "此浏览器不提供语音识别，因此这里只能回放录音。",
+    "Trình duyệt này không có nhận diện giọng nói, vì vậy chỉ có phát lại bản ghi âm.",
+    "El reconocimiento de voz no está disponible en este navegador, así que solo se ofrece la reproducción de la grabación."
+  ),
+  "recorder.recognitionDenied": localized(
+    "Speech recognition permission was blocked. You can keep practicing with recording playback.",
+    "音声認識の許可がブロックされました。録音の再生だけでも練習を続けられます。",
+    "语音识别权限被阻止了。你仍然可以用录音回放继续练习。",
+    "Quyền nhận diện giọng nói đã bị chặn. Bạn vẫn có thể tiếp tục luyện tập bằng cách nghe lại bản ghi âm.",
+    "Se bloqueó el permiso del reconocimiento de voz. Puedes seguir practicando con la reproducción de la grabación."
+  ),
+  "recorder.recognitionFailed": localized(
+    "Speech recognition could not finish this attempt. Try again if you want another practice hint.",
+    "今回の音声認識は最後まで完了できませんでした。もう一度ヒントが欲しければ再試行してください。",
+    "这次语音识别没有顺利完成。如果还想看练习提示，请再试一次。",
+    "Nhận diện giọng nói không thể hoàn tất lần này. Hãy thử lại nếu bạn muốn thêm gợi ý luyện tập.",
+    "El reconocimiento de voz no pudo completar este intento. Vuelve a intentarlo si quieres otra pista de práctica."
+  ),
 
   // Review screen
   "review.empty.title": localized(
@@ -707,5 +741,108 @@ export const uiCatalog = {
     "已安全保存在此设备上。配置Supabase项目后将可以同步。",
     "Đã lưu an toàn trên thiết bị này. Đồng bộ sẽ khả dụng sau khi cấu hình dự án Supabase.",
     "Guardado de forma segura en este dispositivo. La sincronización estará disponible una vez que se configure un proyecto de Supabase."
+  )
+  ,
+  "home.lesson.day": localized("Day {day}", "{day}日目", "第 {day} 天", "Ngày {day}", "Día {day}"),
+  "home.lesson.dayDone": localized("Day {day} done", "{day}日目 完了", "第 {day} 天已完成", "Ngày {day} đã xong", "Día {day} completado"),
+  "home.lesson.heading": localized(
+    "Day {day}. {title}",
+    "{day}日目。{title}",
+    "第 {day} 天。{title}",
+    "Ngày {day}. {title}",
+    "Día {day}. {title}"
+  ),
+  "saved.dayLabel": localized("Day {day}", "{day}日目", "第 {day} 天", "Ngày {day}", "Día {day}"),
+  "settings.field.emailPlaceholder": localized("you@example.com", "you@example.com", "you@example.com", "you@example.com", "you@example.com"),
+  "settings.supabase.ready": localized(
+    "Supabase is configured. Email sign-in and cloud sync are available.",
+    "Supabase は設定済みです。メールログインとクラウド同期が使えます。",
+    "Supabase 已配置。可以使用邮件登录和云同步。",
+    "Supabase đã được cấu hình. Có thể dùng đăng nhập email và đồng bộ đám mây.",
+    "Supabase está configurado. El inicio de sesión por correo y la sincronización en la nube están disponibles."
+  ),
+  "settings.supabase.localOnly": localized(
+    "Supabase is not configured yet. This app is currently saving on this device only.",
+    "Supabase はまだ設定されていません。現在はこの端末だけに保存しています。",
+    "Supabase 尚未配置。当前仅保存在此设备上。",
+    "Supabase chưa được cấu hình. Ứng dụng hiện chỉ lưu trên thiết bị này.",
+    "Supabase todavía no está configurado. Esta app guarda por ahora solo en este dispositivo."
+  ),
+  "settings.debug.eventAt": localized(
+    "{name} · {time}",
+    "{name} · {time}",
+    "{name} · {time}",
+    "{name} · {time}",
+    "{name} · {time}"
+  ),
+  "sync.readyToConnect": localized(
+    "Supabase environment variables are present. Cloud sync can be connected.",
+    "Supabase の環境変数が見つかりました。クラウド同期を接続できます。",
+    "已检测到 Supabase 环境变量。可以连接云同步。",
+    "Đã có biến môi trường Supabase. Có thể kết nối đồng bộ đám mây.",
+    "Las variables de entorno de Supabase están presentes. Se puede conectar la sincronización en la nube."
+  ),
+  "sync.pendingRetry": localized(
+    "Changes are saved on this device and ready to retry syncing.",
+    "変更はこの端末に保存されており、再同期を試せます。",
+    "更改已保存在此设备上，可以重新尝试同步。",
+    "Các thay đổi đã được lưu trên thiết bị này và sẵn sàng thử đồng bộ lại.",
+    "Los cambios están guardados en este dispositivo y listos para reintentar la sincronización."
+  ),
+  "sync.accountMergedCloudReady": localized(
+    "Account and local progress were merged. Cloud save can run after Supabase is connected.",
+    "アカウントとローカル進捗を統合しました。Supabase 接続後にクラウド保存を実行できます。",
+    "账户与本地进度已合并。连接 Supabase 后即可运行云端保存。",
+    "Đã hợp nhất tài khoản và tiến độ cục bộ. Có thể lưu đám mây sau khi kết nối Supabase.",
+    "La cuenta y el progreso local se fusionaron. El guardado en la nube puede ejecutarse después de conectar Supabase."
+  ),
+  "sync.accountMergedLocal": localized(
+    "Account and local progress were merged in this browser's local storage.",
+    "アカウントとローカル進捗をこのブラウザのローカル保存に統合しました。",
+    "账户与本地进度已合并到此浏览器的本地存储中。",
+    "Đã hợp nhất tài khoản và tiến độ cục bộ vào bộ nhớ cục bộ của trình duyệt này.",
+    "La cuenta y el progreso local se fusionaron en el almacenamiento local de este navegador."
+  ),
+  "sync.loggedOutLocal": localized(
+    "Logged out. Guest progress continues to be stored on this device.",
+    "ログアウトしました。ゲストの進捗はこの端末に保存され続けます。",
+    "已退出登录。访客进度仍会继续保存在此设备上。",
+    "Đã đăng xuất. Tiến độ khách vẫn tiếp tục được lưu trên thiết bị này.",
+    "Sesión cerrada. El progreso de invitado seguirá guardado en este dispositivo."
+  ),
+  "sync.authLinkSent": localized(
+    "We sent a login link by email. Opening it will start cloud progress merge.",
+    "ログインリンクをメールで送りました。開くとクラウド進捗の統合が始まります。",
+    "我们已通过邮件发送登录链接。打开后将开始云端进度合并。",
+    "Chúng tôi đã gửi liên kết đăng nhập qua email. Mở liên kết đó sẽ bắt đầu hợp nhất tiến độ đám mây.",
+    "Enviamos un enlace de inicio de sesión por correo. Al abrirlo comenzará la fusión del progreso en la nube."
+  ),
+  "sync.supabaseReady": localized(
+    "Supabase is ready. Sign in with an email link to run cloud sync.",
+    "Supabase の準備ができました。メールリンクでログインするとクラウド同期を実行できます。",
+    "Supabase 已就绪。通过邮件链接登录后即可运行云同步。",
+    "Supabase đã sẵn sàng. Hãy đăng nhập bằng liên kết email để chạy đồng bộ đám mây.",
+    "Supabase está listo. Inicia sesión con un enlace por correo para ejecutar la sincronización en la nube."
+  ),
+  "sync.merged": localized(
+    "Cloud and local progress were merged successfully.",
+    "クラウドとローカルの進捗を正常に統合しました。",
+    "云端与本地进度已成功合并。",
+    "Tiến độ đám mây và cục bộ đã được hợp nhất thành công.",
+    "El progreso en la nube y el local se fusionaron correctamente."
+  ),
+  "audio.readinessPending": localized(
+    "Natural and slow playback are available, but some lines still rely on browser speech until free static audio files are linked.",
+    "通常速度とゆっくり速度の再生は使えますが、無料の静的音声が紐づくまでは一部の行でブラウザ音声に頼ります。",
+    "自然和慢速播放都可用，但在接入免费的静态音频文件前，部分句子仍会依赖浏览器语音。",
+    "Phát ở tốc độ thường và chậm đều dùng được, nhưng một số câu vẫn phải dựa vào giọng đọc của trình duyệt cho đến khi có tệp âm thanh tĩnh miễn phí.",
+    "La reproducción natural y lenta está disponible, pero algunas líneas todavía dependen de la voz del navegador hasta que se vinculen archivos de audio estáticos gratuitos."
+  ),
+  "audio.readinessReady": localized(
+    "Every tracked line has linked natural and slow static audio, so playback can stay on packaged files.",
+    "追跡対象の全ラインに通常速度とゆっくり速度の静的音声が紐づいており、再生はパッケージ済みファイルで完結します。",
+    "所有已跟踪句子都已链接自然和慢速静态音频，因此播放可以直接使用打包文件。",
+    "Mọi câu đã theo dõi đều có âm thanh tĩnh tốc độ thường và chậm, vì vậy phát lại có thể dùng trọn bộ tệp đã đóng gói.",
+    "Cada línea registrada tiene audio estático natural y lento vinculado, así que la reproducción puede mantenerse en archivos ya empaquetados."
   )
 } as const;

@@ -45,7 +45,11 @@ export const requiredColumns: Record<(typeof requiredTables)[number], string[]> 
     "reason",
     "priority",
     "due_at",
-    "last_result"
+    "last_result",
+    "success_count",
+    "hard_count",
+    "last_reviewed_at",
+    "updated_at"
   ],
   saved_phrases: [
     "id",
@@ -58,7 +62,9 @@ export const requiredColumns: Record<(typeof requiredTables)[number], string[]> 
     "tags",
     "source",
     "saved_at",
-    "last_played_at"
+    "last_played_at",
+    "deleted_at",
+    "updated_at"
   ],
   analytics_events: ["id", "user_id", "anonymous_id", "name", "properties", "occurred_at"],
   guest_merge_requests: ["id", "user_id", "anonymous_id", "merged_summary", "created_at"],

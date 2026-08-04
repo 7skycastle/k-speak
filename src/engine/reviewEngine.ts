@@ -43,6 +43,7 @@ export const buildReviewItems = (
         : "며칠 뒤 잊기 전에 다시 볼 표현이에요.";
 
   const dueAt = new Date(Date.now() + dueHours * 60 * 60 * 1000).toISOString();
+  const updatedAt = new Date().toISOString();
 
   return lesson.reviewCards.map((card) => ({
     id: `${lesson.id}:${card.id}`,
@@ -54,7 +55,8 @@ export const buildReviewItems = (
     prompt: card.promptByCountry[countryPackId],
     reason: `${reason} ${card.reason}`,
     priority: normalizedPriority,
-    dueAt
+    dueAt,
+    updatedAt
   }));
 };
 

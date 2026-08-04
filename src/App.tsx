@@ -44,7 +44,6 @@ import {
   upsertReviewItems,
   upsertSavedPhrase
 } from "./services/storage";
-import { describeSupabaseStatus } from "./services/supabaseClient";
 import { markSyncAttempt } from "./services/sync";
 import {
   requestEmailSignIn,
@@ -53,7 +52,7 @@ import {
   syncWithSupabase
 } from "./services/cloudSync";
 import { playLessonAudio, type AudioPlaybackResult } from "./utils/audioPlayback";
-import { recognizeKorean, isRecognitionSupported, scoreMatch, type RecognitionResult } from "./utils/speechRecognition";
+import { recognizeKorean, isRecognitionSupported, type RecognitionResult } from "./utils/speechRecognition";
 import { speakKorean } from "./utils/speech";
 import { t, createTranslator, type UiKey } from "./i18n";
 import type {
@@ -71,6 +70,18 @@ import type {
 
 type Tab = "home" | "lesson" | "review" | "settings";
 type RecorderState = "idle" | "requesting" | "recording" | "denied" | "unsupported" | "ready";
+
+const getRecognitionStatusKey = (code: string): UiKey => {
+  switch (code) {
+    case "unsupported":
+      return "recorder.recognitionUnsupported";
+    case "not-allowed":
+    case "service-not-allowed":
+      return "recorder.recognitionDenied";
+    default:
+      return "recorder.recognitionFailed";
+  }
+};
 
 const levelUiKey: Record<KoreanLevel, UiKey> = {
   "first-time": "level.first-time",
@@ -109,6 +120,7 @@ const totalAudioSlots = audioTargetCount * tutorCharacters.length;
 const staticAudioSlots = audioCatalog.filter((slot) => slot.naturalUrl && slot.slowUrl).length;
 const fallbackAudioSlots = totalAudioSlots - staticAudioSlots;
 const primaryCourseLessons = lessons.filter((lesson) => lesson.day <= 14);
+const hasRemainingLessons = (state: UserState) => lessons.some((lesson) => state.lessonProgress[lesson.id]?.status !== "completed");
 
 const isPrimaryCourseCompleted = (state: UserState) =>
   primaryCourseLessons.every((lesson) => state.lessonProgress[lesson.id]?.status === "completed");
@@ -189,6 +201,11 @@ export const App = () => {
   }, []);
 
   const startLesson = () => {
+    if (!hasRemainingLessons(state)) {
+      setTab("home");
+      return;
+    }
+
     setState((current) => {
       const lesson = getNextLesson(current.lessonProgress);
       const existing = current.lessonProgress[lesson.id];
@@ -261,7 +278,7 @@ export const App = () => {
             />
           )}
           {tab === "review" && (
-            <ReviewScreen state={state} onPersist={updateState} onStartLesson={startLesson} />
+            <ReviewScreen state={state} onPersist={updateState} onStartLesson={startLesson} onReturnHome={() => setTab("home")} />
           )}
           {tab === "settings" && (
             <SettingsScreen
@@ -518,7 +535,7 @@ const HomeScreen = ({
       <div className="home-grid">
         <Metric
           label={tr("home.metric.todayLesson")}
-          value={progress?.status === "completed" ? `Day ${lesson.day} done` : `Day ${lesson.day}`}
+          value={progress?.status === "completed" ? tr("home.lesson.dayDone", { day: lesson.day }) : tr("home.lesson.day", { day: lesson.day })}
         />
         <Metric label={tr("home.metric.reviewCount")} value={String(reviewCount)} />
         <Metric label={tr("home.metric.savedCount")} value={String(savedCount)} />
@@ -528,7 +545,7 @@ const HomeScreen = ({
         <div className="lesson-preview">
           <div>
             <strong>
-              Day {lesson.day}. {lesson.title[countryPack.id]}
+              {tr("home.lesson.heading", { day: lesson.day, title: lesson.title[countryPack.id] })}
             </strong>
             <p className="muted">
               {tr("home.lesson.meta", { percent, dailyGoal: state.onboarding?.dailyGoalMinutes ?? 5 })}
@@ -577,7 +594,7 @@ const HomeScreen = ({
   );
 };
 
-const ContinuationPathPanel = ({
+export const ContinuationPathPanel = ({
   track,
   completedCount,
   courseCompleted,
@@ -655,6 +672,7 @@ const ContinuationPathPanel = ({
 
 const AudioReadinessPanel = ({ packId }: { packId: CountryPackId }) => {
   const tr = createTranslator(packId);
+  const readinessKey = staticAudioSlots === totalAudioSlots ? "audio.readinessReady" : "audio.readinessPending";
   return (
     <Panel title={tr("audio.readinessTitle")}>
       <div className="readiness-grid">
@@ -662,7 +680,7 @@ const AudioReadinessPanel = ({ packId }: { packId: CountryPackId }) => {
         <Metric label={tr("audio.staticFiles")} value={String(staticAudioSlots)} />
         <Metric label={tr("audio.fallback")} value={String(fallbackAudioSlots)} />
       </div>
-      <p className="muted">{tr("audio.readinessBody")}</p>
+      <p className="muted">{tr(readinessKey)}</p>
     </Panel>
   );
 };
@@ -722,6 +740,7 @@ const LessonScreen = ({
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const [recognitionResult, setRecognitionResult] = useState<RecognitionResult | null>(null);
+  const [recognitionStatusKey, setRecognitionStatusKey] = useState<UiKey | null>(null);
   const stopRecognitionRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -735,6 +754,7 @@ const LessonScreen = ({
     setHintVisible(false);
     setAudioStatus(null);
     setRecognitionResult(null);
+    setRecognitionStatusKey(null);
     setStartMs(Date.now());
   }, [step.id]);
 
@@ -820,12 +840,15 @@ const LessonScreen = ({
       recorder.start();
       setRecorderState("recording");
       setRecognitionResult(null);
+      setRecognitionStatusKey(null);
       if (isRecognitionSupported()) {
         stopRecognitionRef.current = recognizeKorean(
           (result) => setRecognitionResult(result),
-          () => {},
+          (code) => setRecognitionStatusKey(getRecognitionStatusKey(code)),
           () => { stopRecognitionRef.current = null; }
         );
+      } else {
+        setRecognitionStatusKey("recorder.recognitionUnsupported");
       }
       onPersist(trackEvent(state, { name: "first_recording_attempt", lessonId: lesson.id, stepId: step.id }));
     } catch {
@@ -852,6 +875,7 @@ const LessonScreen = ({
     setRecordedUrl("");
     setRecorderState("idle");
     setRecognitionResult(null);
+    setRecognitionStatusKey(null);
   };
 
   const advance = () => {
@@ -924,7 +948,7 @@ const LessonScreen = ({
             onRetry={retryRecording}
             packId={packId}
             recognitionResult={recognitionResult}
-            targetKorean={audioTarget.korean}
+            recognitionStatusKey={recognitionStatusKey}
           />
         )}
         {step.kind === "quiz" && step.hint && (
@@ -1077,7 +1101,7 @@ const LessonStepBody = ({
   </div>
 );
 
-const RecorderControls = ({
+export const RecorderControls = ({
   recorderState,
   recordedUrl,
   onStart,
@@ -1085,7 +1109,7 @@ const RecorderControls = ({
   onRetry,
   packId,
   recognitionResult,
-  targetKorean
+  recognitionStatusKey
 }: {
   recorderState: RecorderState;
   recordedUrl: string;
@@ -1094,14 +1118,12 @@ const RecorderControls = ({
   onRetry: () => void;
   packId: CountryPackId;
   recognitionResult?: RecognitionResult | null;
-  targetKorean?: string;
+  recognitionStatusKey?: UiKey | null;
 }) => {
   const tr = createTranslator(packId);
-  const score = recognitionResult && targetKorean ? scoreMatch(recognitionResult.text, targetKorean) : null;
-  const scorePercent = score !== null ? Math.round(score * 100) : null;
-  const scoreTone = scorePercent === null ? "" : scorePercent >= 75 ? "good" : scorePercent >= 40 ? "ok" : "low";
   return (
     <div className="recorder-box">
+      <p className="source-note">{tr("recorder.privacy")}</p>
       {recorderState === "recording" ? (
         <button className="danger-action" onClick={onStop}>
           <Pause />
@@ -1127,13 +1149,10 @@ const RecorderControls = ({
           <p className="muted">
             <strong>{tr("recorder.recognized")}</strong> {recognitionResult.text}
           </p>
-          {scorePercent !== null && (
-            <span className={`review-badge score-${scoreTone}`}>
-              {tr("recorder.matchScore")} {scorePercent}%
-            </span>
-          )}
+          <p className="muted">{tr("recorder.practiceNote")}</p>
         </div>
       )}
+      {recognitionStatusKey && <p className="audio-status">{tr(recognitionStatusKey)}</p>}
       {recorderState === "denied" && (
         <StatePanel
           icon={<Mic />}
@@ -1152,20 +1171,31 @@ const RecorderControls = ({
   );
 };
 
-const ReviewScreen = ({
+export const ReviewScreen = ({
   state,
   onPersist,
-  onStartLesson
+  onStartLesson,
+  onReturnHome
 }: {
   state: UserState;
   onPersist: (state: UserState) => void;
   onStartLesson: () => void;
+  onReturnHome?: () => void;
 }) => {
   const packId: CountryPackId = state.onboarding?.countryPackId ?? "us-en";
   const tr = createTranslator(packId);
   const dueReviews = getDueReviewItems(state.reviewItems);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const active = dueReviews[activeIndex];
+  const canStartNextLesson = hasRemainingLessons(state);
+  const [completedCount, setCompletedCount] = useState(0);
+  const active = dueReviews[0];
+  const sessionTotal = completedCount + dueReviews.length;
+
+  useEffect(() => {
+    if (!dueReviews.length && completedCount) {
+      setCompletedCount(0);
+    }
+  }, [completedCount, dueReviews.length]);
+
   const playSavedPhrase = (phrase: SavedPhrase, rate: number) => {
     speakKorean(phrase.korean, rate);
     onPersist(markSavedPhrasePlayed(state, phrase.id));
@@ -1196,8 +1226,8 @@ const ReviewScreen = ({
       <section className="flow">
         <ReviewOverview state={state} dueCount={dueReviews.length} packId={packId} />
         <StatePanel icon={<Check />} title={tr("review.done.title")} body={tr("review.done.body")} />
-        <button className="primary-action" onClick={onStartLesson}>
-          {tr("review.done.cta")}
+        <button className="primary-action" onClick={canStartNextLesson ? onStartLesson : (onReturnHome ?? onStartLesson)}>
+          {canStartNextLesson ? tr("review.done.cta") : tr("common.close")}
         </button>
         <SavedPhraseBox phrases={state.savedPhrases ?? []} onPlay={playSavedPhrase} onRemove={removePhrase} packId={packId} />
       </section>
@@ -1207,7 +1237,7 @@ const ReviewScreen = ({
   return (
     <section className="flow">
       <ReviewOverview state={state} dueCount={dueReviews.length} packId={packId} />
-      <ProgressHeader current={activeIndex + 1} total={dueReviews.length} title={tr("review.progressTitle")} />
+      <ProgressHeader current={completedCount + 1} total={sessionTotal} title={tr("review.progressTitle")} />
       <Panel title={active.reason}>
         {active.kind && (
           <span className="review-badge">
@@ -1247,7 +1277,7 @@ const ReviewScreen = ({
           className="secondary-action"
           onClick={() => {
             onPersist(completeReviewItem(state, active.id, "hard"));
-            setActiveIndex((value) => value + 1);
+            setCompletedCount((value) => value + 1);
           }}
         >
           {tr("review.action.hard")}
@@ -1258,7 +1288,7 @@ const ReviewScreen = ({
             let next = completeReviewItem(state, active.id, "success");
             next = trackEvent(next, { name: "review_completed", lessonId: active.lessonId, success: true });
             onPersist(next);
-            setActiveIndex((value) => value + 1);
+            setCompletedCount((value) => value + 1);
           }}
         >
           {tr("review.action.success")}
@@ -1353,7 +1383,7 @@ const SavedPhraseBox = ({
             </button>
             {days.map((day) => (
               <button key={day} className={dayFilter === day ? "selected" : ""} onClick={() => setDayFilter(day)}>
-                Day {day.replace("day-", "")}
+                {tr("saved.dayLabel", { day: day.replace("day-", "") })}
               </button>
             ))}
           </div>
@@ -1412,6 +1442,8 @@ const SettingsScreen = ({
   const character = getCharacter(profile.characterId);
   const pack = getCountryPack(profile.countryPackId);
   const tr = createTranslator(pack.id);
+  const syncMessage = state.sync.messageKey ? tr(state.sync.messageKey as UiKey) : state.sync.message;
+  const supabaseStatus = tr(state.sync.mode === "supabase-ready" ? "settings.supabase.ready" : "settings.supabase.localOnly");
 
   const updateProfile = (patch: Partial<OnboardingProfile>) => {
     const next = { ...profile, ...patch };
@@ -1425,7 +1457,7 @@ const SettingsScreen = ({
 
   return (
     <section className="flow">
-      <Panel title={tr("settings.title")} kicker={describeSupabaseStatus()}>
+      <Panel title={tr("settings.title")} kicker={supabaseStatus}>
         <div className="summary-list">
           <label className="field">
             <span>{tr("settings.field.country")}</span>
@@ -1469,7 +1501,7 @@ const SettingsScreen = ({
       <Panel title={tr("settings.account.title")}>
         <label className="field">
           <span>{tr("settings.field.email")}</span>
-          <input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" />
+          <input value={email} onChange={(event) => setEmail(event.target.value)} placeholder={tr("settings.field.emailPlaceholder")} />
         </label>
         <div className="button-row">
           <button
@@ -1491,6 +1523,7 @@ const SettingsScreen = ({
                         ...merged.sync,
                         mode: authResult.sent ? "supabase-ready" : merged.sync.mode,
                         pending: authResult.sent,
+                        messageKey: authResult.messageKey,
                         message: authResult.message
                       }
                     },
@@ -1522,7 +1555,7 @@ const SettingsScreen = ({
         </div>
       </Panel>
       <Panel title={tr("settings.sync.title")}>
-        <p>{state.sync.message}</p>
+        <p>{syncMessage}</p>
         <button
           className="secondary-action inline"
           onClick={async () => {
@@ -1541,7 +1574,7 @@ const SettingsScreen = ({
           <div className="event-list">
             {state.analyticsEvents.slice(-8).map((event) => (
               <span key={event.id}>
-                {event.name} · {new Date(event.occurredAt).toLocaleTimeString()}
+                {tr("settings.debug.eventAt", { name: event.name, time: new Date(event.occurredAt).toLocaleTimeString() })}
               </span>
             ))}
           </div>
