@@ -46,6 +46,20 @@ def validate_wave(path, errors):
         errors.append(f"Invalid wav file {path}: {exc}")
 
 
+def warn_duplicate_groups(warnings, label, groups, preview_limit=5):
+    duplicates = [(group_key, sorted(paths)) for group_key, paths in groups.items() if len(paths) > 1]
+    if not duplicates:
+        return
+    preview = "; ".join(
+        f"{group_key} -> {', '.join(paths[:2])}{' ...' if len(paths) > 2 else ''}"
+        for group_key, paths in duplicates[:preview_limit]
+    )
+    warnings.append(
+        f"{label}: {len(duplicates)} duplicate content group(s). "
+        f"Repeated phrases across lessons can be intentional. Examples: {preview}"
+    )
+
+
 def validate_manifest(path, expected_jobs, errors, warnings):
     if not path.exists():
         warnings.append(f"TTS generated manifest does not exist yet: {path}")
@@ -94,10 +108,11 @@ def validate_manifest(path, expected_jobs, errors, warnings):
         elif entry.get("wavExists") is True:
             errors.append(f"Manifest says WAV exists but file is missing: {entry.get('wavPath')}")
 
-    for content_key, paths in paths_by_content.items():
-        valid_paths = {path for path in paths if path}
-        if len(valid_paths) > 1:
-            warnings.append(f"Same text/voice/speed appears in multiple WAV paths: {content_key}")
+    warn_duplicate_groups(
+        warnings,
+        "Generated manifest reuses the same text/voice/speed in multiple WAV paths",
+        {content_key: {path for path in paths if path} for content_key, paths in paths_by_content.items()},
+    )
 
     missing_keys = sorted(set(expected_by_key) - manifest_keys)
     if missing_keys:
@@ -175,15 +190,21 @@ def validate_comparison_models(errors):
 def validate_comparison_manifest(path, errors, warnings):
     if not path.exists():
         warnings.append(f"TTS comparison manifest does not exist yet: {path}")
-        return 0
+        return {"entry_count": 0, "sentence_ids": set(), "model_ids": set()}
     manifest = json.loads(path.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
     audio_ids = set()
+    sentence_ids = set()
+    model_ids = set()
     for entry in entries:
         audio_id = entry.get("audioId")
         if audio_id in audio_ids:
             errors.append(f"Duplicate comparison audioId: {audio_id}")
         audio_ids.add(audio_id)
+        if entry.get("sentenceId"):
+            sentence_ids.add(entry["sentenceId"])
+        if entry.get("modelId"):
+            model_ids.add(entry["modelId"])
         if entry.get("realPersonClone") is not False:
             errors.append(f"Comparison entry {audio_id} must not clone a real person.")
         wav_path = entry.get("wavPath", "")
@@ -196,24 +217,36 @@ def validate_comparison_manifest(path, errors, warnings):
             errors.append(f"Comparison manifest says WAV exists but file is missing: {wav_path}")
     if entries and len(entries) < 80:
         warnings.append(f"Comparison manifest has {len(entries)} entries; expected 80 for 20 sentences x 2 models x 2 speeds.")
-    return len(entries)
+    return {"entry_count": len(entries), "sentence_ids": sentence_ids, "model_ids": model_ids}
 
 
-def validate_review_data(path, errors, warnings):
+def validate_review_data(path, expected_sentence_ids, expected_model_ids, errors, warnings):
     if not path.exists():
         warnings.append(f"TTS listening review data does not exist yet: {path}")
         return 0
     payload = json.loads(path.read_text(encoding="utf-8"))
     items = payload.get("items", [])
     audio_count = 0
+    seen_sentence_ids = set()
+    if payload.get("sourceManifest") != "tools/tts/comparison_manifest.json":
+        errors.append("Review data sourceManifest must point to tools/tts/comparison_manifest.json.")
     if payload.get("sentenceCount") != len(items):
         errors.append("Review data sentenceCount does not match items length.")
     for item in items:
+        sentence_id = item.get("sentenceId")
+        if not sentence_id:
+            errors.append("Review item is missing sentenceId.")
+            continue
+        seen_sentence_ids.add(sentence_id)
         if not item.get("koreanText"):
-            errors.append(f"Review item {item.get('sentenceId')} is missing koreanText.")
+            errors.append(f"Review item {sentence_id} is missing koreanText.")
         models = item.get("models", {})
-        if len(models) != 2:
-            errors.append(f"Review item {item.get('sentenceId')} must include two comparison models.")
+        model_ids = set(models)
+        if model_ids != expected_model_ids:
+            errors.append(
+                f"Review item {sentence_id} must include exactly the comparison models "
+                f"{sorted(expected_model_ids)}."
+            )
         for model_id, model in models.items():
             if model.get("realPersonClone") is not False:
                 errors.append(f"Review model {model_id} must not clone a real person.")
@@ -232,6 +265,13 @@ def validate_review_data(path, errors, warnings):
                     validate_wave(wav_path, errors)
                 else:
                     errors.append(f"Review audio file is missing: {entry.get('wavPath')}")
+    if seen_sentence_ids != expected_sentence_ids:
+        missing = sorted(expected_sentence_ids - seen_sentence_ids)
+        extra = sorted(seen_sentence_ids - expected_sentence_ids)
+        if missing:
+            errors.append(f"Review data is missing comparison sentence ids: {', '.join(missing[:5])}")
+        if extra:
+            errors.append(f"Review data contains unexpected sentence ids: {', '.join(extra[:5])}")
     if payload.get("entryCount") != audio_count:
         errors.append("Review data entryCount does not match available audio entries.")
     return audio_count
@@ -262,7 +302,7 @@ def main():
         errors.append("paidTtsAllowed must be false.")
 
     validate_candidate_models(licenses, errors, warnings)
-    validate_comparison_models(errors)
+    comparison_models = validate_comparison_models(errors)
 
     for provider in licenses.get("blockedProviders", []):
         lowered = provider.lower()
@@ -271,6 +311,7 @@ def main():
 
     voice_ids = set()
     sentence_ids = set()
+    planned_paths_by_content = {}
     for voice in voices:
         voice_ids.add(voice["characterId"])
         if voice.get("commercialUse") is True and "approved" not in voice.get("reviewStatus", ""):
@@ -303,7 +344,6 @@ def main():
             errors.append(f"Sentence {sentence['sentenceId']} must stay pending_review_audition_only before audio approval.")
         if not sentence.get("auditionTags"):
             errors.append(f"Sentence {sentence['sentenceId']} must include auditionTags.")
-        sentence_paths_by_hash = {}
         for character_id in sentence["characterIds"]:
             if character_id not in voice_ids:
                 errors.append(f"Sentence {sentence['sentenceId']} references unknown character {character_id}.")
@@ -322,15 +362,25 @@ def main():
                         "wavPath": expected_relative_path(sentence, character_id, speed)
                     }
                 )
-                sentence_paths_by_hash.setdefault(f"{text_hash}::{character_id}::{speed}", set()).add(str(path))
+                planned_paths_by_content.setdefault(f"{text_hash}::{character_id}::{speed}", set()).add(str(path))
 
-        for content_key, paths in sentence_paths_by_hash.items():
-            if len(paths) > 1:
-                warnings.append(f"Duplicate sentence content planned for multiple paths: {content_key}")
+    warn_duplicate_groups(
+        warnings,
+        "Sentence plan reuses the same text/voice/speed across multiple lesson paths",
+        planned_paths_by_content,
+    )
 
     manifest_entry_count = validate_manifest(Path(args.manifest), expected_jobs, errors, warnings)
-    comparison_entry_count = validate_comparison_manifest(Path(args.comparison_manifest), errors, warnings)
-    review_audio_count = validate_review_data(Path(args.review_data), errors, warnings)
+    comparison_validation = validate_comparison_manifest(Path(args.comparison_manifest), errors, warnings)
+    comparison_entry_count = comparison_validation["entry_count"]
+    expected_model_ids = {model["modelId"] for model in comparison_models}
+    review_audio_count = validate_review_data(
+        Path(args.review_data),
+        comparison_validation["sentence_ids"],
+        expected_model_ids,
+        errors,
+        warnings,
+    )
 
     for warning in warnings:
         print(f"WARN {warning}")
