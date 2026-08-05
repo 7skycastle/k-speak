@@ -43,7 +43,7 @@ describe("lesson catalog", () => {
 
   it("contains localized explanation and pronunciation notes", () => {
     for (const lesson of lessons) {
-      expect(lesson.countryNotes["us-en"]).toContain("rhythm");
+      expect(lesson.countryNotes["us-en"]).toContain("politeness");
       expect(lesson.countryNotes["jp-ja"]).toContain("助詞");
       expect(lesson.structure.explanationByCountry["us-en"]).toBeTruthy();
       expect(lesson.structure.explanationByCountry["jp-ja"]).toBeTruthy();
@@ -58,6 +58,20 @@ describe("lesson catalog", () => {
     expect(day1.pronunciationByCountry["jp-ja"]).toContain("요");
     expect(day14.structure.explanationByCountry["jp-ja"]).toContain("また会いたい");
     expect(day14.pronunciationByCountry["us-en"]).toContain("warm rhythm");
+  });
+
+  it("keeps Day 1 through Day 14 guidance specific across supported languages", () => {
+    for (const lesson of lessons.filter((item) => item.day <= 14)) {
+      expect(lesson.structure.explanationByCountry["jp-ja"].length).toBeGreaterThan(20);
+      expect(lesson.structure.explanationByCountry["cn-zh"].length).toBeGreaterThan(12);
+      expect(lesson.structure.explanationByCountry["vn-vi"].length).toBeGreaterThan(20);
+      expect(lesson.structure.explanationByCountry["mx-es"].length).toBeGreaterThan(20);
+      expect(lesson.pronunciationByCountry["jp-ja"].length).toBeGreaterThan(20);
+      expect(lesson.pronunciationByCountry["cn-zh"].length).toBeGreaterThan(12);
+      expect(lesson.pronunciationByCountry["vn-vi"].length).toBeGreaterThan(20);
+      expect(lesson.pronunciationByCountry["mx-es"].length).toBeGreaterThan(20);
+      expect(lesson.reviewCards.every((card) => card.reason.length >= 30)).toBe(true);
+    }
   });
 
   it("contains expanded learning guidance for every country pack", () => {

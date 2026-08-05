@@ -107,6 +107,9 @@ describe("ReviewScreen", () => {
       />
     );
 
+    expect(screen.getByText("sugohaesseoyo")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "I remember" }));
+
     expect(screen.getByText("Today's review is complete")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
   });

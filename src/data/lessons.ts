@@ -31,19 +31,19 @@ const phrase = (
 });
 
 const commonCountryNotes = localized(
-  "Korean often puts the object or place before the action. Say the full phrase first, then compare the rhythm instead of chasing a score.",
-  "韓国語は日本語と語順が近いですが、助詞を一対一で置き換えず、最後の요まで一つのかたまりで声に出します。",
-  "先开口说韩语，再看简短的句子结构说明。",
-  "Hãy nói tiếng Hàn trước, rồi xem ghi chú cấu trúc ngắn.",
-  "Primero di la frase en coreano y luego revisa la nota corta."
+  "Korean often puts the object or place before the action. Say the whole phrase once, then notice how the last ending carries politeness and intent.",
+  "韓国語は日本語と語順が近いですが、助詞を一対一で置き換えるより、文末まで一息で言って全体の流れをつかむほうが自然です。",
+  "韩语常把对象或地点放在动作前面。先把整句说出来，再留意句尾怎样表达礼貌和语气。",
+  "Tiếng Hàn thường đặt đồ vật hoặc địa điểm trước hành động. Hãy nói trọn câu trước, rồi chú ý cách đuôi câu mang ý lịch sự và mục đích.",
+  "En coreano, el objeto o el lugar suele ir antes de la acción. Di primero la frase completa y luego fíjate en cómo el final expresa cortesía e intención."
 );
 
 const commonPronunciationNotes = localized(
-  "Listen for the sentence ending first. Korean politeness often lives in the final sound, so compare rhythm before judging pronunciation.",
-  "ローマ字を長く頼らず、最後の요とパッチムの有無を聞きます。日本語の母音で伸ばしすぎないのがコツです。",
-  "先听句尾和停顿，不要只按汉字意思来读。",
-  "Hãy nghe phần cuối câu và nhịp nói trước, đừng chỉ đọc theo chữ romanization.",
-  "Escucha primero el final de la frase y el ritmo, no solo la romanización."
+  "Listen for the sentence ending first. Korean politeness often lives in the final sound, so match the ending and rhythm before fixing each syllable.",
+  "ローマ字を長く頼らず、最後の요やパッチムの有無を先に聞きます。母音を伸ばしすぎず、語尾の下がり方までまねるのがコツです。",
+  "先听句尾、停顿和连读，不要只按字面意思或罗马字去读。先模仿整句节奏，再修单个音节。",
+  "Hãy nghe phần cuối câu, chỗ ngắt và âm nối trước, đừng chỉ đọc theo romanization. Bắt chước nhịp cả câu trước rồi mới sửa từng âm.",
+  "Escucha primero el final de la frase, las pausas y los enlaces. No te guíes solo por la romanización: imita antes el ritmo completo y luego corrige sílaba por sílaba."
 );
 
 const day14StructureOverrides: Partial<Record<number, Record<CountryPackId, string>>> = {
@@ -52,21 +52,21 @@ const day14StructureOverrides: Partial<Record<number, Record<CountryPackId, stri
     "`-요`があると初対面でも自然に丁寧になります。`안녕하세요`は途中で切らず、最後をやわらかく下げます。",
     "`-요` 让这句在初次见面时更礼貌自然。`안녕하세요` 尽量一口气说完，句尾轻轻落下。",
     "Đuôi `-요` làm câu chào lịch sự hơn. Hãy nói `안녕하세요` liền mạch và hạ giọng nhẹ ở cuối câu.",
-    "La terminacion `-요` vuelve el saludo cortés. Di `안녕하세요` de corrido y baja suavemente al final."
+    "La terminación `-요` vuelve el saludo cortés. Di `안녕하세요` de corrido y baja suavemente al final."
   ),
   2: localized(
     "Use `N hana juseyo` for a simple order. Put the item name first, then finish with `juseyo` as one polite chunk.",
     "`N 하나 주세요`は一番使いやすい注文の形です。品目を先に言って、最後の`주세요`をひとかたまりで出します。",
     "`N 하나 주세요` 是最常用的点单句型。先说东西，再把 `주세요` 连起来说完整。",
     "`N 하나 주세요` là mẫu câu gọi món cơ bản nhất. Nói món trước, rồi nói `주세요` thành một cụm lịch sự.",
-    "`N 하나 주세요` es una forma muy util para pedir. Primero di el producto y luego `주세요` como un solo bloque cortés."
+    "`N 하나 주세요` es una forma muy útil para pedir. Primero di el producto y luego `주세요` como un solo bloque cortés."
   ),
   3: localized(
     "Pair `thank you` with a short result such as `that helped`. It sounds warmer than stopping after only `gamsahamnida`.",
     "`ありがとうございます`だけで終わらず、`助かりました`まで添えると気持ちがもっと自然に伝わります。",
     "不要只说“谢谢”，再加一句“真的帮到我了”会更自然、更有温度。",
     "Đừng chỉ nói cảm ơn. Thêm một câu như `việc đó đã giúp tôi` sẽ nghe tự nhiên và ấm áp hơn.",
-    "No te quedes solo con `gracias`. Si añades `me ayudó mucho`, la frase suena más natural y cercana."
+    "No te quedes solo con `gracias`. Si añades `me ayudó mucho`, la frase suena más natural, cálida y cercana."
   ),
   4: localized(
     "Use `N-i eodiyeyo?` to ask where a place is. The topic is the place, so say it clearly before `eodiyeyo`.",
@@ -79,7 +79,7 @@ const day14StructureOverrides: Partial<Record<number, Record<CountryPackId, stri
     "`Igeo eolmayeyo?` asks the price of something near you. Switch to `geugeo` when the item is closer to the other person.",
     "`이거 얼마예요?`は自分の近くの物の値段を聞く形です。相手の近くなら`그거`に替えます。",
     "`이거 얼마예요?` 用来问你手边这个东西的价格。东西更靠近对方时换成 `그거`。",
-    "`이거 얼마예요?` dung de hoi gia mon do gan ban. Neu do vat o phia doi phuong thi doi sang `그거`.",
+    "`이거 얼마예요?` dùng để hỏi giá món đồ ở gần bạn. Nếu đồ vật ở phía đối phương thì đổi sang `그거`.",
     "`이거 얼마예요?` pregunta el precio de algo que tienes cerca. Si lo tiene la otra persona, cambia a `그거`."
   ),
   6: localized(
@@ -108,7 +108,7 @@ const day14StructureOverrides: Partial<Record<number, Record<CountryPackId, stri
     "`-고 싶어요`は自分の希望をやわらかく伝える形です。予約の確認・変更・作成のどれにも使えます。",
     "`-고 싶어요` 用来礼貌表达“我想……”。确认、修改、预约时都很常用。",
     "`-고 싶어요` dùng để nói điều bạn muốn một cách lịch sự. Mẫu này dùng tốt khi xác nhận, đổi, hoặc đặt chỗ.",
-    "`-고 싶어요` expresa lo que quieres de manera cortés. Sirve para confirmar, cambiar o hacer una reservacion."
+    "`-고 싶어요` expresa lo que quieres de manera cortés. Sirve para confirmar, cambiar o hacer una reservación."
   ),
   10: localized(
     "Two short calming lines together sound natural here: `It's okay` plus `there's no problem`. The second line removes doubt.",
@@ -129,14 +129,14 @@ const day14StructureOverrides: Partial<Record<number, Record<CountryPackId, stri
     "`어디에 있어요?`は今その場所がどこにあるかを聞く形です。トイレや出口のような固定された場所によく合います。",
     "`어디에 있어요?` 是在问某样东西或某个地点现在在哪里，特别适合厕所、电梯、出口这类固定地点。",
     "`어디에 있어요?` dùng để hỏi một thứ hoặc một nơi đang ở đâu. Rất hợp với nhà vệ sinh, thang máy, lối ra.",
-    "`어디에 있어요?` pregunta donde esta algo en ese momento. Va muy bien con lugares fijos como bano, ascensor o salida."
+    "`어디에 있어요?` pregunta dónde está algo en ese momento. Va muy bien con lugares fijos como baño, ascensor o salida."
   ),
   13: localized(
     "`V-aseyo/juseyo` is the short request shape you will use constantly in shops. Here it works because the action is simple and clear.",
     "`-아/어 주세요`は店で何度も使う短い依頼の形です。動作が一つでわかりやすい場面に特によく合います。",
     "`-아/어 주세요` 是店里非常常用的请求句型，动作简单明确时最自然。",
     "`-아/어 주세요` là mẫu nhỏ và rất hay dùng ở cửa hàng. Nó hợp nhất khi hành động cần yêu cầu đơn giản, rõ ràng.",
-    "`-아/어 주세요` es una forma corta y muy util para pedir cosas en tiendas. Funciona mejor cuando la accion es simple."
+    "`-아/어 주세요` es una forma corta y muy útil para pedir cosas en tiendas. Funciona mejor cuando la acción es simple."
   ),
   14: localized(
     "`Daeume tto` sets up a warm closing: `next time, again`. It sounds friendlier than ending the conversation with only goodbye.",
@@ -153,14 +153,14 @@ const day14PronunciationOverrides: Partial<Record<number, Record<CountryPackId, 
     "`안녕하세요`は区切らず一息で。最後の`요`をやわらかく下げ、`만나서`の`ㄴ`は少し長めに重ねます。",
     "`안녕하세요` 尽量一口气说完，句尾 `요` 轻轻落下。`만나서` 里的 `ㄴ` 要连得更顺一些。",
     "Nói `안녕하세요` liền mạch, hạ nhẹ ở `요`. Trong `만나서`, âm `n` được giữ dài hơn một chút.",
-    "Di `안녕하세요` de corrido y baja suave en `-yo`. En `만나서`, la `n` se sostiene un poco más."
+    "Di `안녕하세요` de corrido y baja suave en `-yo`. En `만나서`, la `n` se sostiene un poco más que en español."
   ),
   2: localized(
     "Stress the item, not `juseyo`. In `아이스`, the first syllable is clean and short, and `하나` should not become `hanaa`.",
     "`주세요`より品名をはっきり。`아이스`の最初は短く、`하나`は母音を引きのばしすぎないのがコツです。",
     "重点放在饮品名，不要把 `주세요` 读得太重。`아이스` 开头要干净，`하나` 不要拖长。",
     "Nhấn vào tên đồ uống hơn là `주세요`. `아이스` mở đầu gọn, và `하나` không cần kéo dài nguyên âm.",
-    "Marca más el nombre del producto que `주세요`. `아이스` empieza corto y limpio, y `하나` no se alarga."
+    "Marca más el nombre del producto que `주세요`. `아이스` empieza corto y limpio, y `하나` no debe alargarse."
   ),
   3: localized(
     "In `감사합니다`, keep the middle crisp instead of flattening every syllable. `도움이` links smoothly as `doumi` in fast speech.",
@@ -195,35 +195,35 @@ const day14PronunciationOverrides: Partial<Record<number, Record<CountryPackId, 
     "意味の中心は`한 번`です。`한`は短く、`번`の終わりはにごらせすぎず整えて出します。",
     "重点在 `한 번`，表示“再一次”。`한` 要短，`번` 的结尾要收干净。",
     "Phần quan trọng nhất là `한 번`, nghĩa là `một lần nữa`. `한` nói gọn, và cuối `번` đóng âm rõ ràng.",
-    "La parte clave es `한 번`, que significa `una vez más`. `한` va corto y el final de `번` debe cerrarse limpio."
+    "La parte clave es `한 번`, que significa `una vez más`. `한` va corto y el final de `번` debe cerrarse con limpieza."
   ),
   8: localized(
     "In `추천`, the first syllable is tense and clear. Let `뭐예요` rise at the end so it sounds curious, not flat.",
     "`추천`の最初は少ししっかりめに。`뭐예요`は平たく読まず、最後を軽く上げると自然です。",
     "`추천` 开头要清楚有力。`뭐예요` 结尾轻轻上扬，会更像自然提问。",
     "Âm đầu của `추천` cần rõ và chắc. Cuối `뭐예요` nhấc lên nhẹ để nghe đúng là câu hỏi.",
-    "En `추천`, la primera sílaba sale firme. Sube un poco al final de `뭐예요` para que suene realmente a pregunta."
+    "En `추천`, la primera sílaba debe salir firme. Sube un poco al final de `뭐예요` para que suene realmente a pregunta."
   ),
   9: localized(
     "In `확인하고`, the `gi` sound links into the next syllable smoothly. `싶어요` should end softly, not too strongly.",
     "`확인하고`は途中を切らずにつなげます。`싶어요`は言い切りすぎず、やわらかく終えると自然です。",
     "`확인하고` 中间连读更自然。`싶어요` 句尾不要太重，轻轻收尾更像韩语口气。",
     "`확인하고` nên nói liền mượt. `싶어요` kết thúc nhẹ sẽ nghe tự nhiên hơn.",
-    "`확인하고` suena mejor enlazado. `싶어요` debe cerrar suave, no con demasiada fuerza."
+    "`확인하고` suena mejor enlazado. `싶어요` debe cerrar suave, sin demasiada fuerza."
   ),
   10: localized(
     "Say `괜찮아요` with a calm falling tone. In `문제없어요`, keep the break after `문제` very small so the phrase stays reassuring.",
     "`괜찮아요`は落ち着いて下げます。`문제없어요`は`문제`のあとを空けすぎないと、安心させる流れが保てます。",
     "`괜찮아요` 用平稳下行语调说更自然。`문제없어요` 不要把中间停得太开，整句会更安抚人。",
     "Nói `괜찮아요` với giọng dịu và hạ xuống. Trong `문제없어요`, đừng nghỉ quá lâu sau `문제` để câu vẫn liền và trấn an.",
-    "Di `괜찮아요` con tono tranquilo y descendente. En `문제없어요`, no hagas una pausa grande después de `문제`."
+    "Di `괜찮아요` con tono tranquilo y descendente. En `문제없어요`, no hagas una pausa grande después de `문제` para que siga sonando tranquilizador."
   ),
   11: localized(
     "The polite lift is in `주실 수 있어요?`. Keep `사진 좀` light, then let the request part carry the softness.",
     "丁寧さの中心は`주실 수 있어요?`にあります。`사진 좀`は軽く置いて、お願い部分をやわらかく出します。",
     "真正礼貌的感觉在 `주실 수 있어요?`。`사진 좀` 可以轻一点，后半句要更柔和。",
     "Độ lịch sự nằm ở phần `주실 수 있어요?`. `사진 좀` có thể nói nhẹ, rồi để phần nhờ vận mang sự mềm mại.",
-    "La cortesía está sobre todo en `주실 수 있어요?`. Di `사진 좀` más ligero y deja que la segunda parte haga la petición amable."
+    "La cortesía está sobre todo en `주실 수 있어요?`. Di `사진 좀` más ligero y deja que la segunda parte cargue con la amabilidad de la petición."
   ),
   12: localized(
     "`어디에 있어요` should flow without big pauses. In `오른쪽`, the `jjok` ending is short and clipped.",
@@ -237,7 +237,7 @@ const day14PronunciationOverrides: Partial<Record<number, Record<CountryPackId, 
     "`포장해`では`장`をはっきり出してから`해`へつなげます。`부탁드려요`は細かく切らず、なめらかに流すと自然です。",
     "`포장해` 里的 `장` 要清楚，再顺着接到 `해`。`부탁드려요` 不要切得太碎，连起来更自然。",
     "Trong `포장해`, giữ rõ âm `jang` rồi mới chuyển sang `hae`. `부탁드려요` nghe tự nhiên hơn khi nói mượt, không cắt nhỏ.",
-    "En `포장해`, marca bien `jang` antes de pasar a `hae`. `부탁드려요` suena mejor enlazado y no demasiado cortado."
+    "En `포장해`, marca bien `jang` antes de pasar a `hae`. `부탁드려요` suena mejor enlazado, no cortado en trozos."
   ),
   14: localized(
     "Give `다음에 또` a warm rhythm, then soften the ending in `만나요`. The sentence should sound inviting, not abrupt.",
@@ -490,7 +490,8 @@ const reviewCards = (day: number, core: LocalizedPhrase, roleplayPrompt: Localiz
       "Escucha y elige cuándo usarías esta frase."
     ),
     phrase: core,
-    reason: "실제 상황에서 가장 먼저 귀에 익혀 둘 핵심 문장이라, 뜻보다 소리와 리듬에 먼저 익숙해지도록 추천합니다."
+    reason:
+      "복습을 시작할 때 가장 부담이 적은 핵심 문장이라, 뜻을 떠올리기 전에 먼저 소리와 리듬을 귀에 익히기 좋습니다."
   },
   {
     id: "speak",
@@ -503,14 +504,16 @@ const reviewCards = (day: number, core: LocalizedPhrase, roleplayPrompt: Localiz
       "Di la frase desde el significado y compárala con el audio."
     ),
     phrase: core,
-    reason: "내 말하기 습관이 바로 드러나는 대표 문장이라, 내 목소리와 기준 음성을 번갈아 들으며 차이를 잡기 좋습니다."
+    reason:
+      "뜻을 보고 바로 한국어로 꺼내 보는 연습에 잘 맞는 대표 문장이라, 내 말버릇과 기준 음성의 차이를 비교하기 좋습니다."
   },
   {
     id: "roleplay",
     kind: "roleplay",
     promptByCountry: roleplayPrompt.meaningByCountry,
     phrase: core,
-    reason: "상대 말 다음에 바로 꺼내야 하는 문장이라, 실전처럼 짧게 반응하는 연습용으로 가장 효과적입니다."
+    reason:
+      "상대 말 다음에 바로 연결해야 하는 문장이라, 실제 대화처럼 짧게 반응하는 순발력 복습에 가장 잘 맞습니다."
   }
 ];
 

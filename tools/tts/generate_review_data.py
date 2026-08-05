@@ -21,9 +21,12 @@ def main():
     sentence_map = {sentence["sentenceId"]: sentence for sentence in sentences}
     manifest = read_json(TOOL_DIR / "comparison_manifest.json")
     entries = manifest.get("entries", [])
+    review_sentence_ids = {entry["sentenceId"] for entry in entries}
 
     groups = {}
     for sentence in sentences:
+        if sentence["sentenceId"] not in review_sentence_ids:
+            continue
         groups[sentence["sentenceId"]] = {
             "sentenceId": sentence["sentenceId"],
             "lessonId": sentence["lessonId"],

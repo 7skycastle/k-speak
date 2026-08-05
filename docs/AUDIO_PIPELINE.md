@@ -88,6 +88,8 @@ public/audio/audition/qwen3-sohee/hello-nice-meet-you/slow.wav
 
 `public/tts-review.html` loads `public/audio/audition/review-data.json` and provides a browser-based listening review surface. Review notes are stored in browser localStorage and can be exported as JSON.
 
+`npm run tts:review-data` now rebuilds that file strictly from `tools/tts/comparison_manifest.json`, so the browser review surface stays aligned with the 20-sentence comparison pack.
+
 ## Local Runtime Notes
 
 MeloTTS official docs say the project was developed/tested on Ubuntu 20.04 and Python 3.9 and suggest Docker for Windows users. Docker is not currently available in this workspace, so Windows generation should use a dedicated virtual environment or WSL rather than the app runtime. In this workspace, MeloTTS-Korean generated the 20-sentence comparison pack successfully from a dedicated Python 3.11 virtual environment after installing `eunjeon`.

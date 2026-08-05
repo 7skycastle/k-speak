@@ -19,9 +19,8 @@
       "romanization": "Annyeonghaseyo. Mannaseo bangawoyo.",
       "auditionTags": [
         "day-content",
-        "greeting",
-        "polite-ending",
-        "natural-dialogue"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -94,9 +93,8 @@
       "romanization": "Aiseu amerikano hana juseyo.",
       "auditionTags": [
         "day-content",
-        "loanword",
-        "number",
-        "polite-request"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -169,9 +167,8 @@
       "romanization": "Gamsahamnida. Jeongmal doumi dwaesseoyo.",
       "auditionTags": [
         "day-content",
-        "gratitude",
-        "batchim",
-        "polite-ending"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -244,9 +241,8 @@
       "romanization": "Jihacheolyeogi eodiyeyo?",
       "auditionTags": [
         "day-content",
-        "question-intonation",
-        "linking",
-        "place"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -319,8 +315,8 @@
       "romanization": "Igeo eolmayeyo?",
       "auditionTags": [
         "day-content",
-        "price",
-        "question-intonation"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -393,8 +389,8 @@
       "romanization": "Jogeum cheoncheonhi malhae juseyo.",
       "auditionTags": [
         "day-content",
-        "polite-request",
-        "slow-speech-check"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -467,8 +463,8 @@
       "romanization": "Dasi han beon malhae juseyo.",
       "auditionTags": [
         "day-content",
-        "polite-request",
-        "batchim"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -541,9 +537,8 @@
       "romanization": "Chucheon menyuga mwoyeyo?",
       "auditionTags": [
         "day-content",
-        "tense-consonant",
-        "question-intonation",
-        "restaurant"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -616,9 +611,8 @@
       "romanization": "Yeyak hwaginhago sipeoyo.",
       "auditionTags": [
         "day-content",
-        "travel",
-        "polite-ending",
-        "linking"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -691,9 +685,8 @@
       "romanization": "Gwaenchanayo. Munje eopseoyo.",
       "auditionTags": [
         "day-content",
-        "reassurance",
-        "batchim",
-        "linking"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -766,9 +759,8 @@
       "romanization": "Sajin jom jjigeo jusil su isseoyo?",
       "auditionTags": [
         "day-content",
-        "tense-consonant",
-        "honorific",
-        "question-intonation"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -841,9 +833,8 @@
       "romanization": "Hwajangsiri eodie isseoyo?",
       "auditionTags": [
         "day-content",
-        "place",
-        "question-intonation",
-        "linking"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -916,8 +907,8 @@
       "romanization": "Pojanghae juseyo.",
       "auditionTags": [
         "day-content",
-        "polite-request",
-        "aspirated-consonant"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
@@ -990,9 +981,8 @@
       "romanization": "Daeume tto mannayo.",
       "auditionTags": [
         "day-content",
-        "tense-consonant",
-        "farewell",
-        "polite-ending"
+        "core-phrase",
+        "saved-phrase"
       ],
       "models": {
         "melotts-korean-candidate": {
