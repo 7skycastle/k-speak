@@ -66,4 +66,18 @@ describe("reviewEngine", () => {
 
     expect(items[0].id).toBe("high");
   });
+
+  it("localizes review reasons for the active country pack", () => {
+    const lesson = getLesson("day-1");
+    const completed = lesson.steps.reduce(
+      (progress, step) => completeStep(progress, step.id),
+      createLessonProgress("day-1")
+    );
+
+    const reviews = buildReviewItems(completed, "Hello. Nice to meet you.", "mx-es");
+
+    expect(reviews[0].reason).toContain("antes de que se te olvide");
+    expect(reviews[0].reason).toContain("frase clave");
+    expect(reviews[0].reason).not.toContain("복습");
+  });
 });

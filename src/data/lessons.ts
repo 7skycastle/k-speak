@@ -490,8 +490,13 @@ const reviewCards = (day: number, core: LocalizedPhrase, roleplayPrompt: Localiz
       "Escucha y elige cuándo usarías esta frase."
     ),
     phrase: core,
-    reason:
-      "복습을 시작할 때 가장 부담이 적은 핵심 문장이라, 뜻을 떠올리기 전에 먼저 소리와 리듬을 귀에 익히기 좋습니다."
+    reasonByCountry: localized(
+      "This core phrase is the easiest way to begin review, so it helps you tune your ear to the sound and rhythm before you try to recall the meaning.",
+      "復習の入り口として負担が少ない中核フレーズなので、意味を思い出す前に音とリズムを耳になじませるのに向いています。",
+      "这是开始复习时负担最小的核心句子，很适合在回想意思之前，先让耳朵重新熟悉它的声音和节奏。",
+      "Đây là câu trọng tâm nhẹ nhất để bắt đầu ôn tập, nên rất hợp để tai bạn làm quen lại với âm thanh và nhịp điệu trước khi nhớ lại nghĩa.",
+      "Esta frase clave es la forma más ligera de empezar el repaso, así que te ayuda a volver a acostumbrar el oído al sonido y al ritmo antes de recordar el significado."
+    )
   },
   {
     id: "speak",
@@ -504,16 +509,26 @@ const reviewCards = (day: number, core: LocalizedPhrase, roleplayPrompt: Localiz
       "Di la frase desde el significado y compárala con el audio."
     ),
     phrase: core,
-    reason:
-      "뜻을 보고 바로 한국어로 꺼내 보는 연습에 잘 맞는 대표 문장이라, 내 말버릇과 기준 음성의 차이를 비교하기 좋습니다."
+    reasonByCountry: localized(
+      "This is a strong model sentence for pulling the Korean out from meaning alone, so it is useful for comparing your own speaking habit with the reference audio.",
+      "意味を見てすぐ韓国語で取り出す練習に向いた代表文なので、自分の言い方と基準音声の違いを比べやすいです。",
+      "这是很适合看着意思立刻说出韩语的代表句，所以很适合拿来比较你自己的说法和标准音频之间的差别。",
+      "Đây là câu mẫu rất hợp để luyện nhìn nghĩa rồi bật ra tiếng Hàn ngay, nên cũng dễ so sánh thói quen nói của bạn với âm thanh mẫu.",
+      "Es una frase modelo muy útil para sacar el coreano a partir del significado, así que sirve bien para comparar tu manera de hablar con el audio de referencia."
+    )
   },
   {
     id: "roleplay",
     kind: "roleplay",
     promptByCountry: roleplayPrompt.meaningByCountry,
     phrase: core,
-    reason:
-      "상대 말 다음에 바로 연결해야 하는 문장이라, 실제 대화처럼 짧게 반응하는 순발력 복습에 가장 잘 맞습니다."
+    reasonByCountry: localized(
+      "Because this sentence has to connect right after the other person speaks, it is the best fit for practicing quick, real-conversation reactions.",
+      "相手の一言のあとですぐにつなげる文なので、実際の会話のように短く反応する瞬発力の復習に最も向いています。",
+      "这句话要紧接在对方的话后面接上，所以最适合练习像真实对话那样迅速做出简短反应。",
+      "Vì câu này phải nối ngay sau lời của đối phương, nó hợp nhất để ôn lại phản xạ đáp ngắn như trong hội thoại thật.",
+      "Como esta frase tiene que salir justo después de lo que dice la otra persona, es la mejor para practicar reacciones cortas y rápidas como en una conversación real."
+    )
   }
 ];
 

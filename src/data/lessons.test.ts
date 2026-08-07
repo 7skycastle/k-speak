@@ -70,7 +70,8 @@ describe("lesson catalog", () => {
       expect(lesson.pronunciationByCountry["cn-zh"].length).toBeGreaterThan(12);
       expect(lesson.pronunciationByCountry["vn-vi"].length).toBeGreaterThan(20);
       expect(lesson.pronunciationByCountry["mx-es"].length).toBeGreaterThan(20);
-      expect(lesson.reviewCards.every((card) => card.reason.length >= 30)).toBe(true);
+      expect(lesson.reviewCards.every((card) => card.reasonByCountry["us-en"].length >= 30)).toBe(true);
+      expect(lesson.reviewCards.every((card) => card.reasonByCountry["jp-ja"].length >= 20)).toBe(true);
     }
   });
 

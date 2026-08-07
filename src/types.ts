@@ -182,7 +182,7 @@ export interface LessonReviewCard {
   kind: "listen" | "speak" | "roleplay";
   promptByCountry: Record<CountryPackId, string>;
   phrase: LocalizedPhrase;
-  reason: string;
+  reasonByCountry: Record<CountryPackId, string>;
 }
 
 export interface Lesson {
