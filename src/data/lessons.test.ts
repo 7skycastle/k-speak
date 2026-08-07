@@ -79,6 +79,8 @@ describe("lesson catalog", () => {
     const day17 = lessons[16];
     const day22 = lessons[21];
     const day25 = lessons[24];
+    const day29 = lessons[28];
+    const day30 = lessons[29];
 
     expect(day15.meaningByCountry["us-en"]).toBe("Please take me here.");
     expect(day17.responsePhrase.romanization).toBe("Ne, yeogiseo seoulgeyo.");
@@ -86,6 +88,9 @@ describe("lesson catalog", () => {
     expect(day25.romanization).toBe("Oneul nalssi jonneyo.");
     expect(day25.responsePhrase.romanization).toBe("Geureogeyo. Jeongmal jonneyo.");
     expect(day25.swapSlots.map((slot) => slot.romanization)).toEqual(["Bunwigi jonneyo.", "Yeogi jonneyo."]);
+    expect(day29.structure.explanationByCountry["us-en"]).toContain("`이 서류가 필요해요?`");
+    expect(day29.structure.explanationByCountry["jp-ja"]).toContain("`이 서류가 필요해요?`");
+    expect(day30.structure.explanationByCountry["vn-vi"]).toContain("lần sau");
   });
 
   it("contains expanded learning guidance for every country pack", () => {

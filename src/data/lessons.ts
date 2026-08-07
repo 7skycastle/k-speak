@@ -320,11 +320,11 @@ const day15To30StructureOverrides: Partial<Record<number, Record<CountryPackId, 
     "Usa `바꾸고 싶어요` para decir qué quieres cambiar. Pon el objeto antes: `예약을 바꾸고 싶어요`. La nueva hora o fecha va con `-(으)로`."
   ),
   25: localized(
-    "`-네요` adds a soft reaction to something you just noticed. `춥네요` means \"wow, it is cold\" — not just stating a fact but sharing a feeling. It works for anything you observe in the moment.",
-    "`-네요`は今気づいたことをやわらかく伝える語尾です。「寒いですね」のように、単に事実を言うより感想を添える感覚です。",
-    "`-네요` 是对刚注意到的事物做出温和反应的语尾。`춥네요` 不只是陈述事实，更是分享当下的感受。",
-    "`-네요` thêm phản ứng nhẹ về điều bạn vừa nhận ra. `춥네요` không chỉ là sự thật mà còn chia sẻ cảm xúc hiện tại.",
-    "`-네요` añade una reacción suave a algo que acabas de notar. `춥네요` no solo constata el frío — comparte la sensación. Sirve para cualquier cosa observada en el momento."
+    "`-네요` adds a soft reaction to something you just noticed. With `좋네요`, you are not only stating that it is good; you are sharing that warm reaction with the other person. It works for weather, places, food, or 분위기.",
+    "`-네요`は今気づいたことへのやわらかな反応です。`좋네요`は「いいです」と事実を言うだけでなく、その場の感じよさを相手と共有する響きになります。",
+    "`-네요` 是对刚注意到的事情做出的柔和反应。`좋네요` 不只是说“很好”，而是在和对方共享当下那种舒服、不错的感觉。",
+    "`-네요` thêm một phản ứng nhẹ với điều bạn vừa nhận ra. Với `좋네요`, bạn không chỉ nói 'tốt' mà còn chia sẻ cảm giác dễ chịu đó với người đối diện.",
+    "`-네요` añade una reacción suave a algo que acabas de notar. Con `좋네요`, no solo dices que algo está bien; compartes esa sensación agradable con la otra persona."
   ),
   26: localized(
     "`-ㄹ까요?` proposes something to do together — \"shall we?\" Put the time or action before it: `두 시에 만날까요?` (shall we meet at two?). It invites the other person to agree.",
@@ -348,17 +348,17 @@ const day15To30StructureOverrides: Partial<Record<number, Record<CountryPackId, 
     "La parte del cuerpo va primero, luego `아파요`. Esta es la forma más simple de reportar dolor. Añade `조금` antes de `아파요` para suavizar, o `많이` para enfatizar."
   ),
   29: localized(
-    "`뭐가 필요해요?` asks what is needed. At a counter, it is polite and direct. If you want to ask whether a specific document is needed, switch to `N이/가 필요해요?` with the document name.",
-    "`뭐가 필요해요?`は何が必要かを聞く形です。窓口では丁寧で直接的です。特定の書類について聞くなら`N이/가 필요해요?`に変えられます。",
-    "`뭐가 필요해요?` 用来问需要什么。在柜台这样问既礼貌又直接。如果要问特定文件，把 N 换成文件名：`N이/가 필요해요?`",
-    "`뭐가 필요해요?` hỏi cần gì. Tại quầy, câu này lịch sự và thẳng thắn. Nếu muốn hỏi tài liệu cụ thể, đổi sang `N이/가 필요해요?`.",
-    "`뭐가 필요해요?` pregunta qué se necesita. En una ventanilla, es directo y cortés. Si quieres preguntar por un documento específico, cambia a `N이/가 필요해요?`."
+    "`N이/가 필요해요?` asks whether a specific thing is needed. In this lesson, `이 서류가 필요해요?` checks one document right away. Swap `이 서류` for any item name when you want a simple, polite confirmation.",
+    "`N이/가 필요해요?`は、特定の物が必要かどうかをたずねる形です。このレッスンでは`이 서류가 필요해요?`で一つの書類をその場で確認します。`이 서류`の部分を他の物に替えて応用できます。",
+    "`N이/가 필요해요?` 用来问某个具体东西是否需要。这一课里的 `이 서류가 필요해요?` 是当场确认某一份文件。把 `이 서류` 换成别的物品名也能直接套用。",
+    "`N이/가 필요해요?` dùng để hỏi một món cụ thể có cần hay không. Trong bài này, `이 서류가 필요해요?` là cách xác nhận ngay về một giấy tờ. Bạn chỉ cần thay `이 서류` bằng tên món khác để dùng tiếp.",
+    "`N이/가 필요해요?` pregunta si hace falta algo concreto. En esta lección, `이 서류가 필요해요?` sirve para confirmar de inmediato un documento específico. Puedes cambiar `이 서류` por cualquier otro objeto."
   ),
   30: localized(
     "`다음에는` sets the time frame: next time, after this. Then `V-고 싶어요` expresses the wish. Together they make a warm, forward-looking close to any conversation.",
     "`다음에는`で「次回・この次」という時間軸を示し、`V-고 싶어요`で願いを続けます。会話の締めくくりとして前向きな気持ちが伝わります。",
     "`다음에는` 设定时间框架——下次、之后。再加上 `V-고 싶어요` 表达愿望。两者合在一起，为对话画上温暖又期待的句号。",
-    "`다음에는` đặt khung thời gian: lần sau, sau đây. Rồi `V-고 싶어요` bày tỏ mong muốn. Cùng nhau tạo cái kết ấm áp, hướng tới tương lai.",
+    "`다음에는` đặt khung thời gian: lần sau, vào dịp tới. Rồi `V-고 싶어요` bày tỏ mong muốn. Hai phần ghép lại tạo một lời kết ấm áp và hướng về phía trước.",
     "`다음에는` fija el marco de tiempo: la próxima vez, después de esto. Luego `V-고 싶어요` expresa el deseo. Juntos forman un cierre cálido y esperanzador."
   )
 };
