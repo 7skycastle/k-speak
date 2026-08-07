@@ -867,7 +867,7 @@ const lessonSeeds = [
     situation: en("In a taxi or navigation situation, you clearly state where you want to go."),
     quizDistractors: ["When asking someone to take a photo", "When checking the weather"] as [string, string],
     phraseId: "go-here-please",
-    core: phrase("여기로 가 주세요.", "Yeogiro ga juseyo.", "Please go here.", "ここへ行ってください。", "请去这里。", "Làm ơn đi đến đây.", "Por favor, vaya aquí."),
+    core: phrase("여기로 가 주세요.", "Yeogiro ga juseyo.", "Please take me here.", "ここまでお願いします。", "请带我到这里。", "Làm ơn đưa tôi tới đây.", "Lléveme aquí, por favor."),
     response: phrase("네, 알겠습니다.", "Ne, algesseumnida.", "Okay, I understand.", "はい、わかりました。", "好的，明白了。", "Vâng, tôi hiểu rồi.", "Sí, entendido."),
     rescue: phrase("주소를 보여 드릴게요.", "Jusoreul boyeo deurilgeyo.", "I will show you the address.", "住所をお見せします。", "我给您看地址。", "Tôi sẽ cho bạn xem địa chỉ.", "Le muestro la dirección."),
     dialogue: [
@@ -915,7 +915,7 @@ const lessonSeeds = [
     quizDistractors: ["When ordering at a cafe", "When asking for a menu recommendation"] as [string, string],
     phraseId: "get-off-here",
     core: phrase("여기서 내려 주세요.", "Yeogiseo naeryeo juseyo.", "Please let me off here.", "ここで降ろしてください。", "请在这里下车。", "Cho tôi xuống ở đây.", "Déjeme bajar aquí, por favor."),
-    response: phrase("네, 여기서 세울게요.", "Ne, yeogiseo seulkkeyo.", "Okay, I will stop here.", "はい、ここで止めます。", "好的，我在这里停。", "Vâng, tôi sẽ dừng ở đây.", "Sí, paro aquí."),
+    response: phrase("네, 여기서 세울게요.", "Ne, yeogiseo seoulgeyo.", "Okay, I'll stop here.", "はい、ここで止めます。", "好的，我在这里停。", "Vâng, tôi sẽ dừng ở đây.", "Sí, paro aquí."),
     rescue: phrase("조금 더 가 주세요.", "Jogeum deo ga juseyo.", "Please go a little farther.", "もう少し進んでください。", "请再往前一点。", "Đi thêm một chút giúp tôi.", "Avance un poco más, por favor."),
     dialogue: [
       { speaker: "학습자", speakerRole: "learner", text: "여기서 내려 주세요." },
@@ -1029,7 +1029,7 @@ const lessonSeeds = [
     situation: en("At a restaurant or cafe, you ask for the check."),
     quizDistractors: ["When checking your reservation", "When asking someone to speak slowly"] as [string, string],
     phraseId: "check-please",
-    core: phrase("계산해 주세요.", "Gyesanhae juseyo.", "Please ring me up.", "お会計をお願いします。", "请结账。", "Tính tiền giúp tôi.", "La cuenta, por favor."),
+    core: phrase("계산해 주세요.", "Gyesanhae juseyo.", "Check, please.", "お会計をお願いします。", "请结账。", "Tính tiền giúp tôi.", "La cuenta, por favor."),
     response: phrase("카드로 하세요?", "Kadeuro haseyo?", "Will you pay by card?", "カードで払いますか。", "您刷卡吗？", "Bạn trả bằng thẻ không?", "¿Paga con tarjeta?"),
     rescue: phrase("영수증 주세요.", "Yeongsujeung juseyo.", "Please give me a receipt.", "レシートをください。", "请给我收据。", "Cho tôi hóa đơn.", "Deme el recibo, por favor."),
     dialogue: [
@@ -1098,8 +1098,8 @@ const lessonSeeds = [
     situation: en("You start a light conversation by mentioning the weather."),
     quizDistractors: ["When asking about document requirements", "When making a reservation"] as [string, string],
     phraseId: "nice-weather",
-    core: phrase("오늘 날씨 좋네요.", "Oneul nalssi joneyo.", "The weather is nice today.", "今日は天気がいいですね。", "今天天气很好。", "Hôm nay thời tiết đẹp nhỉ.", "Hoy hace buen tiempo."),
-    response: phrase("그러게요. 정말 좋네요.", "Geureogeyo. Jeongmal joneyo.", "Yes, it really is nice.", "そうですね。本当にいいですね。", "是啊，真的很好。", "Đúng vậy. Rất đẹp.", "Sí, está muy bien."),
+    core: phrase("오늘 날씨 좋네요.", "Oneul nalssi jonneyo.", "The weather's nice today.", "今日は天気がいいですね。", "今天天气真不错。", "Hôm nay thời tiết đẹp nhỉ.", "Hoy hace muy buen tiempo."),
+    response: phrase("그러게요. 정말 좋네요.", "Geureogeyo. Jeongmal jonneyo.", "Right? It's really nice.", "そうですね。本当にいいですね。", "是啊，真的很好。", "Đúng vậy. Thật sự đẹp nhỉ.", "Sí, ¿verdad? Está muy agradable."),
     rescue: phrase("조금 추워요.", "Jogeum chuwoyo.", "It is a little cold.", "少し寒いです。", "有点冷。", "Hơi lạnh.", "Hace un poco de frío."),
     dialogue: [
       { speaker: "학습자", speakerRole: "learner", text: "오늘 날씨 좋네요." },
@@ -1109,8 +1109,8 @@ const lessonSeeds = [
     structurePattern: "N 좋네요",
     structureExplanation: localized("Use `-네요` for a soft reaction to what you notice.", "`-네요`は気づいたことをやわらかく言う表現です。", "`-네요` 用来柔和地表达发现或感受。", "Dùng `-네요` để nhận xét nhẹ nhàng.", "Usa `-네요` para una observación suave."),
     swapSlots: [
-      phrase("분위기 좋네요.", "Bunwigi joneyo.", "The atmosphere is nice.", "雰囲気がいいですね。", "气氛很好。", "Không khí tốt nhỉ.", "El ambiente está bien."),
-      phrase("여기 좋네요.", "Yeogi joneyo.", "This place is nice.", "ここはいいですね。", "这里很好。", "Ở đây đẹp nhỉ.", "Este lugar está bien.")
+      phrase("분위기 좋네요.", "Bunwigi jonneyo.", "The atmosphere is nice.", "雰囲気がいいですね。", "气氛很好。", "Không khí ở đây thật dễ chịu nhỉ.", "Qué buen ambiente hay aquí."),
+      phrase("여기 좋네요.", "Yeogi jonneyo.", "This place is nice.", "ここはいいですね。", "这里真不错。", "Chỗ này đẹp nhỉ.", "Qué bien está este lugar.")
     ],
     sceneWords: ["날씨", "좋네요", "추워요"],
     roleplayPrompt: phrase("오늘 날씨 어때요?", "Oneul nalssi eottaeyo?", "How is the weather today?", "今日の天気はどうですか。", "今天天气怎么样？", "Thời tiết hôm nay thế nào?", "¿Cómo está el clima hoy?")

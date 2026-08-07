@@ -124,7 +124,7 @@
 
 ### C2. 정적 음성 생성 🔵 Sonnet · M · (선행 C1)
 - 기존 `tools/tts` 파이프라인 사용 (이미 구축돼 있음)
-- 186문장 × 4튜터 × 2속도 = 1,488파일, mp3 64kbps, `public/audio/{lessonId}/{characterId}/`
+- 186문장 × 4튜터 × 2속도 = 1,488파일, wav 기준 원본, `public/audio/{lessonId}/{characterId}/`
 - 용량 예산: 개당 ~20KB → **총 30MB 내외**. 초과 시 비트레이트 조정
 - **완료 기준**: 파일 수 일치 / `npm run build` 후 배포 용량 확인
 

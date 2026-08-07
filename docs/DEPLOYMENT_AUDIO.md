@@ -15,6 +15,10 @@ The generated files under `public/audio/audition/` are audition assets only. The
 
 No real-person voice cloning is allowed for this project.
 
+Production lesson audio paths should point to `/audio/<lessonId>/<characterId>/<sentenceId>-{natural|slow}.wav` so runtime lookup matches the current TTS tooling output.
+
+When a model is selected after listening review, use `createStaticAudioSlot` in `src/data/audioCatalog.ts` to attach verified `naturalUrl` and `slowUrl` values without removing browser fallback behavior.
+
 ## Review Artifacts
 
 - License source copies: `licenses/tts/`

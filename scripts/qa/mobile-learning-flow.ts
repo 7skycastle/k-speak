@@ -126,6 +126,32 @@ const assertStickyActionsVisible = async (page: Page, name: string) => {
   }
 };
 
+const assertTtsReviewPage = async (page: Page, name: string) => {
+  await page.goto(`http://127.0.0.1:${port}/tts-review.html`, { waitUntil: "networkidle" });
+  await page.getByText("Korean TTS Review").waitFor();
+  await page.locator("#metricSentences").waitFor();
+  await page.locator("#metricAudios").waitFor();
+  if ((await page.locator(".model-title", { hasText: "MeloTTS-Korean" }).count()) === 0) {
+    throw new Error(`${name}: tts-review is missing MeloTTS-Korean rows.`);
+  }
+  if ((await page.locator(".model-title", { hasText: "Qwen3 Sohee" }).count()) === 0) {
+    throw new Error(`${name}: tts-review is missing Qwen3 Sohee rows.`);
+  }
+
+  const sentenceCount = await page.locator("#metricSentences").textContent();
+  const audioCount = await page.locator("#metricAudios").textContent();
+  if (sentenceCount?.trim() !== "20") {
+    throw new Error(`${name}: tts-review sentence count should be 20, received ${sentenceCount}.`);
+  }
+  if (audioCount?.trim() !== "80") {
+    throw new Error(`${name}: tts-review audio count should be 80, received ${audioCount}.`);
+  }
+
+  await page.locator("#search").fill("hello");
+  await page.getByText("안녕하세요. 만나서 반가워요.").waitFor();
+  await assertNoOverflow(page, `${name}: tts-review`);
+};
+
 await new Promise<void>((resolve) => server.listen(port, "127.0.0.1", resolve));
 
 try {
@@ -172,6 +198,7 @@ try {
     await page.getByRole("button", { name: "Continue", exact: true }).waitFor();
     await assertNoOverflow(page, viewport.name);
     await assertStickyActionsVisible(page, viewport.name);
+    await assertTtsReviewPage(page, viewport.name);
 
     if (consoleErrors.length || pageErrors.length) {
       throw new Error(

@@ -74,6 +74,20 @@ describe("lesson catalog", () => {
     }
   });
 
+  it("keeps Day 15 through Day 30 copy natural for travel and daily-life situations", () => {
+    const day15 = lessons[14];
+    const day17 = lessons[16];
+    const day22 = lessons[21];
+    const day25 = lessons[24];
+
+    expect(day15.meaningByCountry["us-en"]).toBe("Please take me here.");
+    expect(day17.responsePhrase.romanization).toBe("Ne, yeogiseo seoulgeyo.");
+    expect(day22.meaningByCountry["us-en"]).toBe("Check, please.");
+    expect(day25.romanization).toBe("Oneul nalssi jonneyo.");
+    expect(day25.responsePhrase.romanization).toBe("Geureogeyo. Jeongmal jonneyo.");
+    expect(day25.swapSlots.map((slot) => slot.romanization)).toEqual(["Bunwigi jonneyo.", "Yeogi jonneyo."]);
+  });
+
   it("contains expanded learning guidance for every country pack", () => {
     for (const pack of countryPacks) {
       expect(pack.learningGuide.focus).toBeTruthy();

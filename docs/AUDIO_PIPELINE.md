@@ -8,6 +8,8 @@
 2. If the static file is missing or fails, use browser `speechSynthesis`.
 3. If browser TTS is unavailable, keep the lesson completable and show a status message.
 
+The runtime catalog now resolves lesson static files to `.wav` paths by default so it matches the current local TTS tooling output.
+
 ## Production Asset Rule
 
 Only approved static files may be linked from `src/data/audioCatalog.ts`.
@@ -89,6 +91,8 @@ public/audio/audition/qwen3-sohee/hello-nice-meet-you/slow.wav
 `public/tts-review.html` loads `public/audio/audition/review-data.json` and provides a browser-based listening review surface. Review notes are stored in browser localStorage and can be exported as JSON.
 
 `npm run tts:review-data` now rebuilds that file strictly from `tools/tts/comparison_manifest.json`, so the browser review surface stays aligned with the 20-sentence comparison pack.
+
+`createStaticAudioSlot` in `src/data/audioCatalog.ts` is the intended helper for linking a chosen production model into the runtime catalog after listening review.
 
 ## Local Runtime Notes
 

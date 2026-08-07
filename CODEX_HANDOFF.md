@@ -123,6 +123,7 @@ Supabase project creation was previously attempted through MCP but returned `INV
 ## Remaining Work
 
 - Select a license-approved local Korean TTS model, generate audition files through `tools/tts`, then update `src/data/audioCatalog.ts`.
+- `src/data/audioCatalog.ts` now has `createStaticAudioSlot` for production linking, and runtime static lookup expects `.wav` lesson files.
 - Review Day 15 to Day 30 copy with a native Korean curriculum reviewer before production launch.
 - Create/configure the dedicated Supabase project and add env vars in Vercel.
 - Apply `docs/supabase/schema.sql` and `docs/supabase/rls.sql`.

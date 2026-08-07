@@ -36,6 +36,8 @@ const isPaidProvider = (value: string | undefined) => {
 const fileExistsForUrl = (publicDir: string, url: string) =>
   existsSync(join(publicDir, url.replace(/^\//, "")));
 
+const hasSupportedStaticExtension = (url: string) => /\.(wav|mp3)$/i.test(url);
+
 export const resolveAudioSlots = () =>
   lessons.flatMap((lesson) =>
     Object.keys(lesson.audioTargets).flatMap((sentenceId) =>
@@ -77,6 +79,15 @@ export const validateAudioConfiguration = ({
     }
 
     for (const url of [slot.naturalUrl, slot.slowUrl, ...(slot.chunkUrls ?? [])].filter(Boolean) as string[]) {
+      if (!url.startsWith("/audio/")) {
+        errors.push(`Static audio URL for ${slot.id} must stay under /audio/: ${url}`);
+      }
+      if (!hasSupportedStaticExtension(url)) {
+        errors.push(`Static audio URL for ${slot.id} must end in .wav or .mp3: ${url}`);
+      }
+      if (url.startsWith("/audio/audition/")) {
+        errors.push(`Audio slot ${slot.id} cannot point at audition-only assets: ${url}`);
+      }
       if (!fileExistsForUrl(publicDir, url)) {
         const message = `Missing static audio file for ${slot.id}: ${url}`;
         if (requireStaticFiles) errors.push(message);

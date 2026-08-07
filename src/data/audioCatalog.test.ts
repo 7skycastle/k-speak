@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { audioCatalog, findAudioSlot } from "./audioCatalog";
+import { audioCatalog, createStaticAudioSlot, findAudioSlot, resolveStaticAudioUrl } from "./audioCatalog";
 import { tutorCharacters } from "./characters";
 import { lessons } from "./lessons";
 
@@ -42,6 +42,35 @@ describe("audio catalog", () => {
     expect(rescue.sentenceId).toBe("rescue");
     expect(swap.sentenceId).toBe("swap-1");
     expect(dialogue.usesTtsFallback).toBe(true);
+  });
+
+  it("uses wav paths for static audio targets so generated local files match runtime lookup", () => {
+    expect(resolveStaticAudioUrl("day-1", "haneul", "hello-nice-meet-you", "natural")).toBe(
+      "/audio/day-1/haneul/hello-nice-meet-you-natural.wav"
+    );
+    expect(resolveStaticAudioUrl("day-1", "haneul", "hello-nice-meet-you", "slow")).toBe(
+      "/audio/day-1/haneul/hello-nice-meet-you-slow.wav"
+    );
+  });
+
+  it("can build a production-ready static slot while keeping browser fallback available", () => {
+    const slot = createStaticAudioSlot("day-1", "haneul", "core", {
+      provider: "local_tts",
+      sourceType: "free_tts",
+      voiceId: "melotts-kr",
+      version: "melotts-day1-v1",
+      rights: "MIT audition model approved for production import after listening review.",
+      licenseStatus: "open_source_license_confirmed",
+      commercialUse: "allowed",
+      generatedBy: "melotts-korean"
+    });
+
+    expect(slot.naturalUrl).toBe("/audio/day-1/haneul/core-natural.wav");
+    expect(slot.slowUrl).toBe("/audio/day-1/haneul/core-slow.wav");
+    expect(slot.usesTtsFallback).toBe(true);
+    expect(slot.fallback.type).toBe("browser_speech_synthesis");
+    expect(slot.provider).toBe("local_tts");
+    expect(slot.licenseStatus).toBe("open_source_license_confirmed");
   });
 
   it("links all tutor characters to free browser voice profiles", () => {
