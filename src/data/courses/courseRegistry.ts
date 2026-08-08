@@ -1,4 +1,5 @@
 import type { CourseExposure, CourseId } from "../../types";
+import { cultureLessonIds } from "./cultureLessons";
 import { kFoodLessonIds } from "./kFoodLessons";
 import { travelLessonIds } from "./travelLessons";
 
@@ -48,7 +49,7 @@ export const courseRegistry: Record<CourseId, CourseRegistryEntry> = {
     titleKey: "course.kCulture.title",
     routeVersion: "k-culture-v1",
     exposure: "hidden",
-    coreLessonIds: [],
+    coreLessonIds: cultureLessonIds,
     continuationLessonIds: []
   },
   "eps-topik": {

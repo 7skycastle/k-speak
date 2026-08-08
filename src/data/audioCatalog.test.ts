@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { audioCatalog, createStaticAudioSlot, findAudioSlot, resolveStaticAudioUrl } from "./audioCatalog";
 import { tutorCharacters } from "./characters";
+import { cultureLessons } from "./courses/cultureLessons";
 import { kFoodLessons } from "./courses/kFoodLessons";
 import { travelLessons } from "./courses/travelLessons";
 import { lessons } from "./lessons";
@@ -68,6 +69,16 @@ describe("audio catalog", () => {
     }
   });
 
+  it("resolves every K-Culture audio target through static audio or browser fallback", () => {
+    for (const lesson of cultureLessons) {
+      for (const sentenceId of ["core", "response", "rescue"] as const) {
+        const slot = findAudioSlot(lesson.id, "haneul", sentenceId);
+        expect(slot?.naturalUrl || slot?.fallback.type === "browser_speech_synthesis").toBeTruthy();
+        expect(slot?.slowUrl || slot?.fallback.type === "browser_speech_synthesis").toBeTruthy();
+        expect(slot.usesTtsFallback).toBe(true);
+      }
+    }
+  });
 
   it("uses wav paths for static audio targets so generated local files match runtime lookup", () => {
     expect(resolveStaticAudioUrl("day-1", "haneul", "hello-nice-meet-you", "natural")).toBe(

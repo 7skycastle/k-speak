@@ -1,4 +1,5 @@
 import { FOUNDATION_COURSE_ID, courseRegistry } from "../data/courses/courseRegistry";
+import { cultureLessons } from "../data/courses/cultureLessons";
 import { kFoodLessons } from "../data/courses/kFoodLessons";
 import { travelLessons } from "../data/courses/travelLessons";
 import { lessons as foundationLessons } from "../data/lessons";
@@ -110,7 +111,7 @@ const courseLessons: Record<CourseId, Lesson[]> = {
   foundation: foundationLessons,
   travel: travelLessons,
   "k-food": kFoodLessons,
-  "k-culture": [],
+  "k-culture": cultureLessons,
   "eps-topik": []
 };
 
