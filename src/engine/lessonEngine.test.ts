@@ -30,4 +30,12 @@ describe("lessonEngine", () => {
     expect(progress.courseId).toBe("travel");
     expect(progress.currentStepId).toBe("situation");
   });
+
+  it("creates progress for a K-Food lesson", () => {
+    const progress = createLessonProgress("k-food-day-1");
+
+    expect(progress.lessonId).toBe("k-food-day-1");
+    expect(progress.courseId).toBe("k-food");
+    expect(progress.currentStepId).toBe("situation");
+  });
 });

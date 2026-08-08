@@ -1,4 +1,5 @@
 import { FOUNDATION_COURSE_ID, courseRegistry } from "../data/courses/courseRegistry";
+import { kFoodLessons } from "../data/courses/kFoodLessons";
 import { travelLessons } from "../data/courses/travelLessons";
 import { lessons as foundationLessons } from "../data/lessons";
 import type { CourseCompletion, CourseEnrollment, CourseId, CourseStatus, Lesson, ReviewItem, UserState } from "../types";
@@ -16,6 +17,7 @@ const compareIso = (left?: string, right?: string) => {
 export const getLessonCourseId = (lessonId: string): CourseId => {
   if (/^day-\d+$/.test(lessonId)) return FOUNDATION_COURSE_ID;
   if (lessonId.startsWith("travel-")) return "travel";
+  if (lessonId.startsWith("k-food-")) return "k-food";
   if (lessonId.startsWith("k-culture-")) return "k-culture";
   if (lessonId.startsWith("eps-")) return "eps-topik";
   return FOUNDATION_COURSE_ID;
@@ -107,7 +109,7 @@ export const getReviewItemsForCourse = (
 const courseLessons: Record<CourseId, Lesson[]> = {
   foundation: foundationLessons,
   travel: travelLessons,
-  "k-food": [],
+  "k-food": kFoodLessons,
   "k-culture": [],
   "eps-topik": []
 };

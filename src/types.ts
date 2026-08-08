@@ -271,7 +271,21 @@ export type BridgeSkillId =
   | "label-instruction"
   | "number-listening"
   | "next-response"
-  | "situation-match";
+  | "situation-match"
+  | "quantity"
+  | "polite-request"
+  | "practical-reading"
+  | "question"
+  | "warning"
+  | "ingredient"
+  | "items"
+  | "service-request"
+  | "option"
+  | "preference"
+  | "instruction"
+  | "sequence"
+  | "payment"
+  | "problem-report";
 
 export type TravelMissionCheckId = "first-sentence" | "short-response" | "rescue-expression";
 
@@ -288,6 +302,13 @@ export interface TravelMissionResult {
   lessonId: string;
   completedAt: string;
   checks: Record<TravelMissionCheckId, TravelMissionCheckResult>;
+}
+
+export type KFoodMissionCheckId = "choose-food" | "short-order" | "resolve-problem";
+
+export interface KFoodMissionCheck {
+  id: KFoodMissionCheckId;
+  label: string;
 }
 
 export interface Lesson {
@@ -310,6 +331,7 @@ export interface Lesson {
   reviewCards: LessonReviewCard[];
   bridgeSkillIds?: BridgeSkillId[];
   travelMissionChecks?: TravelMissionCheck[];
+  kFoodMissionChecks?: KFoodMissionCheck[];
   countryNotes: Record<CountryPackId, string>;
   pronunciationByCountry: Record<CountryPackId, string>;
   audioTargets: Record<string, LocalizedPhrase>;

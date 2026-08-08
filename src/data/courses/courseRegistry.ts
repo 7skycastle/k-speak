@@ -1,9 +1,8 @@
 import type { CourseExposure, CourseId } from "../../types";
+import { kFoodLessonIds } from "./kFoodLessons";
 import { travelLessonIds } from "./travelLessons";
 
 export const FOUNDATION_COURSE_ID = "foundation" satisfies CourseId;
-
-const kFoodLessonIds = Array.from({ length: 14 }, (_, index) => `k-food-day-${index + 1}`);
 
 export const COURSE_IDS = ["foundation", "travel", "k-food", "k-culture", "eps-topik"] as const satisfies readonly CourseId[];
 

@@ -167,6 +167,14 @@ describe("course lesson lookup", () => {
     expect(getCourseLesson("foundation", "travel-day-1")).toBeUndefined();
   });
 
+  it("returns K-Food lessons separately from Travel and Foundation lessons", () => {
+    expect(getLessonCourseId("k-food-day-1")).toBe("k-food");
+    expect(getCourseLessonIds("k-food")).toHaveLength(14);
+    expect(getCourseLesson("k-food", "k-food-day-1")?.courseId).toBe("k-food");
+    expect(getCourseLesson("travel", "k-food-day-1")).toBeUndefined();
+    expect(getCourseLesson("foundation", "k-food-day-1")).toBeUndefined();
+  });
+
   it("finds the next active Travel lesson from course progress", () => {
     const state = normalizeUserCourses(
       baseState({
