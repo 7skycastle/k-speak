@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { kFoodLessonSources } from "../../i18n/kFoodCourse";
 import { countryPacks } from "../countryPacks";
 import { courseRegistry } from "./courseRegistry";
 import { getKFoodLesson, kFoodLessonIds, kFoodLessons } from "./kFoodLessons";
@@ -8,6 +9,12 @@ describe("K-Food lessons", () => {
     expect(kFoodLessons).toHaveLength(14);
     expect(kFoodLessonIds).toEqual(Array.from({ length: 14 }, (_, index) => `k-food-day-${index + 1}`));
     expect(courseRegistry["k-food"].coreLessonIds).toEqual(kFoodLessonIds);
+  });
+
+  it("keeps learner-facing K-Food source copy in the i18n course catalog", () => {
+    expect(kFoodLessonSources).toHaveLength(14);
+    expect(kFoodLessonSources[0].korean).toBe("이거 하나 주세요.");
+    expect(getKFoodLesson("k-food-day-1")?.korean).toBe(kFoodLessonSources[0].korean);
   });
 
   it.each(kFoodLessons)("keeps $id complete and course scoped", (lesson) => {
