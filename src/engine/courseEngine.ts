@@ -192,6 +192,23 @@ const mergeCompletions = (left: CourseCompletion[] = [], right: CourseCompletion
   return Array.from(completions.values()).sort((a, b) => compareIso(a.completedAt, b.completedAt));
 };
 
+const canonicalRouteSlots = (enrollment: CourseEnrollment) => JSON.stringify(enrollment.routeSlots ?? []);
+
+const chooseRouteSource = (left: CourseEnrollment, right: CourseEnrollment): CourseEnrollment => {
+  if (left.routeLockedAt && right.routeLockedAt) {
+    const lockOrder = compareIso(left.routeLockedAt, right.routeLockedAt);
+    if (lockOrder < 0) return left;
+    if (lockOrder > 0) return right;
+    return canonicalRouteSlots(left) <= canonicalRouteSlots(right) ? left : right;
+  }
+  if (left.routeLockedAt) return left;
+  if (right.routeLockedAt) return right;
+
+  const leftRouteSlotsChanged = left.fieldUpdatedAt?.routeSlots;
+  const rightRouteSlotsChanged = right.fieldUpdatedAt?.routeSlots;
+  return compareIso(leftRouteSlotsChanged, rightRouteSlotsChanged) <= 0 ? right : left;
+};
+
 const mergeEnrollment = (left?: CourseEnrollment, right?: CourseEnrollment): CourseEnrollment | undefined => {
   if (!left) return right;
   if (!right) return left;
@@ -200,20 +217,17 @@ const mergeEnrollment = (left?: CourseEnrollment, right?: CourseEnrollment): Cou
   const rightStartedAtChanged = right.fieldUpdatedAt?.startedAt ?? right.startedAt;
   const leftLastOpenedAtChanged = left.fieldUpdatedAt?.lastOpenedAt ?? left.lastOpenedAt;
   const rightLastOpenedAtChanged = right.fieldUpdatedAt?.lastOpenedAt ?? right.lastOpenedAt;
-  const leftRouteSlotsChanged = left.fieldUpdatedAt?.routeSlots;
-  const rightRouteSlotsChanged = right.fieldUpdatedAt?.routeSlots;
   const rightOpenedWins = compareIso(leftLastOpenedAtChanged, rightLastOpenedAtChanged) <= 0;
+  const routeSource = chooseRouteSource(left, right);
 
   return {
     ...left,
     ...right,
-    routeVersion: rightOpenedWins ? right.routeVersion : left.routeVersion,
+    routeVersion: routeSource.routeVersion ?? (rightOpenedWins ? right.routeVersion : left.routeVersion),
     startedAt: compareIso(leftStartedAtChanged, rightStartedAtChanged) <= 0 ? right.startedAt : left.startedAt,
     lastOpenedAt: rightOpenedWins ? right.lastOpenedAt : left.lastOpenedAt,
-    routeSlots:
-      compareIso(leftRouteSlotsChanged, rightRouteSlotsChanged) <= 0
-        ? right.routeSlots ?? left.routeSlots
-        : left.routeSlots ?? right.routeSlots,
+    routeLockedAt: routeSource.routeLockedAt,
+    routeSlots: routeSource.routeSlots ?? (routeSource === right ? left.routeSlots : right.routeSlots),
     completions: mergeCompletions(left.completions, right.completions),
     fieldUpdatedAt: {
       ...left.fieldUpdatedAt,

@@ -110,6 +110,7 @@ create table if not exists public.course_enrollments (
   route_version text not null,
   started_at timestamptz,
   last_opened_at timestamptz,
+  route_locked_at timestamptz,
   route_slots jsonb,
   completions jsonb not null default '[]'::jsonb,
   field_updated_at jsonb not null default '{}'::jsonb,

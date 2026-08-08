@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { LessonProgress, ReviewItem, SavedPhrase, UserState } from "../types";
+import { createCultureRoute } from "../engine/culturePathEngine";
 import {
   completeReviewItem,
   completeCourseRoute,
@@ -448,6 +449,48 @@ describe("storage sync persistence", () => {
       "foundation-v1",
       "foundation-v2"
     ]);
+  });
+
+  it("keeps a locked K-Culture route over a newer unlocked selection during account merge", () => {
+    const lockedRoute = createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" });
+    const alternateRoute = createCultureRoute({ primaryPackId: "k-drama", samplerPackId: "k-pop" });
+    const account = buildState({
+      courseEnrollments: {
+        "k-culture": {
+          courseId: "k-culture",
+          routeVersion: "k-culture-v1",
+          startedAt: "2026-08-08T09:00:00.000Z",
+          lastOpenedAt: "2026-08-08T09:10:00.000Z",
+          routeLockedAt: "2026-08-08T09:30:00.000Z",
+          routeSlots: lockedRoute,
+          completions: [],
+          fieldUpdatedAt: {
+            routeLockedAt: "2026-08-08T09:30:00.000Z",
+            routeSlots: "2026-08-08T09:00:00.000Z"
+          }
+        }
+      }
+    });
+    const guest = buildState({
+      courseEnrollments: {
+        "k-culture": {
+          courseId: "k-culture",
+          routeVersion: "k-culture-v1",
+          startedAt: "2026-08-08T10:00:00.000Z",
+          lastOpenedAt: "2026-08-08T10:10:00.000Z",
+          routeSlots: alternateRoute,
+          completions: [],
+          fieldUpdatedAt: {
+            routeSlots: "2026-08-08T10:00:00.000Z"
+          }
+        }
+      }
+    });
+
+    const merged = mergeUserStates(account, guest, "learner@example.com");
+
+    expect(merged.courseEnrollments["k-culture"]?.routeLockedAt).toBe("2026-08-08T09:30:00.000Z");
+    expect(merged.courseEnrollments["k-culture"]?.routeSlots).toEqual(lockedRoute);
   });
 
   it("stores EPS assessment attempts in the persistent outbox", () => {

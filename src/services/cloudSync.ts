@@ -76,6 +76,7 @@ interface CourseEnrollmentRow {
   route_version: string;
   started_at?: string | null;
   last_opened_at?: string | null;
+  route_locked_at?: string | null;
   route_slots?: CourseEnrollment["routeSlots"] | null;
   completions?: CourseEnrollment["completions"] | null;
   field_updated_at?: CourseEnrollment["fieldUpdatedAt"] | null;
@@ -491,6 +492,7 @@ const courseEnrollmentRowToState = (row: CourseEnrollmentRow): CourseEnrollment 
   routeVersion: row.route_version,
   startedAt: row.started_at ?? undefined,
   lastOpenedAt: row.last_opened_at ?? undefined,
+  routeLockedAt: row.route_locked_at ?? undefined,
   routeSlots: row.route_slots ?? undefined,
   completions: row.completions ?? [],
   fieldUpdatedAt: row.field_updated_at ?? {}
@@ -502,6 +504,7 @@ const courseEnrollmentToRow = (userId: string, enrollment: CourseEnrollment) => 
   route_version: enrollment.routeVersion,
   started_at: enrollment.startedAt,
   last_opened_at: enrollment.lastOpenedAt,
+  route_locked_at: enrollment.routeLockedAt,
   route_slots: enrollment.routeSlots ?? null,
   completions: enrollment.completions,
   field_updated_at: enrollment.fieldUpdatedAt ?? {}

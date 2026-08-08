@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { UserState } from "../types";
+import { createCultureRoute } from "../engine/culturePathEngine";
 import { createInitialState } from "./storage";
 
 const {
@@ -215,6 +216,43 @@ describe("syncWithSupabase", () => {
     expect(next.activeCourseId).toBe("travel");
     expect(next.courseEnrollments.foundation?.routeVersion).toBe("foundation-v1");
     expect(supabase.from).toHaveBeenCalledWith("course_enrollments");
+  });
+
+  it("round-trips a locked K-Culture route through course enrollments", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true);
+    const routeSlots = createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" });
+    const supabase = buildSupabaseClient({
+      courseEnrollments: [
+        {
+          course_id: "k-culture",
+          route_version: "k-culture-v1",
+          started_at: "2026-08-08T09:00:00.000Z",
+          last_opened_at: "2026-08-08T09:10:00.000Z",
+          route_locked_at: "2026-08-08T09:30:00.000Z",
+          route_slots: routeSlots,
+          completions: [],
+          field_updated_at: {
+            routeSlots: "2026-08-08T09:00:00.000Z",
+            routeLockedAt: "2026-08-08T09:30:00.000Z"
+          }
+        }
+      ]
+    });
+    mockGetSupabaseClient.mockReturnValue(supabase);
+
+    const next = await syncWithSupabase(buildState(), session as never);
+
+    expect(next.courseEnrollments["k-culture"]?.routeLockedAt).toBe("2026-08-08T09:30:00.000Z");
+    expect(supabase.__builders.course_enrollments.upsert).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          course_id: "k-culture",
+          route_locked_at: "2026-08-08T09:30:00.000Z",
+          route_slots: routeSlots
+        })
+      ]),
+      { onConflict: "user_id,course_id" }
+    );
   });
 
   it("loads and persists course mission results by latest completion time", async () => {
