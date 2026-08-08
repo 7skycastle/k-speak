@@ -117,6 +117,16 @@ create table if not exists public.course_enrollments (
   primary key (user_id, course_id)
 );
 
+create table if not exists public.course_mission_results (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  course_id text not null,
+  lesson_id text not null,
+  completed_at timestamptz not null,
+  checks jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, course_id, lesson_id)
+);
+
 create table if not exists public.eps_assessment_attempts (
   user_id uuid not null references auth.users(id) on delete cascade,
   attempt_id text not null,
@@ -135,4 +145,5 @@ create table if not exists public.eps_assessment_attempts (
 );
 
 grant select, insert, update on public.course_enrollments to authenticated;
+grant select, insert, update on public.course_mission_results to authenticated;
 grant select, insert, update on public.eps_assessment_attempts to authenticated;

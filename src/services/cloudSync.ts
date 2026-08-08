@@ -1,5 +1,14 @@
 import type { Session, SupabaseClient, User } from "@supabase/supabase-js";
-import type { AnalyticsEvent, LessonProgress, OnboardingProfile, ReviewItem, SavedPhrase, UserState } from "../types";
+import type {
+  AnalyticsEvent,
+  KFoodMissionResult,
+  LessonProgress,
+  OnboardingProfile,
+  ReviewItem,
+  SavedPhrase,
+  TravelMissionResult,
+  UserState
+} from "../types";
 import { createInitialState, mergeUserStates, saveState } from "./storage";
 import { getSupabaseClient, isSupabaseConfigured } from "./supabaseClient";
 
@@ -70,6 +79,14 @@ interface CourseEnrollmentRow {
   route_slots?: CourseEnrollment["routeSlots"] | null;
   completions?: CourseEnrollment["completions"] | null;
   field_updated_at?: CourseEnrollment["fieldUpdatedAt"] | null;
+}
+
+interface CourseMissionResultRow {
+  user_id: string;
+  course_id: "travel" | "k-food";
+  lesson_id: string;
+  completed_at: string;
+  checks: Record<string, "success" | "practice-more">;
 }
 
 interface EpsAssessmentAttemptRow {
@@ -196,13 +213,21 @@ export const syncWithSupabase = async (state: UserState, session?: Session | nul
 };
 
 const loadCloudState = async (supabase: SupabaseClient, user: User, anonymousId: string): Promise<UserState> => {
-  const [profileResult, progressResult, reviewResult, savedPhraseResult, courseEnrollmentResult, epsAttemptResult] =
-    await Promise.all([
+  const [
+    profileResult,
+    progressResult,
+    reviewResult,
+    savedPhraseResult,
+    courseEnrollmentResult,
+    courseMissionResult,
+    epsAttemptResult
+  ] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle<ProfileRow>(),
     supabase.from("lesson_progress").select("*").eq("user_id", user.id).returns<LessonProgressRow[]>(),
     supabase.from("review_items").select("*").eq("user_id", user.id).returns<ReviewItemRow[]>(),
     supabase.from("saved_phrases").select("*").eq("user_id", user.id).returns<SavedPhraseRow[]>(),
     supabase.from("course_enrollments").select("*").eq("user_id", user.id).returns<CourseEnrollmentRow[]>(),
+    supabase.from("course_mission_results").select("*").eq("user_id", user.id).returns<CourseMissionResultRow[]>(),
     supabase.from("eps_assessment_attempts").select("*").eq("user_id", user.id).returns<EpsAssessmentAttemptRow[]>()
   ]);
 
@@ -211,6 +236,7 @@ const loadCloudState = async (supabase: SupabaseClient, user: User, anonymousId:
   if (reviewResult.error) throw reviewResult.error;
   if (savedPhraseResult.error) throw savedPhraseResult.error;
   if (courseEnrollmentResult.error) throw courseEnrollmentResult.error;
+  if (courseMissionResult.error) throw courseMissionResult.error;
   if (epsAttemptResult.error) throw epsAttemptResult.error;
 
   const cloud = createInitialState();
@@ -230,6 +256,20 @@ const loadCloudState = async (supabase: SupabaseClient, user: User, anonymousId:
   cloud.courseEnrollments = Object.fromEntries(
     (courseEnrollmentResult.data ?? []).map((row) => [row.course_id, courseEnrollmentRowToState(row)])
   );
+  for (const row of courseMissionResult.data ?? []) {
+    if (row.course_id === "travel") {
+      cloud.travelMissionResults = {
+        ...(cloud.travelMissionResults ?? {}),
+        [row.lesson_id]: courseMissionResultRowToTravelState(row)
+      };
+    }
+    if (row.course_id === "k-food" && row.lesson_id === "k-food-day-14") {
+      cloud.kFoodMissionResults = {
+        ...(cloud.kFoodMissionResults ?? {}),
+        [row.lesson_id]: courseMissionResultRowToKFoodState(row)
+      };
+    }
+  }
   cloud.epsAssessmentAttempts = Object.fromEntries(
     (epsAttemptResult.data ?? []).map((row) => [row.attempt_id, epsAssessmentAttemptRowToState(row)])
   );
@@ -271,6 +311,21 @@ const persistCloudState = async (supabase: SupabaseClient, user: User, state: Us
     .map((enrollment) => courseEnrollmentToRow(user.id, enrollment));
   if (courseRows.length) {
     const { error } = await supabase.from("course_enrollments").upsert(courseRows, { onConflict: "user_id,course_id" });
+    if (error) throw error;
+  }
+
+  const missionRows = [
+    ...Object.values(state.travelMissionResults ?? {}).map((result) =>
+      courseMissionResultToRow(user.id, "travel", result)
+    ),
+    ...Object.values(state.kFoodMissionResults ?? {}).map((result) =>
+      courseMissionResultToRow(user.id, "k-food", result)
+    )
+  ];
+  if (missionRows.length) {
+    const { error } = await supabase.from("course_mission_results").upsert(missionRows, {
+      onConflict: "user_id,course_id,lesson_id"
+    });
     if (error) throw error;
   }
 
@@ -450,6 +505,30 @@ const courseEnrollmentToRow = (userId: string, enrollment: CourseEnrollment) => 
   route_slots: enrollment.routeSlots ?? null,
   completions: enrollment.completions,
   field_updated_at: enrollment.fieldUpdatedAt ?? {}
+});
+
+const courseMissionResultRowToTravelState = (row: CourseMissionResultRow): TravelMissionResult => ({
+  lessonId: row.lesson_id,
+  completedAt: row.completed_at,
+  checks: row.checks as TravelMissionResult["checks"]
+});
+
+const courseMissionResultRowToKFoodState = (row: CourseMissionResultRow): KFoodMissionResult => ({
+  lessonId: "k-food-day-14",
+  completedAt: row.completed_at,
+  checks: row.checks as KFoodMissionResult["checks"]
+});
+
+const courseMissionResultToRow = (
+  userId: string,
+  courseId: CourseMissionResultRow["course_id"],
+  result: TravelMissionResult | KFoodMissionResult
+): CourseMissionResultRow => ({
+  user_id: userId,
+  course_id: courseId,
+  lesson_id: result.lessonId,
+  completed_at: result.completedAt,
+  checks: result.checks
 });
 
 const epsAssessmentAttemptRowToState = (row: EpsAssessmentAttemptRow): UserState["epsAssessmentAttempts"][string] => ({

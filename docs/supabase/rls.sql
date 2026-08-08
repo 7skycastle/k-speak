@@ -6,6 +6,7 @@ alter table public.analytics_events enable row level security;
 alter table public.guest_merge_requests enable row level security;
 alter table public.country_pack_snapshots enable row level security;
 alter table public.course_enrollments enable row level security;
+alter table public.course_mission_results enable row level security;
 alter table public.eps_assessment_attempts enable row level security;
 
 create policy "profiles_select_own" on public.profiles
@@ -63,6 +64,15 @@ create policy "course_enrollments_insert_own" on public.course_enrollments
   for insert to authenticated with check ((select auth.uid()) = user_id);
 
 create policy "course_enrollments_update_own" on public.course_enrollments
+  for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+
+create policy "course_mission_results_select_own" on public.course_mission_results
+  for select to authenticated using ((select auth.uid()) = user_id);
+
+create policy "course_mission_results_insert_own" on public.course_mission_results
+  for insert to authenticated with check ((select auth.uid()) = user_id);
+
+create policy "course_mission_results_update_own" on public.course_mission_results
   for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
 
 create policy "eps_assessment_attempts_select_own" on public.eps_assessment_attempts

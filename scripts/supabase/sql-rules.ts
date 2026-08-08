@@ -8,7 +8,8 @@ export const requiredTables = [
   "saved_phrases",
   "analytics_events",
   "guest_merge_requests",
-  "country_pack_snapshots"
+  "country_pack_snapshots",
+  "course_mission_results"
 ] as const;
 
 export const requiredColumns: Record<(typeof requiredTables)[number], string[]> = {
@@ -68,7 +69,8 @@ export const requiredColumns: Record<(typeof requiredTables)[number], string[]> 
   ],
   analytics_events: ["id", "user_id", "anonymous_id", "name", "properties", "occurred_at"],
   guest_merge_requests: ["id", "user_id", "anonymous_id", "merged_summary", "created_at"],
-  country_pack_snapshots: ["id", "version", "payload", "created_at"]
+  country_pack_snapshots: ["id", "version", "payload", "created_at"],
+  course_mission_results: ["user_id", "course_id", "lesson_id", "completed_at", "checks", "updated_at"]
 };
 
 export const requiredPolicies = [
@@ -87,7 +89,10 @@ export const requiredPolicies = [
   "analytics_insert_own_or_guest",
   "analytics_update_own",
   "guest_merge_insert_own",
-  "country_pack_read"
+  "country_pack_read",
+  "course_mission_results_select_own",
+  "course_mission_results_insert_own",
+  "course_mission_results_update_own"
 ] as const;
 
 export interface SupabaseSqlValidationResult {
@@ -149,6 +154,10 @@ export const validateSupabaseSql = (schemaSql: string, rlsSql: string): Supabase
   const primaryKeyMatches = normalizedSchema.match(/primary key \(id, user_id\)/g) ?? [];
   if (primaryKeyMatches.length < 2) {
     errors.push("Missing composite primary key for review_items and saved_phrases id/user_id upserts.");
+  }
+
+  if (!normalizedSchema.includes("primary key (user_id, course_id, lesson_id)")) {
+    errors.push("Missing composite primary key for course_mission_results user/course/lesson upserts.");
   }
 
   if (!normalizedSchema.includes("grant select, insert, update on public.lesson_progress to authenticated")) {

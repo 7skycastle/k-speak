@@ -6,6 +6,7 @@ import type {
   SavedPhraseTombstone,
   SyncChange,
   CourseId,
+  KFoodMissionResult,
   TravelMissionResult,
   UserState
 } from "../types";
@@ -141,10 +142,7 @@ const resolveSavedPhraseState = (
   };
 };
 
-const mergeTravelMissionResults = (
-  account: UserState["travelMissionResults"] = {},
-  guest: UserState["travelMissionResults"] = {}
-) => {
+const mergeMissionResults = <T extends { completedAt: string }>(account: Record<string, T> = {}, guest: Record<string, T> = {}) => {
   const merged = { ...account };
   for (const [lessonId, result] of Object.entries(guest)) {
     const current = merged[lessonId];
@@ -163,6 +161,7 @@ export const createInitialState = (): UserState => ({
   epsAssessmentAttempts: {},
   epsAssessmentResults: {},
   travelMissionResults: {},
+  kFoodMissionResults: {},
   lessonProgress: {},
   reviewItems: [],
   savedPhrases: [],
@@ -298,7 +297,35 @@ export const saveTravelMissionResult = (state: UserState, result: TravelMissionR
           [result.lessonId]: result
         }
       },
-      [{ entity: "course-enrollment", entityId: "travel", operation: "upsert", changedAt: result.completedAt }]
+      [
+        {
+          entity: "course-mission-result",
+          entityId: `travel:${result.lessonId}`,
+          operation: "upsert",
+          changedAt: result.completedAt
+        }
+      ]
+    )
+  );
+
+export const saveKFoodMissionResult = (state: UserState, result: KFoodMissionResult): UserState =>
+  saveState(
+    withPendingChanges(
+      {
+        ...state,
+        kFoodMissionResults: {
+          ...(state.kFoodMissionResults ?? {}),
+          [result.lessonId]: result
+        }
+      },
+      [
+        {
+          entity: "course-mission-result",
+          entityId: `k-food:${result.lessonId}`,
+          operation: "upsert",
+          changedAt: result.completedAt
+        }
+      ]
     )
   );
 
@@ -594,9 +621,13 @@ export const mergeUserStates = (account: UserState, guest: UserState, email?: st
       ...normalizedAccount.epsAssessmentResults,
       ...normalizedGuest.epsAssessmentResults
     },
-    travelMissionResults: mergeTravelMissionResults(
+    travelMissionResults: mergeMissionResults(
       normalizedAccount.travelMissionResults,
       normalizedGuest.travelMissionResults
+    ),
+    kFoodMissionResults: mergeMissionResults(
+      normalizedAccount.kFoodMissionResults,
+      normalizedGuest.kFoodMissionResults
     ),
     analyticsEvents: [...normalizedAccount.analyticsEvents, ...normalizedGuest.analyticsEvents],
     sync: {

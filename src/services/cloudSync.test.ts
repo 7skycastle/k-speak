@@ -31,6 +31,7 @@ const buildSupabaseClient = ({
   reviewItems = [],
   savedPhrases = [],
   courseEnrollments = [],
+  courseMissionResults = [],
   epsAssessmentAttempts = [],
   upsertError = null
 }: {
@@ -39,6 +40,7 @@ const buildSupabaseClient = ({
   reviewItems?: unknown[];
   savedPhrases?: unknown[];
   courseEnrollments?: unknown[];
+  courseMissionResults?: unknown[];
   epsAssessmentAttempts?: unknown[];
   upsertError?: unknown;
 }) => {
@@ -48,6 +50,7 @@ const buildSupabaseClient = ({
     review_items: createQueryBuilder(reviewItems, null),
     saved_phrases: createQueryBuilder(savedPhrases, null),
     course_enrollments: createQueryBuilder(courseEnrollments, null),
+    course_mission_results: createQueryBuilder(courseMissionResults, null),
     eps_assessment_attempts: createQueryBuilder(epsAssessmentAttempts, null),
     analytics_events: createQueryBuilder([], null)
   };
@@ -57,11 +60,13 @@ const buildSupabaseClient = ({
   builders.review_items.upsert = vi.fn().mockResolvedValue({ error: upsertError });
   builders.saved_phrases.upsert = vi.fn().mockResolvedValue({ error: upsertError });
   builders.course_enrollments.upsert = vi.fn().mockResolvedValue({ error: upsertError });
+  builders.course_mission_results.upsert = vi.fn().mockResolvedValue({ error: upsertError });
   builders.eps_assessment_attempts.upsert = vi.fn().mockResolvedValue({ error: upsertError });
   builders.analytics_events.upsert = vi.fn().mockResolvedValue({ error: upsertError });
 
   return {
-    from: vi.fn((table: keyof typeof builders) => builders[table])
+    from: vi.fn((table: keyof typeof builders) => builders[table]),
+    __builders: builders
   };
 };
 
@@ -204,6 +209,57 @@ describe("syncWithSupabase", () => {
     expect(next.activeCourseId).toBe("travel");
     expect(next.courseEnrollments.foundation?.routeVersion).toBe("foundation-v1");
     expect(supabase.from).toHaveBeenCalledWith("course_enrollments");
+  });
+
+  it("loads and persists course mission results by latest completion time", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true);
+    const supabase = buildSupabaseClient({
+      courseMissionResults: [
+        {
+          user_id: "user-1",
+          course_id: "k-food",
+          lesson_id: "k-food-day-14",
+          completed_at: "2026-08-08T11:00:00.000Z",
+          checks: {
+            "choose-food": "success",
+            "short-order": "practice-more",
+            "resolve-problem": "success"
+          }
+        }
+      ]
+    });
+    mockGetSupabaseClient.mockReturnValue(supabase);
+
+    const next = await syncWithSupabase(
+      {
+        ...buildState(),
+        kFoodMissionResults: {
+          "k-food-day-14": {
+            lessonId: "k-food-day-14",
+            completedAt: "2026-08-08T10:00:00.000Z",
+            checks: {
+              "choose-food": "practice-more",
+              "short-order": "practice-more",
+              "resolve-problem": "practice-more"
+            }
+          }
+        }
+      },
+      session as never
+    );
+
+    expect(next.kFoodMissionResults?.["k-food-day-14"]?.completedAt).toBe("2026-08-08T11:00:00.000Z");
+    expect(supabase.__builders.course_mission_results.upsert).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          user_id: "user-1",
+          course_id: "k-food",
+          lesson_id: "k-food-day-14",
+          completed_at: "2026-08-08T11:00:00.000Z"
+        })
+      ]),
+      { onConflict: "user_id,course_id,lesson_id" }
+    );
   });
 
   it("keeps pending changes when cloud upsert fails", async () => {

@@ -8,6 +8,7 @@ import {
   mergeGuestIntoAccount,
   mergeUserStates,
   removeSavedPhrase,
+  saveKFoodMissionResult,
   saveTravelMissionResult,
   upsertEpsAssessmentAttempt,
   upsertSavedPhrase
@@ -478,5 +479,61 @@ describe("storage sync persistence", () => {
     expect(withMission.sync.pendingChanges).toEqual(
       expect.arrayContaining([expect.objectContaining({ entity: "course-enrollment", entityId: "travel" })])
     );
+  });
+
+  it("stores K-Food mission feedback without a score", () => {
+    const result = saveKFoodMissionResult(buildState(), {
+      lessonId: "k-food-day-14",
+      completedAt: "2026-08-08T12:00:00.000Z",
+      checks: {
+        "choose-food": "success",
+        "short-order": "practice-more",
+        "resolve-problem": "success"
+      }
+    });
+
+    expect(result.kFoodMissionResults?.["k-food-day-14"]?.checks["short-order"]).toBe("practice-more");
+    expect(JSON.stringify(result.kFoodMissionResults)).not.toMatch(/%|accuracy|score/i);
+    expect(result.sync.pendingChanges).toEqual([
+      expect.objectContaining({
+        entity: "course-mission-result",
+        entityId: "k-food:k-food-day-14",
+        operation: "upsert"
+      })
+    ]);
+  });
+
+  it("keeps the latest K-Food mission result during account merge", () => {
+    const account = buildState({
+      kFoodMissionResults: {
+        "k-food-day-14": {
+          lessonId: "k-food-day-14",
+          completedAt: "2026-08-08T10:00:00.000Z",
+          checks: {
+            "choose-food": "practice-more",
+            "short-order": "practice-more",
+            "resolve-problem": "practice-more"
+          }
+        }
+      }
+    });
+    const guest = buildState({
+      kFoodMissionResults: {
+        "k-food-day-14": {
+          lessonId: "k-food-day-14",
+          completedAt: "2026-08-08T11:00:00.000Z",
+          checks: {
+            "choose-food": "success",
+            "short-order": "practice-more",
+            "resolve-problem": "success"
+          }
+        }
+      }
+    });
+
+    const merged = mergeUserStates(account, guest, "learner@example.com");
+
+    expect(merged.kFoodMissionResults?.["k-food-day-14"]?.completedAt).toBe("2026-08-08T11:00:00.000Z");
+    expect(merged.kFoodMissionResults?.["k-food-day-14"]?.checks["choose-food"]).toBe("success");
   });
 });

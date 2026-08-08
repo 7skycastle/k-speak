@@ -311,6 +311,14 @@ export interface KFoodMissionCheck {
   label: string;
 }
 
+export type KFoodMissionCheckResult = "success" | "practice-more";
+
+export interface KFoodMissionResult {
+  lessonId: "k-food-day-14";
+  completedAt: string;
+  checks: Record<KFoodMissionCheckId, KFoodMissionCheckResult>;
+}
+
 export interface Lesson {
   id: string;
   courseId?: CourseId;
@@ -410,6 +418,7 @@ export interface UserState {
   epsAssessmentAttempts: Record<string, EpsAssessmentAttempt>;
   epsAssessmentResults: Record<string, EpsAssessmentResult>;
   travelMissionResults?: Record<string, TravelMissionResult>;
+  kFoodMissionResults?: Record<string, KFoodMissionResult>;
   lessonProgress: Record<string, LessonProgress>;
   reviewItems: ReviewItem[];
   savedPhrases: SavedPhrase[];
@@ -454,6 +463,7 @@ export interface SyncChange {
     | "saved-phrase"
     | "profile-course-preference"
     | "course-enrollment"
+    | "course-mission-result"
     | "eps-assessment-attempt"
     | "eps-assessment-result";
   entityId: string;
