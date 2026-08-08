@@ -255,6 +255,40 @@ describe("syncWithSupabase", () => {
     );
   });
 
+  it("round-trips an expanded Beauty/Webtoon culture route through course enrollments", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true);
+    const routeSlots = createCultureRoute({ primaryPackId: "k-beauty", samplerPackId: "k-webtoon" });
+    const supabase = buildSupabaseClient({
+      courseEnrollments: [
+        {
+          course_id: "k-culture",
+          route_version: "k-culture-v1",
+          started_at: "2026-08-08T12:00:00.000Z",
+          last_opened_at: "2026-08-08T12:10:00.000Z",
+          route_locked_at: "2026-08-08T12:05:00.000Z",
+          route_slots: routeSlots,
+          completions: [],
+          field_updated_at: {
+            routeSlots: "2026-08-08T12:00:00.000Z",
+            routeLockedAt: "2026-08-08T12:05:00.000Z"
+          }
+        }
+      ]
+    });
+    mockGetSupabaseClient.mockReturnValue(supabase);
+
+    const next = await syncWithSupabase(buildState(), session as never);
+
+    expect(next.courseEnrollments["k-culture"]?.routeSlots?.[1]).toMatchObject({
+      lessonId: "k-culture-k-beauty-1",
+      packId: "k-beauty"
+    });
+    expect(supabase.__builders.course_enrollments.upsert).toHaveBeenCalledWith(
+      expect.arrayContaining([expect.objectContaining({ route_slots: routeSlots })]),
+      { onConflict: "user_id,course_id" }
+    );
+  });
+
   it("loads and persists course mission results by latest completion time", async () => {
     mockIsSupabaseConfigured.mockReturnValue(true);
     const supabase = buildSupabaseClient({

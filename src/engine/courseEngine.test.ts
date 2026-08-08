@@ -310,8 +310,43 @@ describe("course lesson lookup", () => {
       })
     );
 
-    expect(getCourseLessonIds("k-culture")).toHaveLength(18);
+    expect(getCourseLessonIds("k-culture")).toHaveLength(30);
     expect(getCourseRouteLessonIds(state, "k-culture")).toHaveLength(14);
+    expect(isCourseRouteCompleted(state, "k-culture")).toBe(true);
+  });
+
+  it("isolates Beauty primary and Webtoon sampler route progress from unused culture lessons", () => {
+    const routeSlots = createCultureRoute({ primaryPackId: "k-beauty", samplerPackId: "k-webtoon" });
+    const state = normalizeUserCourses(
+      baseState({
+        activeCourseId: "k-culture",
+        courseEnrollments: {
+          "k-culture": {
+            courseId: "k-culture",
+            routeVersion: "k-culture-v1",
+            routeSlots,
+            completions: []
+          }
+        },
+        lessonProgress: Object.fromEntries(
+          routeSlots.map((slot) => [
+            slot.lessonId,
+            {
+              lessonId: slot.lessonId,
+              courseId: "k-culture",
+              status: "completed" as const,
+              currentStepId: "summary",
+              completedStepIds: ["summary"],
+              metrics: {}
+            }
+          ])
+        )
+      })
+    );
+
+    expect(getCourseRouteLessonIds(state, "k-culture").filter((id) => id.includes("k-beauty"))).toHaveLength(6);
+    expect(getCourseRouteLessonIds(state, "k-culture").filter((id) => id.includes("k-webtoon"))).toHaveLength(2);
+    expect(state.lessonProgress["k-culture-k-webtoon-3"]).toBeUndefined();
     expect(isCourseRouteCompleted(state, "k-culture")).toBe(true);
   });
 });

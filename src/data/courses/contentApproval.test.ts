@@ -14,8 +14,15 @@ describe("course locale approval", () => {
   });
 
   it("requires two different approved culture packs before exposing K-Culture", () => {
-    expect(getApprovedCulturePacks("us-en").sort()).toEqual(["k-drama", "k-pop"]);
+    expect(getApprovedCulturePacks("us-en").sort()).toEqual(["k-beauty", "k-drama", "k-pop", "k-webtoon"]);
     expect(getApprovedCulturePacks("vn-vi")).toEqual([]);
+  });
+
+  it("exposes expanded culture packs without changing the top-level route version", () => {
+    expect(getCourseExposureForLocale("k-culture", "us-en")).toBe("visible");
+    expect(getApprovedCulturePacks("us-en")).toEqual(
+      expect.arrayContaining(["k-pop", "k-drama", "k-beauty", "k-webtoon"])
+    );
   });
 
   it("has an explicit approval entry for every country pack and course", () => {

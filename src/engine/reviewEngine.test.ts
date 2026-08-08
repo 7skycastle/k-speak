@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { completeStep, createLessonProgress } from "./lessonEngine";
 import { buildReviewItems, getDueReviewItems } from "./reviewEngine";
 import { getLesson } from "../data/lessons";
+import { getCultureLesson } from "../data/courses/cultureLessons";
 import { getKFoodLesson } from "../data/courses/kFoodLessons";
 
 describe("reviewEngine", () => {
@@ -113,5 +114,20 @@ describe("reviewEngine", () => {
     expect(reviews[0].id).toBe("k-food-day-1:listen");
     expect(reviews.every((item) => item.courseId === "k-food")).toBe(true);
     expect(reviews[0].meaning).toBe("One of this, please.");
+  });
+
+  it("creates K-Culture review cards for expanded culture pack lessons", () => {
+    const lesson = getCultureLesson("k-culture-k-beauty-1");
+    if (!lesson) throw new Error("Missing K-Beauty culture lesson");
+    const completed = lesson.steps.reduce(
+      (progress, step) => completeStep(progress, step.id),
+      createLessonProgress("k-culture-k-beauty-1")
+    );
+
+    const reviews = buildReviewItems(completed, "What colors does this product come in?", "us-en");
+
+    expect(reviews).toHaveLength(3);
+    expect(reviews[0].id).toBe("k-culture-k-beauty-1:listen");
+    expect(reviews.every((item) => item.courseId === "k-culture")).toBe(true);
   });
 });

@@ -36,4 +36,40 @@ describe("CultureCourseSetup", () => {
 
     expect(onSave).toHaveBeenCalledWith({ primaryPackId: "k-beauty", samplerPackId: "k-webtoon" });
   });
+
+  it("shows only approved packs when the caller limits available packs", () => {
+    render(
+      <CultureCourseSetup
+        enrollment={undefined}
+        progress={{}}
+        onSave={() => undefined}
+        packId="us-en"
+        availablePackIds={["k-pop", "k-drama"]}
+      />
+    );
+
+    expect(screen.getByLabelText("K-Pop primary")).toBeInTheDocument();
+    expect(screen.getByLabelText("K-Drama sampler")).toBeInTheDocument();
+    expect(screen.queryByLabelText("K-Beauty primary")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("K-Webtoon sampler")).not.toBeInTheDocument();
+  });
+
+  it("does not save when fewer than two approved packs are available", () => {
+    const onSave = vi.fn();
+    render(
+      <CultureCourseSetup
+        enrollment={undefined}
+        progress={{}}
+        onSave={onSave}
+        packId="us-en"
+        availablePackIds={["k-pop"]}
+      />
+    );
+
+    const createButton = screen.getByRole("button", { name: "Create my route" });
+    expect(createButton).toBeDisabled();
+    fireEvent.click(createButton);
+
+    expect(onSave).not.toHaveBeenCalled();
+  });
 });

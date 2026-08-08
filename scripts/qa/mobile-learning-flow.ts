@@ -205,8 +205,13 @@ try {
     await page.getByRole("button", { name: /Start|Resume/ }).click();
     await page.getByText("Choose your K-Culture route").waitFor();
     await page.getByText(/K-Speak original learning scenes/i).waitFor();
-    await page.getByLabel("K-Pop primary").check();
-    await page.getByLabel("K-Drama sampler").check();
+    await page.getByLabel("K-Beauty primary").waitFor();
+    await page.getByLabel("K-Webtoon sampler").waitFor();
+    await page.getByLabel("K-Beauty primary").check();
+    if (!(await page.getByLabel("K-Beauty sampler").isDisabled())) {
+      throw new Error(`${viewport.name}: duplicate K-Beauty sampler choice should be disabled.`);
+    }
+    await page.getByLabel("K-Webtoon sampler").check();
     await page.getByRole("button", { name: "Create my route" }).click();
     await page.getByText("Polite and casual distance").waitFor();
     await assertNoOverflow(page, `${viewport.name}: k-culture setup`);

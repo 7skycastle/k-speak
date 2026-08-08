@@ -544,6 +544,80 @@ describe("storage sync persistence", () => {
     );
   });
 
+  it("keeps a locked Beauty route over a newer alternate route and unrelated course progress", () => {
+    const lockedRoute = createCultureRoute({ primaryPackId: "k-beauty", samplerPackId: "k-webtoon" });
+    const alternateRoute = createCultureRoute({ primaryPackId: "k-webtoon", samplerPackId: "k-pop" });
+    const account = buildState({
+      courseEnrollments: {
+        "k-culture": {
+          courseId: "k-culture",
+          routeVersion: "k-culture-v1",
+          routeLockedAt: "2026-08-08T12:05:00.000Z",
+          routeSlots: lockedRoute,
+          completions: [],
+          fieldUpdatedAt: {
+            routeLockedAt: "2026-08-08T12:05:00.000Z",
+            routeSlots: "2026-08-08T12:00:00.000Z"
+          }
+        }
+      },
+      lessonProgress: {
+        "k-culture-k-beauty-1": {
+          lessonId: "k-culture-k-beauty-1",
+          courseId: "k-culture",
+          status: "in-progress",
+          currentStepId: "situation",
+          completedStepIds: [],
+          metrics: {}
+        }
+      }
+    });
+    const guest = buildState({
+      courseEnrollments: {
+        "k-culture": {
+          courseId: "k-culture",
+          routeVersion: "k-culture-v1",
+          routeSlots: alternateRoute,
+          completions: [],
+          fieldUpdatedAt: {
+            routeSlots: "2026-08-08T13:00:00.000Z"
+          }
+        }
+      },
+      lessonProgress: {
+        "k-food-day-1": {
+          lessonId: "k-food-day-1",
+          courseId: "k-food",
+          status: "completed",
+          currentStepId: "summary",
+          completedStepIds: ["summary"],
+          metrics: {}
+        }
+      },
+      epsAssessmentAttempts: {
+        "attempt-1": {
+          attemptId: "attempt-1",
+          kind: "placement",
+          assessmentVersion: "eps-v1",
+          questionOrder: ["q1"],
+          answers: {},
+          currentIndex: 0,
+          status: "in-progress",
+          startedAt: "2026-08-08T13:00:00.000Z",
+          lastSavedAt: "2026-08-08T13:00:00.000Z",
+          unavailableQuestionIds: []
+        }
+      }
+    });
+
+    const merged = mergeUserStates(account, guest, "learner@example.com");
+
+    expect(merged.courseEnrollments["k-culture"]?.routeSlots).toEqual(lockedRoute);
+    expect(merged.lessonProgress["k-culture-k-beauty-1"]?.courseId).toBe("k-culture");
+    expect(merged.lessonProgress["k-food-day-1"]?.status).toBe("completed");
+    expect(merged.epsAssessmentAttempts["attempt-1"]?.status).toBe("in-progress");
+  });
+
   it("stores EPS assessment attempts in the persistent outbox", () => {
     const next = upsertEpsAssessmentAttempt(buildState(), {
       attemptId: "attempt-1",

@@ -24,7 +24,7 @@ import { countryPacks, getCountryPack } from "./data/countryPacks";
 import { getContinuationTrack, type ContinuationModule } from "./data/continuationProgram";
 import { getLesson, lessons } from "./data/lessons";
 import { COURSE_IDS, courseRegistry } from "./data/courses/courseRegistry";
-import { getCourseExposureForLocale } from "./data/courses/contentApproval";
+import { getApprovedCulturePacks, getCourseExposureForLocale } from "./data/courses/contentApproval";
 import { audioCatalog, findAudioSlot } from "./data/audioCatalog";
 import { buildReviewItems, getDueReviewItems } from "./engine/reviewEngine";
 import {
@@ -361,6 +361,7 @@ export const App = () => {
                 enrollment={state.courseEnrollments["k-culture"]}
                 progress={state.lessonProgress}
                 packId={countryPack.id}
+                availablePackIds={getApprovedCulturePacks(countryPack.id)}
                 onSave={(selection) => setState((current) => saveCultureRouteSelection(current, selection))}
               />
             ) : (

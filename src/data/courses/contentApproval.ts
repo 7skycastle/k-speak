@@ -94,9 +94,25 @@ export const culturePackLocaleApprovals: CulturePackLocaleApproval[] = [
     reviewerRole: "internal",
     approvedAt: "2026-08-08T00:00:00.000Z"
   },
+  {
+    packId: "k-beauty",
+    countryPackId: "us-en",
+    contentVersion: "k-beauty-v1",
+    status: "approved",
+    reviewerRole: "internal",
+    approvedAt: "2026-08-08T00:00:00.000Z"
+  },
+  {
+    packId: "k-webtoon",
+    countryPackId: "us-en",
+    contentVersion: "k-webtoon-v1",
+    status: "approved",
+    reviewerRole: "internal",
+    approvedAt: "2026-08-08T00:00:00.000Z"
+  },
   ...countryPackIds.flatMap((countryPackId) =>
     (["k-pop", "k-drama", "k-beauty", "k-webtoon"] as const).flatMap((packId) =>
-      countryPackId === "us-en" && (packId === "k-pop" || packId === "k-drama")
+      countryPackId === "us-en"
         ? []
         : [
             {

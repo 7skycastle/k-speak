@@ -17,18 +17,24 @@ export const CultureCourseSetup = ({
   enrollment,
   progress,
   onSave,
-  packId
+  packId,
+  availablePackIds = culturePackIds
 }: {
   enrollment: CourseEnrollment | undefined;
   progress: UserState["lessonProgress"];
   onSave: (selection: CultureRouteSelection) => void;
   packId: CountryPackId;
+  availablePackIds?: CulturePackId[];
 }) => {
   const tr = createTranslator(packId);
   const locked = isCultureRouteLocked(enrollment, progress);
   const [primaryPackId, setPrimaryPackId] = useState<CulturePackId>("k-pop");
   const [samplerPackId, setSamplerPackId] = useState<CulturePackId>("k-drama");
-  const canSave = primaryPackId !== samplerPackId && !locked;
+  const canSave =
+    primaryPackId !== samplerPackId &&
+    availablePackIds.includes(primaryPackId) &&
+    availablePackIds.includes(samplerPackId) &&
+    !locked;
 
   return (
     <section className="flow" aria-label={tr("culture.setup.title")}>
@@ -40,7 +46,7 @@ export const CultureCourseSetup = ({
         <div className="summary-list">
           <fieldset className="field">
             <legend>{tr("culture.setup.primaryLabel")}</legend>
-            {culturePackIds.map((id) => (
+            {availablePackIds.map((id) => (
               <label key={id} className="row-choice">
                 <input
                   type="radio"
@@ -57,7 +63,7 @@ export const CultureCourseSetup = ({
 
           <fieldset className="field">
             <legend>{tr("culture.setup.samplerLabel")}</legend>
-            {culturePackIds.map((id) => (
+            {availablePackIds.map((id) => (
               <label key={id} className="row-choice">
                 <input
                   type="radio"
