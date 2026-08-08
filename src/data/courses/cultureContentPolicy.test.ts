@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { findAudioSlot } from "../audioCatalog";
 import { CULTURE_ORIGINAL_CONTENT_NOTICE, cultureLessons } from "./cultureLessons";
 
-const BLOCKED_KNOWN_IP_TERMS = /BTS|Blackpink|Squid Game|Netflix|HYBE|SM Entertainment/i;
+const BLOCKED_KNOWN_IP_TERMS =
+  /BTS|Blackpink|Squid Game|Netflix|HYBE|SM Entertainment|Laneige|Innisfree|Olive Young|Solo Leveling|True Beauty|Tower of God|Naver Webtoon|Kakao Webtoon/i;
 const TEMPORARY_COPY = /TODO|TBD|lorem|https?:\/\//i;
 
 describe("K-Culture content policy", () => {

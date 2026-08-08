@@ -219,6 +219,151 @@ const kDrama: CultureLessonSource[] = [
   }
 ];
 
+const beautyCountryNote = `${CULTURE_ORIGINAL_CONTENT_NOTICE.en} Individual experiences differ; ask a qualified professional for medical concerns.`;
+
+const kBeauty: CultureLessonSource[] = [
+  {
+    id: "k-culture-k-beauty-1",
+    group: "k-beauty",
+    title: "Product and color",
+    scene: "Asking about a neutral product option and color",
+    korean: "이 제품은 어떤 색이 있어요?",
+    romanization: "I jepumeun eotteon saegi isseoyo?",
+    meaning: "What colors does this product come in?",
+    response,
+    bridgeSkillIds: ["question", "practical-reading"]
+  },
+  {
+    id: "k-culture-k-beauty-2",
+    group: "k-beauty",
+    title: "Skin concern and request",
+    scene: "Explaining a preference without medical claims",
+    korean: "저에게 맞는 제품을 찾고 있어요.",
+    romanization: "Jeoege matneun jepumeul chatgo isseoyo.",
+    meaning: "I am looking for a product that suits me.",
+    response,
+    bridgeSkillIds: ["request", "preference"]
+  },
+  {
+    id: "k-culture-k-beauty-3",
+    group: "k-beauty",
+    title: "Function and comparison",
+    scene: "Comparing two general product types",
+    korean: "이 제품은 뭐가 달라요?",
+    romanization: "I jepumeun mwoga dallayo?",
+    meaning: "What is different about this product?",
+    response,
+    bridgeSkillIds: ["comparison", "question"]
+  },
+  {
+    id: "k-culture-k-beauty-4",
+    group: "k-beauty",
+    title: "Order and label",
+    scene: "Reading a simple use-order label",
+    korean: "이건 세안 후에 사용해요.",
+    romanization: "Igeon sean hue sayonghaeyo.",
+    meaning: "This is used after washing your face.",
+    response,
+    bridgeSkillIds: ["label-instruction", "sequence"]
+  },
+  {
+    id: "k-culture-k-beauty-5",
+    group: "k-beauty",
+    title: "Caution and exchange",
+    scene: "Checking cautions before buying",
+    korean: "사용 전에 주의사항을 확인하세요.",
+    romanization: "Sayong jeone juuisahangeul hwaginhaseyo.",
+    meaning: "Please check the cautions before use.",
+    response,
+    bridgeSkillIds: ["warning", "practical-reading"]
+  },
+  {
+    id: "k-culture-k-beauty-6",
+    group: "k-beauty",
+    title: "Review and recommendation",
+    scene: "Sharing a neutral personal impression",
+    korean: "제 느낌에는 사용감이 가벼웠어요.",
+    romanization: "Je neukkimeneun sayonggami gabyeowosseoyo.",
+    meaning: "For me, the texture felt light.",
+    response,
+    bridgeSkillIds: ["preference", "comparison"]
+  }
+];
+
+const kWebtoon: CultureLessonSource[] = [
+  {
+    id: "k-culture-k-webtoon-1",
+    group: "k-webtoon",
+    title: "Scene order",
+    scene: "K-Speak original story: Mina opens a door and enters a room",
+    korean: "먼저 문을 열고 그다음에 안으로 들어가요.",
+    romanization: "Meonjeo muneul yeolgo geudaeume aneuro deureogayo.",
+    meaning: "First, open the door, and then go inside.",
+    response,
+    bridgeSkillIds: ["sequence", "instruction"]
+  },
+  {
+    id: "k-culture-k-webtoon-2",
+    group: "k-webtoon",
+    title: "Emotion and tone",
+    scene: "K-Speak original story: Jun explains a character's tone",
+    korean: "화난 것 같지만 차분한 말투예요.",
+    romanization: "Hwanan geot gatjiman chabunhan maltuyeyo.",
+    meaning: "It seems angry, but the tone is calm.",
+    response,
+    bridgeSkillIds: ["situation-match", "comparison"]
+  },
+  {
+    id: "k-culture-k-webtoon-3",
+    group: "k-webtoon",
+    title: "Character relationship",
+    scene: "K-Speak original story: Two characters meet again",
+    korean: "두 사람은 오래된 친구예요.",
+    romanization: "Du sarameun oraedoen chinguyeyo.",
+    meaning: "The two people are old friends.",
+    response,
+    bridgeSkillIds: ["situation-match", "next-response"]
+  },
+  {
+    id: "k-culture-k-webtoon-4",
+    group: "k-webtoon",
+    title: "Context and next line",
+    scene: "K-Speak original story: Choosing a natural next line",
+    korean: "이 상황에서는 어떤 대답이 자연스러워요?",
+    romanization: "I sanghwangeseoneun eotteon daedabi jayeonseureowoyo?",
+    meaning: "What answer sounds natural in this situation?",
+    response,
+    bridgeSkillIds: ["question", "situation-match"]
+  },
+  {
+    id: "k-culture-k-webtoon-5",
+    group: "k-webtoon",
+    title: "Dramatic to polite",
+    scene: "K-Speak original story: Softening a strong line",
+    korean: "일상에서는 조용히 이야기할 수 있어요.",
+    romanization: "Ilsangeseoneun joyonghi iyagihal su isseoyo.",
+    meaning: "In daily life, you can say it quietly.",
+    response,
+    everydayAlternative: phrase(
+      "조금 더 부드럽게 말할게요.",
+      "Jogeum deo budeureopge malhalgeyo.",
+      "I will say it a little more softly."
+    ),
+    bridgeSkillIds: ["polite-ending", "comparison"]
+  },
+  {
+    id: "k-culture-k-webtoon-6",
+    group: "k-webtoon",
+    title: "Summary and opinion",
+    scene: "K-Speak original story: Sharing a short opinion",
+    korean: "주인공이 약속을 지키는 장면이 인상적이었어요.",
+    romanization: "Juingongi yaksogeul jikineun jangmyeoni insangjeogieosseoyo.",
+    meaning: "The scene where the main character keeps a promise was memorable.",
+    response,
+    bridgeSkillIds: ["preference", "situation-match"]
+  }
+];
+
 const synthesis: CultureLessonSource[] = [
   {
     id: "k-culture-synthesis-1",
@@ -244,7 +389,7 @@ const synthesis: CultureLessonSource[] = [
   }
 ];
 
-const cultureSources = [...common, ...kPop, ...kDrama, ...synthesis];
+const cultureSources = [...common, ...kPop, ...kDrama, ...kBeauty, ...kWebtoon, ...synthesis];
 
 const makeCultureLesson = (source: CultureLessonSource, index: number): Lesson => {
   const core = phrase(source.korean, source.romanization, source.meaning);
@@ -304,7 +449,7 @@ const makeCultureLesson = (source: CultureLessonSource, index: number): Lesson =
       }
     ],
     bridgeSkillIds: source.bridgeSkillIds,
-    countryNotes: localized(CULTURE_ORIGINAL_CONTENT_NOTICE.en),
+    countryNotes: localized(source.group === "k-beauty" ? beautyCountryNote : CULTURE_ORIGINAL_CONTENT_NOTICE.en),
     pronunciationByCountry: localized("Keep the final 요 light and do not copy dramatic intonation."),
     audioTargets: {
       core,
@@ -370,5 +515,7 @@ const makeCultureLesson = (source: CultureLessonSource, index: number): Lesson =
 export const cultureLessons: Lesson[] = cultureSources.map(makeCultureLesson);
 export const cultureLessonIds = cultureLessons.map((lesson) => lesson.id);
 export const getCultureLesson = (lessonId: string) => cultureLessons.find((lesson) => lesson.id === lessonId);
+export const getCulturePackLessons = (packId: CulturePackId) =>
+  cultureLessons.filter((lesson) => lesson.id.startsWith(`k-culture-${packId}-`));
 export const getCulturePackLessonIds = (packId: CulturePackId) =>
-  cultureLessons.filter((lesson) => lesson.id.startsWith(`k-culture-${packId}-`)).map((lesson) => lesson.id);
+  getCulturePackLessons(packId).map((lesson) => lesson.id);

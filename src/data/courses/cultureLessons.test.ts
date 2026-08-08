@@ -5,18 +5,40 @@ import {
   cultureLessonIds,
   cultureLessons,
   getCultureLesson,
+  getCulturePackLessons,
   getCulturePackLessonIds
 } from "./cultureLessons";
 import { courseRegistry } from "./courseRegistry";
 
-const blockedKnownIpTerms = /BTS|Blackpink|Squid Game|Netflix|HYBE|SM Entertainment/i;
+const blockedKnownIpTerms =
+  /BTS|Blackpink|Squid Game|Netflix|HYBE|SM Entertainment|Solo Leveling|True Beauty|Tower of God|Naver Webtoon|Kakao Webtoon/i;
 
 describe("K-Culture lessons", () => {
-  it("ships 18 original lessons for the first culture gate", () => {
-    expect(cultureLessons).toHaveLength(18);
+  it("ships 30 original lessons for the expanded culture gate", () => {
+    expect(cultureLessons).toHaveLength(30);
     expect(getCulturePackLessonIds("k-pop")).toHaveLength(6);
     expect(getCulturePackLessonIds("k-drama")).toHaveLength(6);
+    expect(getCulturePackLessonIds("k-beauty")).toHaveLength(6);
+    expect(getCulturePackLessonIds("k-webtoon")).toHaveLength(6);
     expect(courseRegistry["k-culture"].coreLessonIds).toEqual(cultureLessonIds);
+  });
+
+  it("provides six complete K-Beauty lessons", () => {
+    expect(getCulturePackLessonIds("k-beauty")).toEqual(
+      Array.from({ length: 6 }, (_, index) => `k-culture-k-beauty-${index + 1}`)
+    );
+    const serialized = JSON.stringify(getCulturePackLessons("k-beauty"));
+    expect(serialized).not.toMatch(/cure|treats acne|guaranteed|dermatologist approved|Laneige|Innisfree|Olive Young/i);
+    expect(serialized).toContain("Individual experiences differ");
+  });
+
+  it("provides six complete K-Webtoon lessons with only K-Speak scenes", () => {
+    expect(getCulturePackLessonIds("k-webtoon")).toEqual(
+      Array.from({ length: 6 }, (_, index) => `k-culture-k-webtoon-${index + 1}`)
+    );
+    const serialized = JSON.stringify(getCulturePackLessons("k-webtoon"));
+    expect(serialized).not.toMatch(/Solo Leveling|True Beauty|Tower of God|Naver Webtoon|Kakao Webtoon/i);
+    expect(serialized).toContain("K-Speak");
   });
 
   it.each(cultureLessons)("keeps $id complete and namespaced", (lesson) => {
@@ -52,6 +74,8 @@ describe("K-Culture lessons", () => {
       "k-culture-common-1",
       "k-culture-k-pop-1",
       "k-culture-k-drama-1",
+      "k-culture-k-beauty-1",
+      "k-culture-k-webtoon-1",
       "k-culture-synthesis-1",
       "k-culture-synthesis-2"
     ]) {
