@@ -70,6 +70,7 @@ describe("i18n core", () => {
       "course.selector.title",
       "course.foundation.title",
       "course.travel.title",
+      "course.kFood.title",
       "course.kCulture.title",
       "course.epsTopik.title",
       "course.status.notStarted",
@@ -84,7 +85,13 @@ describe("i18n core", () => {
       "travel.mission.shortResponse",
       "travel.mission.rescueExpression",
       "travel.mission.success",
-      "travel.mission.practiceMore"
+      "travel.mission.practiceMore",
+      "kFood.mission.title",
+      "kFood.mission.chooseFood",
+      "kFood.mission.shortOrder",
+      "kFood.mission.resolveProblem",
+      "kFood.mission.success",
+      "kFood.mission.practiceMore"
     ];
 
     for (const pack of countryPacks) {

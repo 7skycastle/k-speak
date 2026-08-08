@@ -56,6 +56,7 @@ import {
   updateActiveCourse,
   upsertLessonProgress,
   upsertReviewItems,
+  saveKFoodMissionResult,
   saveTravelMissionResult,
   upsertSavedPhrase
 } from "./services/storage";
@@ -83,8 +84,11 @@ import type {
   OnboardingProfile,
   SavedPhrase,
   UserState,
+  KFoodMissionCheckId,
+  KFoodMissionResult,
   TravelMissionCheckId,
-  TravelMissionResult
+  TravelMissionResult,
+  TravelMissionCheckResult
 } from "./types";
 
 type Tab = "home" | "lesson" | "review" | "settings";
@@ -141,6 +145,12 @@ const travelMissionCheckUiKey = {
   "short-response": "travel.mission.shortResponse",
   "rescue-expression": "travel.mission.rescueExpression"
 } satisfies Record<TravelMissionCheckId, UiKey>;
+
+const kFoodMissionCheckUiKey = {
+  "choose-food": "kFood.mission.chooseFood",
+  "short-order": "kFood.mission.shortOrder",
+  "resolve-problem": "kFood.mission.resolveProblem"
+} satisfies Record<KFoodMissionCheckId, UiKey>;
 
 const goalOptions: LearningGoal[] = ["travel", "daily", "study", "work", "life", "k-content"];
 const levelOptions: KoreanLevel[] = ["first-time", "beginner", "returning", "daily"];
@@ -958,20 +968,36 @@ const LessonScreen = ({
     if (nextProgress.status === "completed") {
       const reviews = buildReviewItems(nextProgress, meaning, countryPack.id);
       nextState = upsertReviewItems(nextState, reviews);
+      const completedAt = new Date().toISOString();
+      const quizSucceeded = nextProgress.metrics.quiz?.answeredCorrectly !== false;
       if (lesson.id === "travel-day-14") {
-        const completedAt = new Date().toISOString();
         const missionResult = {
           lessonId: lesson.id,
           completedAt,
           checks: {
             "first-sentence": "success",
-            "short-response": answeredCorrectly ? "success" : "practice-more",
+            "short-response": quizSucceeded ? "success" : "practice-more",
             "rescue-expression": "success"
           }
         } satisfies TravelMissionResult;
         nextState = saveTravelMissionResult(nextState, missionResult);
         if (isCourseRouteCompleted(nextState, "travel")) {
           nextState = completeCourseRoute(nextState, "travel", completedAt);
+        }
+      }
+      if (lesson.id === "k-food-day-14") {
+        const missionResult = {
+          lessonId: lesson.id,
+          completedAt,
+          checks: {
+            "choose-food": "success",
+            "short-order": quizSucceeded ? "success" : "practice-more",
+            "resolve-problem": "success"
+          }
+        } satisfies KFoodMissionResult;
+        nextState = saveKFoodMissionResult(nextState, missionResult);
+        if (isCourseRouteCompleted(nextState, "k-food")) {
+          nextState = completeCourseRoute(nextState, "k-food", completedAt);
         }
       }
       nextState = trackEvent(nextState, { name: "lesson_completed", lessonId: lesson.id, success: true });
@@ -1253,22 +1279,30 @@ export const RecorderControls = ({
   );
 };
 
-const TravelMissionResultPanel = ({
-  result,
+type MissionResultValue = TravelMissionCheckResult;
+
+const MissionResultPanel = ({
+  titleKey,
+  checks,
+  successKey,
+  practiceMoreKey,
   packId
 }: {
-  result: TravelMissionResult;
+  titleKey: UiKey;
+  checks: { id: string; labelKey: UiKey; value: MissionResultValue }[];
+  successKey: UiKey;
+  practiceMoreKey: UiKey;
   packId: CountryPackId;
 }) => {
   const tr = createTranslator(packId);
 
   return (
-    <Panel title={tr("travel.mission.title")}>
+    <Panel title={tr(titleKey)}>
       <div className="summary-list">
-        {Object.entries(result.checks).map(([id, value]) => (
+        {checks.map(({ id, labelKey, value }) => (
           <div key={id} className="mission-row">
-            <span>{tr(travelMissionCheckUiKey[id as TravelMissionCheckId])}</span>
-            <strong>{value === "success" ? tr("travel.mission.success") : tr("travel.mission.practiceMore")}</strong>
+            <span>{tr(labelKey)}</span>
+            <strong>{value === "success" ? tr(successKey) : tr(practiceMoreKey)}</strong>
           </div>
         ))}
       </div>
@@ -1292,6 +1326,33 @@ export const ReviewScreen = ({
   const courseReviewItems = getReviewItemsForCourse(state);
   const dueReviews = getDueReviewItems(courseReviewItems);
   const travelMissionResult = state.activeCourseId === "travel" ? state.travelMissionResults?.["travel-day-14"] : undefined;
+  const kFoodMissionResult =
+    state.activeCourseId === "k-food" ? state.kFoodMissionResults?.["k-food-day-14"] : undefined;
+  const missionPanel = travelMissionResult ? (
+    <MissionResultPanel
+      titleKey="travel.mission.title"
+      checks={Object.entries(travelMissionResult.checks).map(([id, value]) => ({
+        id,
+        labelKey: travelMissionCheckUiKey[id as TravelMissionCheckId],
+        value
+      }))}
+      successKey="travel.mission.success"
+      practiceMoreKey="travel.mission.practiceMore"
+      packId={packId}
+    />
+  ) : kFoodMissionResult ? (
+    <MissionResultPanel
+      titleKey="kFood.mission.title"
+      checks={Object.entries(kFoodMissionResult.checks).map(([id, value]) => ({
+        id,
+        labelKey: kFoodMissionCheckUiKey[id as KFoodMissionCheckId],
+        value
+      }))}
+      successKey="kFood.mission.success"
+      practiceMoreKey="kFood.mission.practiceMore"
+      packId={packId}
+    />
+  ) : undefined;
   const canStartNextLesson = hasRemainingLessons(state);
   const [completedCount, setCompletedCount] = useState(0);
   const active = dueReviews[0];
@@ -1320,7 +1381,7 @@ export const ReviewScreen = ({
           title={tr("review.empty.title")}
           body={tr("review.empty.body")}
         />
-        {travelMissionResult && <TravelMissionResultPanel result={travelMissionResult} packId={packId} />}
+        {missionPanel}
         <button className="primary-action" onClick={onStartLesson}>
           {tr("review.empty.cta")}
         </button>
@@ -1333,7 +1394,7 @@ export const ReviewScreen = ({
     return (
       <section className="flow">
         <ReviewOverview state={state} dueCount={dueReviews.length} packId={packId} />
-        {travelMissionResult && <TravelMissionResultPanel result={travelMissionResult} packId={packId} />}
+        {missionPanel}
         <StatePanel icon={<Check />} title={tr("review.done.title")} body={tr("review.done.body")} />
         <button className="primary-action" onClick={canStartNextLesson ? onStartLesson : (onReturnHome ?? onStartLesson)}>
           {canStartNextLesson ? tr("review.done.cta") : tr("common.close")}
@@ -1346,7 +1407,7 @@ export const ReviewScreen = ({
   return (
     <section className="flow">
       <ReviewOverview state={state} dueCount={dueReviews.length} packId={packId} />
-      {travelMissionResult && <TravelMissionResultPanel result={travelMissionResult} packId={packId} />}
+      {missionPanel}
       <ProgressHeader current={completedCount + 1} total={sessionTotal} title={tr("review.progressTitle")} />
       <Panel title={active.reason}>
         {active.kind && (

@@ -90,6 +90,18 @@ export const uiCatalog = {
     "ภาษาเกาหลีสำหรับท่องเที่ยว",
     "Korea untuk melancong"
   ),
+  "course.kFood.title": localized(
+    "K-Food Korean",
+    "Kフード韓国語",
+    "韩餐韩语",
+    "Tiếng Hàn K-Food",
+    "Coreano K-Food",
+    "Bahasa Korea K-Food",
+    "កូរ៉េ K-Food",
+    "K-Food ကိုရီးယားစာ",
+    "ภาษาเกาหลี K-Food",
+    "Korea K-Food"
+  ),
   "course.kCulture.title": localized(
     "K-Culture Korean",
     "Kカルチャー韓国語",
@@ -228,6 +240,80 @@ export const uiCatalog = {
     "Anda berjaya"
   ),
   "travel.mission.practiceMore": localized(
+    "Practice more",
+    "もう少し練習",
+    "继续练习",
+    "Luyện thêm",
+    "Practica más",
+    "Latihan lagi",
+    "ហាត់បន្ថែម",
+    "ထပ်လေ့ကျင့်ပါ",
+    "ฝึกเพิ่ม",
+    "Berlatih lagi"
+  ),
+
+  // K-Food mission
+  "kFood.mission.title": localized(
+    "K-Food mission",
+    "Kフードミッション",
+    "韩餐任务",
+    "Nhiệm vụ K-Food",
+    "Misión K-Food",
+    "Misi K-Food",
+    "បេសកកម្ម K-Food",
+    "K-Food မစ်ရှင်",
+    "ภารกิจ K-Food",
+    "Misi K-Food"
+  ),
+  "kFood.mission.chooseFood": localized(
+    "Choose food safely",
+    "安全に料理を選ぶ",
+    "安全选择食物",
+    "Chọn món an toàn",
+    "Elegir comida con seguridad",
+    "Pilih makanan dengan aman",
+    "ជ្រើសអាហារឱ្យមានសុវត្ថិភាព",
+    "အစားအစာကို လုံခြုံစွာရွေးပါ",
+    "เลือกอาหารอย่างปลอดภัย",
+    "Pilih makanan dengan selamat"
+  ),
+  "kFood.mission.shortOrder": localized(
+    "Complete a short order",
+    "短い注文を完了する",
+    "完成简短点餐",
+    "Hoàn thành một lượt gọi món ngắn",
+    "Completar un pedido corto",
+    "Selesaikan pesanan singkat",
+    "បញ្ចប់ការកម្មង់ខ្លី",
+    "မှာယူမှုတိုတစ်ခု ပြီးအောင်လုပ်ပါ",
+    "สั่งอาหารสั้น ๆ ให้สำเร็จ",
+    "Lengkapkan pesanan ringkas"
+  ),
+  "kFood.mission.resolveProblem": localized(
+    "Resolve one problem",
+    "問題を一つ解決する",
+    "解决一个问题",
+    "Xử lý một vấn đề",
+    "Resolver un problema",
+    "Selesaikan satu masalah",
+    "ដោះស្រាយបញ្ហាមួយ",
+    "ပြဿနာတစ်ခု ဖြေရှင်းပါ",
+    "แก้ปัญหาหนึ่งอย่าง",
+    "Selesaikan satu masalah"
+  ),
+  "kFood.mission.success": localized(
+    "You did it",
+    "できました",
+    "你做到了",
+    "Bạn làm được rồi",
+    "Lo lograste",
+    "Berhasil",
+    "អ្នកធ្វើបានហើយ",
+    "သင်လုပ်နိုင်ခဲ့ပြီ",
+    "คุณทำได้แล้ว",
+    "Anda berjaya"
+  ),
+  "kFood.mission.practiceMore": localized(
     "Practice more",
     "もう少し練習",
     "继续练习",

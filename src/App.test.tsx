@@ -148,6 +148,38 @@ describe("ReviewScreen", () => {
     expect(screen.getByText("Practice more")).toBeInTheDocument();
     expect(screen.queryByText(/%/)).not.toBeInTheDocument();
   });
+
+  it("shows Day 14 K-Food mission checks without percentage scoring", () => {
+    render(
+      <ReviewScreen
+        state={{
+          ...createState([]),
+          activeCourseId: "k-food",
+          kFoodMissionResults: {
+            "k-food-day-14": {
+              lessonId: "k-food-day-14",
+              completedAt: "2026-08-14T00:00:00.000Z",
+              checks: {
+                "choose-food": "success",
+                "short-order": "practice-more",
+                "resolve-problem": "success"
+              }
+            }
+          }
+        }}
+        onPersist={() => undefined}
+        onStartLesson={() => undefined}
+        onReturnHome={() => undefined}
+      />
+    );
+
+    expect(screen.getByText("Choose food safely")).toBeInTheDocument();
+    expect(screen.getByText("Complete a short order")).toBeInTheDocument();
+    expect(screen.getByText("Resolve one problem")).toBeInTheDocument();
+    expect(screen.getAllByText("You did it").length).toBeGreaterThan(0);
+    expect(screen.getByText("Practice more")).toBeInTheDocument();
+    expect(screen.queryByText(/%/)).not.toBeInTheDocument();
+  });
 });
 
 describe("RecorderControls", () => {
@@ -236,6 +268,7 @@ describe("HomeScreen course selector", () => {
     fireEvent.click(screen.getByRole("button", { name: "Change course" }));
 
     expect(screen.getByText("Korean Travel")).toBeInTheDocument();
+    expect(screen.getByText("K-Food Korean")).toBeInTheDocument();
     expect(screen.getByText("K-Culture Korean")).toBeInTheDocument();
     expect(screen.getAllByText("Preparing").length).toBeGreaterThan(0);
     expect(screen.queryByText("EPS lesson 1")).not.toBeInTheDocument();
