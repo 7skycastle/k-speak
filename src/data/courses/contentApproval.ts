@@ -42,6 +42,14 @@ export const courseLocaleApprovals: CourseLocaleApproval[] = [
     reviewerRole: "internal" as const,
     reviewedAt: "2026-08-08T00:00:00.000Z"
   })),
+  {
+    courseId: "k-food" as const,
+    countryPackId: "us-en" as const,
+    contentVersion: "k-food-v1",
+    status: "approved" as const,
+    reviewerRole: "internal" as const,
+    reviewedAt: "2026-08-08T00:00:00.000Z"
+  },
   ...countryPackIds.flatMap((countryPackId) => [
     {
       courseId: "k-culture" as const,

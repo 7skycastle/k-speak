@@ -6,7 +6,8 @@ describe("course locale approval", () => {
   it("keeps future courses hidden while allowing approved Travel locales", () => {
     expect(isCourseLocaleApproved("travel", "us-en")).toBe(true);
     expect(getCourseExposureForLocale("travel", "us-en")).toBe("visible");
-    expect(getCourseExposureForLocale("k-food", "us-en")).toBe("preparing");
+    expect(getCourseExposureForLocale("k-food", "us-en")).toBe("visible");
+    expect(getCourseExposureForLocale("k-food", "vn-vi")).toBe("preparing");
     expect(getCourseExposureForLocale("k-culture", "us-en")).toBe("hidden");
     expect(getCourseExposureForLocale("eps-topik", "us-en")).toBe("hidden");
   });
@@ -15,7 +16,7 @@ describe("course locale approval", () => {
     for (const pack of countryPacks) {
       expect(getCourseExposureForLocale("foundation", pack.id)).toBe("visible");
       expect(["visible", "preparing"]).toContain(getCourseExposureForLocale("travel", pack.id));
-      expect(getCourseExposureForLocale("k-food", pack.id)).toBe("preparing");
+      expect(["visible", "preparing"]).toContain(getCourseExposureForLocale("k-food", pack.id));
       expect(getCourseExposureForLocale("k-culture", pack.id)).toBe("hidden");
       expect(getCourseExposureForLocale("eps-topik", pack.id)).toBe("hidden");
     }

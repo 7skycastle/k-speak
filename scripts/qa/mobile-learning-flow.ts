@@ -38,6 +38,7 @@ const state = {
   epsAssessmentAttempts: {},
   epsAssessmentResults: {},
   travelMissionResults: {},
+  kFoodMissionResults: {},
   onboarding: {
     countryPackId: "us-en",
     nativeLanguage: "English",
@@ -187,6 +188,13 @@ try {
     await page.getByRole("button", { name: "Change course" }).click();
     await page.getByRole("button", { name: /Korean Travel/ }).click();
     await page.getByText("Airport Arrival").waitFor();
+    await page.getByRole("button", { name: "Change course" }).click();
+    await page.getByRole("button", { name: /K-Food Korean/ }).click();
+    await page.getByText("First food-court order").waitFor();
+    await page.getByRole("button", { name: /Start|Resume/ }).click();
+    await page.getByText("First food-court order").waitFor();
+    await assertStickyActionsVisible(page, `${viewport.name}: k-food`);
+    await page.getByRole("button", { name: "Home" }).click();
     await page.getByRole("button", { name: "Change course" }).click();
     await page.getByRole("button", { name: /Korean First Talk/ }).click();
     await page.getByText(/Day 1\./).waitFor();
