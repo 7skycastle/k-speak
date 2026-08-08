@@ -1,0 +1,11 @@
+.git
+.codebase-memory
+.omc
+.venv-tts-*/
+artifacts
+dist
+node_modules
+tools
+licenses
+docs
+*.docx
