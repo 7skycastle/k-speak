@@ -3,7 +3,9 @@ import { travelLessonIds } from "./travelLessons";
 
 export const FOUNDATION_COURSE_ID = "foundation" satisfies CourseId;
 
-export const COURSE_IDS = ["foundation", "travel", "k-culture", "eps-topik"] as const satisfies readonly CourseId[];
+const kFoodLessonIds = Array.from({ length: 14 }, (_, index) => `k-food-day-${index + 1}`);
+
+export const COURSE_IDS = ["foundation", "travel", "k-food", "k-culture", "eps-topik"] as const satisfies readonly CourseId[];
 
 export interface CourseRegistryEntry {
   id: CourseId;
@@ -32,6 +34,14 @@ export const courseRegistry: Record<CourseId, CourseRegistryEntry> = {
     routeVersion: "travel-v1",
     exposure: "preparing",
     coreLessonIds: travelLessonIds,
+    continuationLessonIds: []
+  },
+  "k-food": {
+    id: "k-food",
+    titleKey: "course.kFood.title",
+    routeVersion: "k-food-v1",
+    exposure: "preparing",
+    coreLessonIds: kFoodLessonIds,
     continuationLessonIds: []
   },
   "k-culture": {

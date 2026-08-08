@@ -107,6 +107,7 @@ export const getReviewItemsForCourse = (
 const courseLessons: Record<CourseId, Lesson[]> = {
   foundation: foundationLessons,
   travel: travelLessons,
+  "k-food": [],
   "k-culture": [],
   "eps-topik": []
 };

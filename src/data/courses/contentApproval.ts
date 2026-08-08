@@ -1,4 +1,5 @@
 import type { CourseExposure, CourseId, CountryPackId } from "../../types";
+import { courseRegistry } from "./courseRegistry";
 
 export type CourseLocaleApprovalStatus = "draft" | "native-review" | "approved";
 
@@ -69,6 +70,6 @@ export const isCourseLocaleApproved = (courseId: CourseId, countryPackId: Countr
 
 export const getCourseExposureForLocale = (courseId: CourseId, countryPackId: CountryPackId): CourseExposure => {
   if (courseId === "foundation") return "visible";
-  if (courseId === "k-culture" || courseId === "eps-topik") return "hidden";
+  if (courseRegistry[courseId].exposure === "hidden") return "hidden";
   return isCourseLocaleApproved(courseId, countryPackId) ? "visible" : "preparing";
 };

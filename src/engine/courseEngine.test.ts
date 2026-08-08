@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FOUNDATION_COURSE_ID, courseRegistry, getCourseRegistryEntry } from "../data/courses/courseRegistry";
+import { COURSE_IDS, FOUNDATION_COURSE_ID, courseRegistry, getCourseRegistryEntry } from "../data/courses/courseRegistry";
 import { createInitialState } from "../services/storage";
 import type { UserState } from "../types";
 import {
@@ -21,6 +21,16 @@ describe("course registry", () => {
     expect(courseRegistry.foundation.coreLessonIds).toHaveLength(14);
     expect(courseRegistry.foundation.continuationLessonIds).toHaveLength(16);
     expect(courseRegistry.travel.exposure).toBe("preparing");
+    expect(COURSE_IDS).toContain("k-food");
+    expect(courseRegistry["k-food"]).toMatchObject({
+      id: "k-food",
+      titleKey: "course.kFood.title",
+      routeVersion: "k-food-v1",
+      exposure: "preparing"
+    });
+    expect(courseRegistry["k-food"].coreLessonIds).toEqual(
+      Array.from({ length: 14 }, (_, index) => `k-food-day-${index + 1}`)
+    );
     expect(courseRegistry["k-culture"].exposure).toBe("hidden");
     expect(courseRegistry["eps-topik"].exposure).toBe("hidden");
   });
