@@ -199,23 +199,36 @@ try {
     await page.getByRole("button", { name: /Korean First Talk/ }).click();
     await page.getByText(/Day 1\./).waitFor();
 
+    await page.getByRole("button", { name: "Change course" }).click();
+    await page.getByRole("button", { name: /K-Culture Korean/ }).click();
+    await page.getByText("Polite and casual distance").waitFor();
+    await page.getByRole("button", { name: /Start|Resume/ }).click();
+    await page.getByText("Choose your K-Culture route").waitFor();
+    await page.getByText(/K-Speak original learning scenes/i).waitFor();
+    await page.getByLabel("K-Pop primary").check();
+    await page.getByLabel("K-Drama sampler").check();
+    await page.getByRole("button", { name: "Create my route" }).click();
+    await page.getByText("Polite and casual distance").waitFor();
+    await assertNoOverflow(page, `${viewport.name}: k-culture setup`);
+    await assertStickyActionsVisible(page, `${viewport.name}: k-culture`);
+
     await assertNoOverflow(page, viewport.name);
     await assertBottomContentVisible(page, viewport.name);
 
     await page.getByRole("button", { name: "Settings" }).click();
     await page.getByText("My learning settings").waitFor();
     await page.getByText("Sync status").waitFor();
+    await page.locator('select').first().selectOption("vn-vi");
+    await page.getByText("Cài đặt học tập của tôi").waitFor();
     await assertNoOverflow(page, viewport.name);
 
-    await page.getByRole("button", { name: "Review" }).click();
-    await page.getByText("3-minute review").waitFor();
-    await page.locator(".korean-phrase strong").first().waitFor();
-    await page.getByRole("button", { name: "I remember" }).click();
-    await page.getByText("Today's review is complete").waitFor();
+    await page.getByRole("button", { name: "Ôn tập" }).click();
+    await page.getByText("Chưa có mục ôn tập").waitFor();
+    await assertNoOverflow(page, `${viewport.name}: vietnamese review empty`);
 
-    await page.getByRole("button", { name: "Home" }).click();
-    await page.getByRole("button", { name: /Start|Resume/ }).click();
-    await page.getByRole("button", { name: "Continue", exact: true }).waitFor();
+    await page.getByRole("button", { name: "Trang chủ" }).click();
+    await page.getByRole("button", { name: /Start|Resume|Bắt đầu|Tiếp tục/ }).click();
+    await page.getByRole("button", { name: /^(Continue|Tiếp tục)$/ }).waitFor();
     await assertNoOverflow(page, viewport.name);
     await assertStickyActionsVisible(page, viewport.name);
     await assertTtsReviewPage(page, viewport.name);
