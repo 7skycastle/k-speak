@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { completeStep, createLessonProgress } from "./lessonEngine";
 import { buildReviewItems, getDueReviewItems } from "./reviewEngine";
 import { getLesson } from "../data/lessons";
+import { getKFoodLesson } from "../data/courses/kFoodLessons";
 
 describe("reviewEngine", () => {
   it("creates three program review cards after Day 1 is completed", () => {
@@ -96,5 +97,21 @@ describe("reviewEngine", () => {
 
     expect(items.length).toBeGreaterThan(0);
     expect(items.every((item) => item.courseId === "foundation")).toBe(true);
+  });
+
+  it("creates K-Food review cards without falling back to Foundation lessons", () => {
+    const lesson = getKFoodLesson("k-food-day-1");
+    if (!lesson) throw new Error("Missing K-Food Day 1 lesson");
+    const completed = lesson.steps.reduce(
+      (progress, step) => completeStep(progress, step.id),
+      createLessonProgress("k-food-day-1")
+    );
+
+    const reviews = buildReviewItems(completed, "One of this, please.", "us-en");
+
+    expect(reviews).toHaveLength(3);
+    expect(reviews[0].id).toBe("k-food-day-1:listen");
+    expect(reviews.every((item) => item.courseId === "k-food")).toBe(true);
+    expect(reviews[0].meaning).toBe("One of this, please.");
   });
 });

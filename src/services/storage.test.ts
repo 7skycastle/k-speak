@@ -370,6 +370,42 @@ describe("storage sync persistence", () => {
     expect(merged.activeCourseChangedAt).toBe("2026-08-05T00:00:00.000Z");
   });
 
+  it("preserves each course progress after switching and merging", () => {
+    const account = buildState({
+      activeCourseId: "travel",
+      lessonProgress: {
+        "travel-day-1": {
+          lessonId: "travel-day-1",
+          courseId: "travel",
+          status: "completed",
+          currentStepId: "summary",
+          completedStepIds: ["summary"],
+          metrics: {}
+        }
+      }
+    });
+    const guest = buildState({
+      activeCourseId: "k-food",
+      lessonProgress: {
+        "k-food-day-1": {
+          lessonId: "k-food-day-1",
+          courseId: "k-food",
+          status: "completed",
+          currentStepId: "summary",
+          completedStepIds: ["summary"],
+          metrics: {}
+        }
+      }
+    });
+
+    const merged = mergeUserStates(account, guest, "learner@example.com");
+
+    expect(merged.lessonProgress["travel-day-1"]?.status).toBe("completed");
+    expect(merged.lessonProgress["travel-day-1"]?.courseId).toBe("travel");
+    expect(merged.lessonProgress["k-food-day-1"]?.status).toBe("completed");
+    expect(merged.lessonProgress["k-food-day-1"]?.courseId).toBe("k-food");
+  });
+
   it("unions completion history by course and route version", () => {
     const account = buildState({
       courseEnrollments: {

@@ -1,7 +1,7 @@
 import { getLesson } from "../data/lessons";
 import { reviewRules } from "../data/reviewRules";
 import type { CountryPackId, LessonProgress, ReviewItem } from "../types";
-import { getLessonCourseId } from "./courseEngine";
+import { getCourseLesson, getLessonCourseId } from "./courseEngine";
 
 const reviewReasonPrefixByPriority = (priority: number, countryPackId: CountryPackId) => {
   if (priority >= 55) {
@@ -59,7 +59,8 @@ export const buildReviewItems = (
   meaning: string,
   countryPackId: CountryPackId = "us-en"
 ): ReviewItem[] => {
-  const lesson = getLesson(progress.lessonId);
+  const courseId = getLessonCourseId(progress.lessonId);
+  const lesson = getCourseLesson(courseId, progress.lessonId) ?? getLesson(progress.lessonId);
   if (progress.status !== "completed") return [];
 
   const priority = Object.values(progress.metrics).reduce((score, metric) => {
@@ -93,7 +94,7 @@ export const buildReviewItems = (
 
   return lesson.reviewCards.map((card) => ({
     id: `${lesson.id}:${card.id}`,
-    courseId: getLessonCourseId(lesson.id),
+    courseId,
     lessonId: lesson.id,
     phraseId: `${lesson.phraseId}:${card.kind}`,
     korean: card.phrase.korean,

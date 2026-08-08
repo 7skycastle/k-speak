@@ -157,6 +157,48 @@ describe("course normalization", () => {
 
     expect(getReviewItemsForCourse(state).map((item) => item.id)).toEqual(["day-1:core"]);
   });
+
+  it("keeps K-Food review cards out of Travel review", () => {
+    const state = normalizeUserCourses(
+      baseState({
+        reviewItems: [
+          {
+            id: "day-1:core",
+            lessonId: "day-1",
+            phraseId: "core",
+            korean: "hello",
+            meaning: "Hello",
+            reason: "Review",
+            priority: 10,
+            dueAt: "2026-08-02T00:00:00.000Z"
+          },
+          {
+            id: "travel-day-1:core",
+            lessonId: "travel-day-1",
+            phraseId: "core",
+            korean: "help me",
+            meaning: "Help me",
+            reason: "Review",
+            priority: 10,
+            dueAt: "2026-08-02T00:00:00.000Z"
+          },
+          {
+            id: "k-food-day-1:core",
+            lessonId: "k-food-day-1",
+            phraseId: "core",
+            korean: "igeo hana juseyo",
+            meaning: "One of this, please.",
+            reason: "Review",
+            priority: 10,
+            dueAt: "2026-08-02T00:00:00.000Z"
+          }
+        ]
+      })
+    );
+
+    expect(getReviewItemsForCourse(state, "k-food").map((item) => item.id)).toEqual(["k-food-day-1:core"]);
+    expect(getReviewItemsForCourse(state, "travel").map((item) => item.id)).toEqual(["travel-day-1:core"]);
+  });
 });
 
 describe("course lesson lookup", () => {
