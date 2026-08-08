@@ -33,7 +33,8 @@ const buildSupabaseClient = ({
   courseEnrollments = [],
   courseMissionResults = [],
   epsAssessmentAttempts = [],
-  upsertError = null
+  upsertError = null,
+  upsertErrors = {}
 }: {
   profile?: unknown;
   lessonProgress?: unknown[];
@@ -43,6 +44,7 @@ const buildSupabaseClient = ({
   courseMissionResults?: unknown[];
   epsAssessmentAttempts?: unknown[];
   upsertError?: unknown;
+  upsertErrors?: Partial<Record<string, unknown>>;
 }) => {
   const builders = {
     profiles: createQueryBuilder(profile, null),
@@ -55,14 +57,18 @@ const buildSupabaseClient = ({
     analytics_events: createQueryBuilder([], null)
   };
 
-  builders.profiles.upsert = vi.fn().mockResolvedValue({ error: upsertError });
-  builders.lesson_progress.upsert = vi.fn().mockResolvedValue({ error: upsertError });
-  builders.review_items.upsert = vi.fn().mockResolvedValue({ error: upsertError });
-  builders.saved_phrases.upsert = vi.fn().mockResolvedValue({ error: upsertError });
-  builders.course_enrollments.upsert = vi.fn().mockResolvedValue({ error: upsertError });
-  builders.course_mission_results.upsert = vi.fn().mockResolvedValue({ error: upsertError });
-  builders.eps_assessment_attempts.upsert = vi.fn().mockResolvedValue({ error: upsertError });
-  builders.analytics_events.upsert = vi.fn().mockResolvedValue({ error: upsertError });
+  builders.profiles.upsert = vi.fn().mockResolvedValue({ error: upsertErrors.profiles ?? upsertError });
+  builders.lesson_progress.upsert = vi.fn().mockResolvedValue({ error: upsertErrors.lesson_progress ?? upsertError });
+  builders.review_items.upsert = vi.fn().mockResolvedValue({ error: upsertErrors.review_items ?? upsertError });
+  builders.saved_phrases.upsert = vi.fn().mockResolvedValue({ error: upsertErrors.saved_phrases ?? upsertError });
+  builders.course_enrollments.upsert = vi.fn().mockResolvedValue({ error: upsertErrors.course_enrollments ?? upsertError });
+  builders.course_mission_results.upsert = vi.fn().mockResolvedValue({
+    error: upsertErrors.course_mission_results ?? upsertError
+  });
+  builders.eps_assessment_attempts.upsert = vi
+    .fn()
+    .mockResolvedValue({ error: upsertErrors.eps_assessment_attempts ?? upsertError });
+  builders.analytics_events.upsert = vi.fn().mockResolvedValue({ error: upsertErrors.analytics_events ?? upsertError });
 
   return {
     from: vi.fn((table: keyof typeof builders) => builders[table]),
@@ -270,5 +276,60 @@ describe("syncWithSupabase", () => {
 
     const stored = JSON.parse(localStorage.getItem("korean-first-talk:user-state:v1") ?? "{}") as UserState;
     expect(stored.sync.pendingChanges?.length).toBeGreaterThan(0);
+  });
+
+  it("keeps mission pending changes when the course mission sync step fails", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true);
+    mockGetSupabaseClient.mockReturnValue(
+      buildSupabaseClient({
+        upsertErrors: {
+          course_mission_results: new Error("mission temporary")
+        }
+      })
+    );
+
+    await expect(
+      syncWithSupabase(
+        {
+          ...buildState(),
+          kFoodMissionResults: {
+            "k-food-day-14": {
+              lessonId: "k-food-day-14",
+              completedAt: "2026-08-08T12:00:00.000Z",
+              checks: {
+                "choose-food": "success",
+                "short-order": "practice-more",
+                "resolve-problem": "success"
+              }
+            }
+          },
+          sync: {
+            ...buildState().sync,
+            pending: true,
+            pendingChanges: [
+              {
+                entity: "course-mission-result",
+                entityId: "k-food:k-food-day-14",
+                operation: "upsert",
+                changedAt: "2026-08-08T12:00:00.000Z"
+              }
+            ]
+          }
+        },
+        session as never
+      )
+    ).rejects.toThrow("mission temporary");
+
+    const stored = JSON.parse(localStorage.getItem("korean-first-talk:user-state:v1") ?? "{}") as UserState;
+    expect(stored.sync.pending).toBe(true);
+    expect(stored.sync.pendingChanges).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          entity: "course-mission-result",
+          entityId: "k-food:k-food-day-14",
+          operation: "upsert"
+        })
+      ])
+    );
   });
 });

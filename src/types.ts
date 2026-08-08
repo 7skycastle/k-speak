@@ -262,6 +262,7 @@ export type BridgeSkillId =
   | "sign"
   | "location-direction"
   | "price-quantity"
+  | "time"
   | "time-date"
   | "request"
   | "prohibition"
@@ -278,6 +279,7 @@ export type BridgeSkillId =
   | "question"
   | "warning"
   | "ingredient"
+  | "order"
   | "items"
   | "service-request"
   | "option"
@@ -308,7 +310,6 @@ export type KFoodMissionCheckId = "choose-food" | "short-order" | "resolve-probl
 
 export interface KFoodMissionCheck {
   id: KFoodMissionCheckId;
-  label: string;
 }
 
 export type KFoodMissionCheckResult = "success" | "practice-more";

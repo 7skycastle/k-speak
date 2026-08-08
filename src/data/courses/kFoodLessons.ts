@@ -156,7 +156,7 @@ const kFoodSources: KFoodLessonSource[] = [
     korean: "주문한 음식이 아직 안 나왔어요.",
     romanization: "Jumunhan eumsigi ajik an nawasseoyo.",
     meaning: "The food I ordered has not come out yet.",
-    bridgeSkillIds: ["problem-report", "time-date"]
+    bridgeSkillIds: ["problem-report", "time"]
   },
   {
     id: "k-food-day-14",
@@ -165,14 +165,14 @@ const kFoodSources: KFoodLessonSource[] = [
     korean: "재료를 확인하고 주문할게요.",
     romanization: "Jaeryoreul hwaginhago jumunhalgeyo.",
     meaning: "I will check the ingredients and order.",
-    bridgeSkillIds: ["ingredient", "request", "problem-report"]
+    bridgeSkillIds: ["ingredient", "order", "problem-report"]
   }
 ];
 
 const kFoodMissionChecks = (): KFoodMissionCheck[] => [
-  { id: "choose-food", label: "Choose food safely" },
-  { id: "short-order", label: "Complete a short order" },
-  { id: "resolve-problem", label: "Resolve one problem" }
+  { id: "choose-food" },
+  { id: "short-order" },
+  { id: "resolve-problem" }
 ];
 
 const makeKFoodLesson = (source: KFoodLessonSource, index: number): Lesson => {

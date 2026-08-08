@@ -1,7 +1,14 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
-import { ContinuationPathPanel, HomeScreen, RecorderControls, ReviewScreen } from "./App";
+import {
+  buildKFoodMissionResult,
+  buildTravelMissionResult,
+  ContinuationPathPanel,
+  HomeScreen,
+  RecorderControls,
+  ReviewScreen
+} from "./App";
 import { getContinuationTrack } from "./data/continuationProgram";
 import { lessons } from "./data/lessons";
 import type { UserState } from "./types";
@@ -179,6 +186,109 @@ describe("ReviewScreen", () => {
     expect(screen.getAllByText("You did it").length).toBeGreaterThan(0);
     expect(screen.getByText("Practice more")).toBeInTheDocument();
     expect(screen.queryByText(/%/)).not.toBeInTheDocument();
+  });
+
+  it("renders K-Food mission checks in the fixed order", () => {
+    render(
+      <ReviewScreen
+        state={{
+          ...createState([]),
+          activeCourseId: "k-food",
+          kFoodMissionResults: {
+            "k-food-day-14": {
+              lessonId: "k-food-day-14",
+              completedAt: "2026-08-14T00:00:00.000Z",
+              checks: {
+                "resolve-problem": "success",
+                "short-order": "practice-more",
+                "choose-food": "success"
+              }
+            }
+          }
+        }}
+        onPersist={() => undefined}
+        onStartLesson={() => undefined}
+        onReturnHome={() => undefined}
+      />
+    );
+
+    const rows = screen.getAllByText(/Choose food safely|Complete a short order|Resolve one problem/).map((node) => node.textContent);
+    expect(rows).toEqual(["Choose food safely", "Complete a short order", "Resolve one problem"]);
+  });
+});
+
+describe("mission result helpers", () => {
+  it("derives K-Food Day 14 results from quiz and roleplay metrics", () => {
+    const result = buildKFoodMissionResult(
+      {
+        lessonId: "k-food-day-14",
+        courseId: "k-food",
+        status: "completed",
+        currentStepId: "summary",
+        completedStepIds: ["quiz", "roleplay", "summary"],
+        metrics: {
+          quiz: {
+            stepId: "quiz",
+            answeredCorrectly: false,
+            naturalPlayCount: 0,
+            slowPlayCount: 0,
+            recordingRetries: 0
+          },
+          roleplay: {
+            stepId: "roleplay",
+            completedAt: "2026-08-08T12:00:00.000Z",
+            usedHint: true,
+            naturalPlayCount: 0,
+            slowPlayCount: 0,
+            recordingRetries: 0
+          }
+        }
+      },
+      "2026-08-08T12:00:00.000Z"
+    );
+
+    expect(result.checks).toEqual({
+      "choose-food": "practice-more",
+      "short-order": "success",
+      "resolve-problem": "practice-more"
+    });
+  });
+
+  it("derives Travel Day 14 results from quiz and roleplay metrics", () => {
+    const result = buildTravelMissionResult(
+      {
+        lessonId: "travel-day-14",
+        courseId: "travel",
+        status: "completed",
+        currentStepId: "summary",
+        completedStepIds: ["quiz", "roleplay", "summary"],
+        metrics: {
+          quiz: {
+            stepId: "quiz",
+            answeredCorrectly: true,
+            naturalPlayCount: 0,
+            slowPlayCount: 0,
+            recordingRetries: 0
+          },
+          roleplay: {
+            stepId: "roleplay",
+            completedAt: "2026-08-08T12:00:00.000Z",
+            usedHint: false,
+            naturalPlayCount: 0,
+            slowPlayCount: 0,
+            recordingRetries: 0
+          }
+        }
+      },
+      "travel-day-14",
+      "2026-08-08T12:00:00.000Z"
+    );
+
+    expect(result.checks).toEqual({
+      "first-sentence": "success",
+      "short-response": "success",
+      "rescue-expression": "success"
+    });
   });
 });
 

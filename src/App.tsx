@@ -152,6 +152,16 @@ const kFoodMissionCheckUiKey = {
   "resolve-problem": "kFood.mission.resolveProblem"
 } satisfies Record<KFoodMissionCheckId, UiKey>;
 
+const travelMissionCheckOrder: TravelMissionCheckId[] = [
+  "first-sentence",
+  "short-response",
+  "rescue-expression"
+];
+
+const kFoodMissionCheckOrder: KFoodMissionCheckId[] = ["choose-food", "short-order", "resolve-problem"];
+
+const toMissionCheckResult = (success: boolean): TravelMissionCheckResult => (success ? "success" : "practice-more");
+
 const goalOptions: LearningGoal[] = ["travel", "daily", "study", "work", "life", "k-content"];
 const levelOptions: KoreanLevel[] = ["first-time", "beginner", "returning", "daily"];
 const minuteOptions: DailyGoalMinutes[] = [3, 5, 10, 15];
@@ -188,6 +198,38 @@ const defaultOnboarding: OnboardingProfile = {
   dailyGoalMinutes: 5,
   characterId: "haneul",
   reminderTime: "19:30"
+};
+
+export const buildTravelMissionResult = (
+  progress: LessonProgress,
+  lessonId: "travel-day-14",
+  completedAt: string
+): TravelMissionResult => {
+  const quizMetric = progress.metrics.quiz;
+  const roleplayMetric = progress.metrics.roleplay;
+  return {
+    lessonId,
+    completedAt,
+    checks: {
+      "first-sentence": toMissionCheckResult(Boolean(roleplayMetric?.completedAt)),
+      "short-response": toMissionCheckResult(quizMetric?.answeredCorrectly === true),
+      "rescue-expression": toMissionCheckResult(Boolean(roleplayMetric?.completedAt) && !roleplayMetric?.usedHint)
+    }
+  };
+};
+
+export const buildKFoodMissionResult = (progress: LessonProgress, completedAt: string): KFoodMissionResult => {
+  const quizMetric = progress.metrics.quiz;
+  const roleplayMetric = progress.metrics.roleplay;
+  return {
+    lessonId: "k-food-day-14",
+    completedAt,
+    checks: {
+      "choose-food": toMissionCheckResult(quizMetric?.answeredCorrectly === true),
+      "short-order": toMissionCheckResult(Boolean(roleplayMetric?.completedAt)),
+      "resolve-problem": toMissionCheckResult(Boolean(roleplayMetric?.completedAt) && !roleplayMetric?.usedHint)
+    }
+  };
 };
 
 export const App = () => {
@@ -969,33 +1011,14 @@ const LessonScreen = ({
       const reviews = buildReviewItems(nextProgress, meaning, countryPack.id);
       nextState = upsertReviewItems(nextState, reviews);
       const completedAt = new Date().toISOString();
-      const quizSucceeded = nextProgress.metrics.quiz?.answeredCorrectly !== false;
       if (lesson.id === "travel-day-14") {
-        const missionResult = {
-          lessonId: lesson.id,
-          completedAt,
-          checks: {
-            "first-sentence": "success",
-            "short-response": quizSucceeded ? "success" : "practice-more",
-            "rescue-expression": "success"
-          }
-        } satisfies TravelMissionResult;
-        nextState = saveTravelMissionResult(nextState, missionResult);
+        nextState = saveTravelMissionResult(nextState, buildTravelMissionResult(nextProgress, "travel-day-14", completedAt));
         if (isCourseRouteCompleted(nextState, "travel")) {
           nextState = completeCourseRoute(nextState, "travel", completedAt);
         }
       }
       if (lesson.id === "k-food-day-14") {
-        const missionResult = {
-          lessonId: lesson.id,
-          completedAt,
-          checks: {
-            "choose-food": "success",
-            "short-order": quizSucceeded ? "success" : "practice-more",
-            "resolve-problem": "success"
-          }
-        } satisfies KFoodMissionResult;
-        nextState = saveKFoodMissionResult(nextState, missionResult);
+        nextState = saveKFoodMissionResult(nextState, buildKFoodMissionResult(nextProgress, completedAt));
         if (isCourseRouteCompleted(nextState, "k-food")) {
           nextState = completeCourseRoute(nextState, "k-food", completedAt);
         }
@@ -1331,10 +1354,10 @@ export const ReviewScreen = ({
   const missionPanel = travelMissionResult ? (
     <MissionResultPanel
       titleKey="travel.mission.title"
-      checks={Object.entries(travelMissionResult.checks).map(([id, value]) => ({
+      checks={travelMissionCheckOrder.map((id) => ({
         id,
-        labelKey: travelMissionCheckUiKey[id as TravelMissionCheckId],
-        value
+        labelKey: travelMissionCheckUiKey[id],
+        value: travelMissionResult.checks[id]
       }))}
       successKey="travel.mission.success"
       practiceMoreKey="travel.mission.practiceMore"
@@ -1343,10 +1366,10 @@ export const ReviewScreen = ({
   ) : kFoodMissionResult ? (
     <MissionResultPanel
       titleKey="kFood.mission.title"
-      checks={Object.entries(kFoodMissionResult.checks).map(([id, value]) => ({
+      checks={kFoodMissionCheckOrder.map((id) => ({
         id,
-        labelKey: kFoodMissionCheckUiKey[id as KFoodMissionCheckId],
-        value
+        labelKey: kFoodMissionCheckUiKey[id],
+        value: kFoodMissionResult.checks[id]
       }))}
       successKey="kFood.mission.success"
       practiceMoreKey="kFood.mission.practiceMore"
