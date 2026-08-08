@@ -1,12 +1,16 @@
 import { getLesson } from "../data/lessons";
 import type { LessonProgress, LessonStep, StepMetrics } from "../types";
+import { getCourseLesson, getLessonCourseId } from "./courseEngine";
 
 const now = () => new Date().toISOString();
 
+const resolveLesson = (lessonId: string) => getCourseLesson(getLessonCourseId(lessonId), lessonId) ?? getLesson(lessonId);
+
 export const createLessonProgress = (lessonId = "day-1"): LessonProgress => {
-  const lesson = getLesson(lessonId);
+  const lesson = resolveLesson(lessonId);
   return {
     lessonId: lesson.id,
+    courseId: getLessonCourseId(lesson.id),
     status: "in-progress",
     currentStepId: lesson.steps[0].id,
     completedStepIds: [],
@@ -16,7 +20,7 @@ export const createLessonProgress = (lessonId = "day-1"): LessonProgress => {
 };
 
 export const getCurrentStep = (progress: LessonProgress): LessonStep => {
-  const lesson = getLesson(progress.lessonId);
+  const lesson = resolveLesson(progress.lessonId);
   return lesson.steps.find((step) => step.id === progress.currentStepId) ?? lesson.steps[0];
 };
 
@@ -25,7 +29,7 @@ export const completeStep = (
   stepId: string,
   metrics: Partial<StepMetrics> = {}
 ): LessonProgress => {
-  const lesson = getLesson(progress.lessonId);
+  const lesson = resolveLesson(progress.lessonId);
   const stepIndex = lesson.steps.findIndex((step) => step.id === stepId);
   const nextStep = lesson.steps[stepIndex + 1];
   const completedStepIds = Array.from(new Set([...progress.completedStepIds, stepId]));
@@ -72,6 +76,6 @@ export const updateStepMetrics = (
 });
 
 export const getLessonPercent = (progress: LessonProgress) => {
-  const lesson = getLesson(progress.lessonId);
+  const lesson = resolveLesson(progress.lessonId);
   return Math.round((progress.completedStepIds.length / lesson.steps.length) * 100);
 };

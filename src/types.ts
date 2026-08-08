@@ -1,9 +1,81 @@
-export type CountryPackId = "us-en" | "jp-ja" | "cn-zh" | "vn-vi" | "mx-es";
+export type CountryPackId =
+  | "us-en"
+  | "jp-ja"
+  | "cn-zh"
+  | "vn-vi"
+  | "mx-es"
+  | "id-id"
+  | "kh-km"
+  | "mm-my"
+  | "th-th"
+  | "my-ms";
 export type CharacterId = "haneul" | "jun" | "mina" | "taeho";
 export type KoreanLevel = "first-time" | "beginner" | "returning" | "daily";
 export type LearningGoal = "travel" | "daily" | "study" | "work" | "life" | "k-content";
+export type CourseId = "foundation" | "travel" | "k-culture" | "eps-topik";
+export type CourseExposure = "visible" | "preparing" | "hidden";
+export type CourseStatus = "not-started" | "in-progress" | "completed";
+export type CourseRouteSlotKind = "lesson" | "common" | "primary" | "sampler" | "capstone" | "assessment";
 export type DailyGoalMinutes = 3 | 5 | 10 | 15;
 export type LessonStatus = "not-started" | "in-progress" | "completed";
+
+export interface CourseRouteSlot {
+  slot: number;
+  kind: CourseRouteSlotKind;
+  lessonId: string;
+  packId?: string;
+}
+
+export interface CourseCompletion {
+  courseId: CourseId;
+  routeVersion: string;
+  completedAt: string;
+  completedLessonIds: string[];
+  summary?: string;
+}
+
+export interface CourseEnrollment {
+  courseId: CourseId;
+  routeVersion: string;
+  startedAt?: string;
+  lastOpenedAt?: string;
+  routeSlots?: CourseRouteSlot[];
+  completions: CourseCompletion[];
+  fieldUpdatedAt?: Partial<Record<"startedAt" | "lastOpenedAt" | "routeSlots" | "completions", string>>;
+}
+
+export type EpsAssessmentKind = "placement" | "stage-check" | "reading-practice" | "listening-practice" | "mock";
+export type EpsAssessmentStatus = "in-progress" | "completed" | "expired" | "abandoned";
+
+export interface EpsAttemptAnswer {
+  questionId: string;
+  answerId?: string;
+  answeredAt: string;
+}
+
+export interface EpsAssessmentAttempt {
+  attemptId: string;
+  kind: EpsAssessmentKind;
+  assessmentVersion: string;
+  questionOrder: string[];
+  answers: Record<string, EpsAttemptAnswer>;
+  currentIndex: number;
+  status: EpsAssessmentStatus;
+  startedAt: string;
+  expiresAt?: string;
+  lastSavedAt: string;
+  unavailableQuestionIds: string[];
+}
+
+export interface EpsAssessmentResult {
+  attemptId: string;
+  kind: EpsAssessmentKind;
+  assessmentVersion: string;
+  completedAt: string;
+  correctCount: number;
+  totalCount: number;
+  stageRecommendations: string[];
+}
 
 export interface CountryLearningGuide {
   focus: string;
@@ -168,7 +240,7 @@ export interface LessonStructure {
 }
 
 export interface LessonSwapSlot extends LocalizedPhrase {
-  label: string;
+  label?: string;
 }
 
 export interface LessonRoleplay {
@@ -185,8 +257,42 @@ export interface LessonReviewCard {
   reasonByCountry: Record<CountryPackId, string>;
 }
 
+export type BridgeSkillId =
+  | "polite-ending"
+  | "sign"
+  | "location-direction"
+  | "price-quantity"
+  | "time-date"
+  | "request"
+  | "prohibition"
+  | "condition"
+  | "comparison"
+  | "schedule-table"
+  | "label-instruction"
+  | "number-listening"
+  | "next-response"
+  | "situation-match";
+
+export type TravelMissionCheckId = "first-sentence" | "short-response" | "rescue-expression";
+
+export interface TravelMissionCheck {
+  id: TravelMissionCheckId;
+  promptByCountry: Record<CountryPackId, string>;
+  successLabelByCountry: Record<CountryPackId, string>;
+  practiceMoreLabelByCountry: Record<CountryPackId, string>;
+}
+
+export type TravelMissionCheckResult = "success" | "practice-more";
+
+export interface TravelMissionResult {
+  lessonId: string;
+  completedAt: string;
+  checks: Record<TravelMissionCheckId, TravelMissionCheckResult>;
+}
+
 export interface Lesson {
   id: string;
+  courseId?: CourseId;
   day: number;
   title: Record<CountryPackId, string>;
   situation: Record<CountryPackId, string>;
@@ -202,6 +308,8 @@ export interface Lesson {
   sceneWords: string[];
   roleplay: LessonRoleplay;
   reviewCards: LessonReviewCard[];
+  bridgeSkillIds?: BridgeSkillId[];
+  travelMissionChecks?: TravelMissionCheck[];
   countryNotes: Record<CountryPackId, string>;
   pronunciationByCountry: Record<CountryPackId, string>;
   audioTargets: Record<string, LocalizedPhrase>;
@@ -222,6 +330,7 @@ export interface StepMetrics {
 
 export interface ReviewItem {
   id: string;
+  courseId?: CourseId;
   lessonId: string;
   phraseId: string;
   korean: string;
@@ -240,6 +349,7 @@ export interface ReviewItem {
 
 export interface SavedPhrase {
   id: string;
+  courseId?: CourseId;
   lessonId: string;
   phraseId: string;
   korean: string;
@@ -259,6 +369,7 @@ export interface SavedPhraseTombstone extends SavedPhrase {
 
 export interface LessonProgress {
   lessonId: string;
+  courseId?: CourseId;
   status: LessonStatus;
   currentStepId: string;
   completedStepIds: string[];
@@ -271,6 +382,12 @@ export interface UserState {
   anonymousId: string;
   accountEmail?: string;
   onboarding?: OnboardingProfile;
+  activeCourseId: CourseId;
+  activeCourseChangedAt: string;
+  courseEnrollments: Partial<Record<CourseId, CourseEnrollment>>;
+  epsAssessmentAttempts: Record<string, EpsAssessmentAttempt>;
+  epsAssessmentResults: Record<string, EpsAssessmentResult>;
+  travelMissionResults?: Record<string, TravelMissionResult>;
   lessonProgress: Record<string, LessonProgress>;
   reviewItems: ReviewItem[];
   savedPhrases: SavedPhrase[];
@@ -310,7 +427,13 @@ export interface SyncState {
 }
 
 export interface SyncChange {
-  entity: "review-item" | "saved-phrase";
+  entity:
+    | "review-item"
+    | "saved-phrase"
+    | "profile-course-preference"
+    | "course-enrollment"
+    | "eps-assessment-attempt"
+    | "eps-assessment-result";
   entityId: string;
   operation: "upsert" | "delete";
   changedAt: string;

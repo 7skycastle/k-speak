@@ -3,11 +3,11 @@ import type { TutorCharacter } from "../types";
 export const tutorCharacters: TutorCharacter[] = [
   {
     id: "haneul",
-    name: "하늘",
-    intro: "차분하게 속도를 맞춰 주는 서울 출신 튜터",
-    tone: "부드럽고 안정적인 말투",
-    learnerFeeling: "처음 말해도 부담이 적음",
-    recommendedFor: "처음 시작하거나 긴장하는 학습자",
+    name: "Haneul",
+    intro: "A calm tutor who helps you match the pace before pushing the sentence.",
+    tone: "Soft, steady, reassuring",
+    learnerFeeling: "Good when speaking still feels a little intimidating",
+    recommendedFor: "First-time learners and learners who want a gentle start",
     voiceId: "voice-haneul-01",
     hasRecordedVoice: false,
     usesTtsFallback: true,
@@ -23,19 +23,24 @@ export const tutorCharacters: TutorCharacter[] = [
     },
     countryGreetings: {
       "us-en": "Let's keep it light and useful.",
-      "jp-ja": "ゆっくり一緒に練習しましょう。",
-      "cn-zh": "我们慢慢练一句可以马上用的话。",
-      "vn-vi": "Mình luyện chậm và rõ nhé.",
-      "mx-es": "Vamos con una frase corta y util."
+      "jp-ja": "Let's keep it light and useful.",
+      "cn-zh": "Let's keep it light and useful.",
+      "vn-vi": "Mình luyện nhẹ và rõ nhé.",
+      "mx-es": "Vamos con una frase corta y util.",
+      "id-id": "Kita mulai dari satu kalimat yang ringan dan berguna.",
+      "kh-km": "ចាប់ផ្តើមពីប្រយោគខ្លីមួយដែលអាចយកទៅប្រើបានសិន។",
+      "mm-my": "အသုံးဝင်တဲ့ ဝါကျတိုတစ်ခုနဲ့ စလိုက်ရအောင်။",
+      "th-th": "เริ่มจากประโยคสั้นๆ ที่ใช้ได้จริงกันก่อน",
+      "my-ms": "Mari mula dengan satu ayat yang ringkas dan berguna."
     }
   },
   {
     id: "jun",
-    name: "준",
-    intro: "짧고 명확하게 실전 표현을 잡아 주는 튜터",
-    tone: "밝고 간결한 말투",
-    learnerFeeling: "빠르게 한 문장을 완성하는 느낌",
-    recommendedFor: "여행과 일상회화 목적 학습자",
+    name: "Jun",
+    intro: "A direct tutor who turns practical Korean into short repeatable chunks.",
+    tone: "Clear, concise, practical",
+    learnerFeeling: "Good when you want to build usable sentences quickly",
+    recommendedFor: "Travel and day-to-day conversation goals",
     voiceId: "voice-jun-01",
     hasRecordedVoice: false,
     usesTtsFallback: true,
@@ -51,19 +56,24 @@ export const tutorCharacters: TutorCharacter[] = [
     },
     countryGreetings: {
       "us-en": "One phrase, real use. Ready?",
-      "jp-ja": "すぐ使える一言から始めます。",
-      "cn-zh": "先学一句马上能用的韩语。",
+      "jp-ja": "One phrase, real use. Ready?",
+      "cn-zh": "One phrase, real use. Ready?",
       "vn-vi": "Bắt đầu bằng một câu dùng được ngay.",
-      "mx-es": "Una frase real para usar hoy."
+      "mx-es": "Una frase real para usar hoy.",
+      "id-id": "Satu kalimat, langsung bisa dipakai. Siap?",
+      "kh-km": "ប្រយោគមួយដែលអ្នកអាចយកទៅប្រើបានភ្លាម។ រួចរាល់ហើយទេ?",
+      "mm-my": "အခုချက်ချင်းသုံးနိုင်တဲ့ ဝါကျတစ်ကြောင်းပါ။ အဆင်သင့်လား?",
+      "th-th": "หนึ่งประโยคที่เอาไปใช้ได้เลย พร้อมไหม",
+      "my-ms": "Satu ayat yang boleh terus digunakan. Sedia?"
     }
   },
   {
     id: "mina",
-    name: "미나",
-    intro: "친근한 반응으로 말하기를 계속 이어 주는 튜터",
-    tone: "따뜻하고 격려하는 말투",
-    learnerFeeling: "틀려도 계속 말하고 싶어짐",
-    recommendedFor: "회화 자신감을 만들고 싶은 학습자",
+    name: "Mina",
+    intro: "A warm tutor who keeps the conversation moving with encouraging follow-ups.",
+    tone: "Friendly, encouraging, lively",
+    learnerFeeling: "Good when you want momentum and speaking confidence",
+    recommendedFor: "Learners who want to keep talking instead of stopping early",
     voiceId: "voice-mina-01",
     hasRecordedVoice: false,
     usesTtsFallback: true,
@@ -79,19 +89,24 @@ export const tutorCharacters: TutorCharacter[] = [
     },
     countryGreetings: {
       "us-en": "You do not need perfect Korean to start.",
-      "jp-ja": "完璧でなくても大丈夫です。",
-      "cn-zh": "不用完美，也可以开始说。",
+      "jp-ja": "You do not need perfect Korean to start.",
+      "cn-zh": "You do not need perfect Korean to start.",
       "vn-vi": "Không cần hoàn hảo mới bắt đầu được.",
-      "mx-es": "No tiene que sonar perfecto para empezar."
+      "mx-es": "No tiene que sonar perfecto para empezar.",
+      "id-id": "Tidak perlu bahasa Korea yang sempurna untuk mulai.",
+      "kh-km": "អ្នកមិនចាំបាច់ចេះភាសាកូរ៉េឲ្យល្អឥតខ្ចោះទេ ដើម្បីចាប់ផ្តើម។",
+      "mm-my": "စဖို့ ကိုရီးယားလိုကို ပြီးပြည့်စုံနေဖို့ မလိုပါဘူး။",
+      "th-th": "ไม่ต้องพูดเกาหลีได้สมบูรณ์แบบก็เริ่มได้",
+      "my-ms": "Tidak perlu bahasa Korea yang sempurna untuk bermula."
     }
   },
   {
     id: "taeho",
-    name: "태호",
-    intro: "발음의 리듬과 반복을 잘 짚어 주는 튜터",
-    tone: "또렷하고 실용적인 말투",
-    learnerFeeling: "내 목소리를 비교하며 개선하는 느낌",
-    recommendedFor: "듣기와 말하기를 함께 잡고 싶은 학습자",
+    name: "Taeho",
+    intro: "A rhythm-focused tutor who helps you compare, repeat, and tighten pronunciation.",
+    tone: "Observant, practical, coaching",
+    learnerFeeling: "Good when you want to compare your voice and hear quick improvements",
+    recommendedFor: "Learners who want strong listen-and-repeat practice",
     voiceId: "voice-taeho-01",
     hasRecordedVoice: false,
     usesTtsFallback: true,
@@ -107,10 +122,15 @@ export const tutorCharacters: TutorCharacter[] = [
     },
     countryGreetings: {
       "us-en": "Listen once, then make it yours.",
-      "jp-ja": "聞いて、自分の声で試しましょう。",
-      "cn-zh": "先听，再用自己的声音试试。",
-      "vn-vi": "Nghe một lần, rồi nói bằng giọng của bạn.",
-      "mx-es": "Escucha una vez y luego dilo con tu voz."
+      "jp-ja": "Listen once, then make it yours.",
+      "cn-zh": "Listen once, then make it yours.",
+      "vn-vi": "Nghe một lần, rồi nói theo cách của bạn.",
+      "mx-es": "Escucha una vez y luego dilo con tu voz.",
+      "id-id": "Dengar sekali, lalu ucapkan dengan gayamu sendiri.",
+      "kh-km": "ស្តាប់ម្តងសិន បន្ទាប់មកនិយាយវាចេញដោយសម្លេងរបស់អ្នកផ្ទាល់។",
+      "mm-my": "တစ်ခါနားထောင်ပြီး သင့်အသံနဲ့ ပြန်ပြောပါ။",
+      "th-th": "ฟังก่อนหนึ่งครั้ง แล้วพูดด้วยจังหวะของตัวเอง",
+      "my-ms": "Dengar sekali, kemudian sebut dengan suara sendiri."
     }
   }
 ];

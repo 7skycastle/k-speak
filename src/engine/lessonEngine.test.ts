@@ -22,4 +22,12 @@ describe("lessonEngine", () => {
     expect(next.metrics.situation.naturalPlayCount).toBe(2);
     expect(getLessonPercent(next)).toBeGreaterThan(0);
   });
+
+  it("creates progress for a Travel lesson", () => {
+    const progress = createLessonProgress("travel-day-1");
+
+    expect(progress.lessonId).toBe("travel-day-1");
+    expect(progress.courseId).toBe("travel");
+    expect(progress.currentStepId).toBe("situation");
+  });
 });

@@ -5,6 +5,8 @@ alter table public.saved_phrases enable row level security;
 alter table public.analytics_events enable row level security;
 alter table public.guest_merge_requests enable row level security;
 alter table public.country_pack_snapshots enable row level security;
+alter table public.course_enrollments enable row level security;
+alter table public.eps_assessment_attempts enable row level security;
 
 create policy "profiles_select_own" on public.profiles
   for select to authenticated using ((select auth.uid()) = id);
@@ -53,3 +55,21 @@ create policy "guest_merge_insert_own" on public.guest_merge_requests
 
 create policy "country_pack_read" on public.country_pack_snapshots
   for select to anon, authenticated using (true);
+
+create policy "course_enrollments_select_own" on public.course_enrollments
+  for select to authenticated using ((select auth.uid()) = user_id);
+
+create policy "course_enrollments_insert_own" on public.course_enrollments
+  for insert to authenticated with check ((select auth.uid()) = user_id);
+
+create policy "course_enrollments_update_own" on public.course_enrollments
+  for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+
+create policy "eps_assessment_attempts_select_own" on public.eps_assessment_attempts
+  for select to authenticated using ((select auth.uid()) = user_id);
+
+create policy "eps_assessment_attempts_insert_own" on public.eps_assessment_attempts
+  for insert to authenticated with check ((select auth.uid()) = user_id);
+
+create policy "eps_assessment_attempts_update_own" on public.eps_assessment_attempts
+  for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);

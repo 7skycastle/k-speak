@@ -21,9 +21,21 @@ import {
 import { getCharacter, tutorCharacters } from "./data/characters";
 import { countryPacks, getCountryPack } from "./data/countryPacks";
 import { getContinuationTrack, type ContinuationModule } from "./data/continuationProgram";
-import { getLesson, getNextLesson, lessons } from "./data/lessons";
+import { getLesson, lessons } from "./data/lessons";
+import { COURSE_IDS, courseRegistry } from "./data/courses/courseRegistry";
+import { getCourseExposureForLocale } from "./data/courses/contentApproval";
 import { audioCatalog, findAudioSlot } from "./data/audioCatalog";
 import { buildReviewItems, getDueReviewItems } from "./engine/reviewEngine";
+import {
+  getCourseLesson,
+  getCourseLessonIds,
+  getDerivedCourseStatus,
+  getLessonCourseId,
+  getNextCourseLesson,
+  getReviewItemsForCourse,
+  isCourseRouteCompleted,
+  normalizeUserCourses
+} from "./engine/courseEngine";
 import {
   completeStep,
   createLessonProgress,
@@ -34,14 +46,17 @@ import {
 import { trackEvent } from "./services/analytics";
 import {
   completeReviewItem,
+  completeCourseRoute,
   loadState,
   logoutLocalAccount,
   markSavedPhrasePlayed,
   mergeGuestIntoAccount,
   removeSavedPhrase,
   updateOnboarding,
+  updateActiveCourse,
   upsertLessonProgress,
   upsertReviewItems,
+  saveTravelMissionResult,
   upsertSavedPhrase
 } from "./services/storage";
 import { markSyncAttempt } from "./services/sync";
@@ -54,18 +69,22 @@ import {
 import { playLessonAudio, type AudioPlaybackResult } from "./utils/audioPlayback";
 import { recognizeKorean, isRecognitionSupported, type RecognitionResult } from "./utils/speechRecognition";
 import { speakKorean } from "./utils/speech";
-import { t, createTranslator, type UiKey } from "./i18n";
+import { t, createTranslator, resolveLocalized, type UiKey } from "./i18n";
+import { getLessonStepText } from "./i18n/lessonStepOverrides";
 import type {
   CharacterId,
   CountryPackId,
   DailyGoalMinutes,
+  Lesson,
   KoreanLevel,
   LearningGoal,
   LessonProgress,
   LessonStep,
   OnboardingProfile,
   SavedPhrase,
-  UserState
+  UserState,
+  TravelMissionCheckId,
+  TravelMissionResult
 } from "./types";
 
 type Tab = "home" | "lesson" | "review" | "settings";
@@ -111,6 +130,18 @@ const kindUiKey: Record<string, UiKey> = {
   review: "kind.review"
 };
 
+const courseStatusUiKey = {
+  "not-started": "course.status.notStarted",
+  "in-progress": "course.status.inProgress",
+  completed: "course.status.completed"
+} satisfies Record<string, UiKey>;
+
+const travelMissionCheckUiKey = {
+  "first-sentence": "travel.mission.firstSentence",
+  "short-response": "travel.mission.shortResponse",
+  "rescue-expression": "travel.mission.rescueExpression"
+} satisfies Record<TravelMissionCheckId, UiKey>;
+
 const goalOptions: LearningGoal[] = ["travel", "daily", "study", "work", "life", "k-content"];
 const levelOptions: KoreanLevel[] = ["first-time", "beginner", "returning", "daily"];
 const minuteOptions: DailyGoalMinutes[] = [3, 5, 10, 15];
@@ -120,7 +151,8 @@ const totalAudioSlots = audioTargetCount * tutorCharacters.length;
 const staticAudioSlots = audioCatalog.filter((slot) => slot.naturalUrl && slot.slowUrl).length;
 const fallbackAudioSlots = totalAudioSlots - staticAudioSlots;
 const primaryCourseLessons = lessons.filter((lesson) => lesson.day <= 14);
-const hasRemainingLessons = (state: UserState) => lessons.some((lesson) => state.lessonProgress[lesson.id]?.status !== "completed");
+const hasRemainingLessons = (state: UserState) =>
+  getCourseLessonIds(state.activeCourseId).some((lessonId) => state.lessonProgress[lessonId]?.status !== "completed");
 
 const isPrimaryCourseCompleted = (state: UserState) =>
   primaryCourseLessons.every((lesson) => state.lessonProgress[lesson.id]?.status === "completed");
@@ -136,7 +168,7 @@ const formatDueLabel = (iso: string, packId: CountryPackId) => {
   return t("time.daysLater", packId, { days: Math.ceil(hours / 24) });
 };
 
-const getContinuationStartDay = (module: ContinuationModule) => module.dayRange.match(/\d+/)?.[0] ?? "15";
+const getContinuationStartDay = (module: ContinuationModule) => module.dayRange["us-en"].match(/\d+/)?.[0] ?? "15";
 
 const defaultOnboarding: OnboardingProfile = {
   countryPackId: "us-en",
@@ -156,9 +188,9 @@ export const App = () => {
   const onboarding = state.onboarding;
   const countryPack = getCountryPack(onboarding?.countryPackId);
   const character = getCharacter(onboarding?.characterId);
-  const currentLesson = getNextLesson(state.lessonProgress);
+  const currentLesson = getNextCourseLesson(state);
   const progress = state.lessonProgress[currentLesson.id];
-  const dueReviews = getDueReviewItems(state.reviewItems);
+  const dueReviews = getDueReviewItems(getReviewItemsForCourse(state));
 
   useEffect(() => {
     const timer = window.setTimeout(() => setIsLoading(false), 250);
@@ -207,7 +239,7 @@ export const App = () => {
     }
 
     setState((current) => {
-      const lesson = getNextLesson(current.lessonProgress);
+      const lesson = getNextCourseLesson(current);
       const existing = current.lessonProgress[lesson.id];
       const nextProgress = existing ?? createLessonProgress(lesson.id);
       const saved = upsertLessonProgress(current, lesson.id, nextProgress);
@@ -231,7 +263,7 @@ export const App = () => {
     window.setTimeout(startLesson, 0);
   };
 
-  const updateState = (next: UserState) => setState(next);
+  const updateState = (next: UserState) => setState(normalizeUserCourses(next));
 
   if (isLoading) {
     return (
@@ -475,7 +507,7 @@ const OnboardingFlow = ({ onComplete }: { onComplete: (profile: OnboardingProfil
   );
 };
 
-const HomeScreen = ({
+export const HomeScreen = ({
   state,
   characterName,
   lesson,
@@ -489,7 +521,7 @@ const HomeScreen = ({
 }: {
   state: UserState;
   characterName: string;
-  lesson: ReturnType<typeof getLesson>;
+  lesson: Lesson;
   progress?: LessonProgress;
   reviewCount: number;
   savedCount: number;
@@ -498,6 +530,7 @@ const HomeScreen = ({
   onLogin: () => void;
   onPersist: (state: UserState) => void;
 }) => {
+  const [courseSelectorOpen, setCourseSelectorOpen] = useState(false);
   const percent = progress ? getLessonPercent(progress) : 0;
   const countryPack = getCountryPack(state.onboarding?.countryPackId);
   const packId = countryPack.id;
@@ -514,8 +547,8 @@ const HomeScreen = ({
       lessonId: `day-${startDay}`,
       phraseId,
       korean: phrase,
-      meaning: module.outcome,
-      tags: ["continuation", continuationTrack.id, module.title],
+      meaning: resolveLocalized(module.outcome, packId),
+      tags: ["continuation", continuationTrack.id, resolveLocalized(module.title, packId)],
       source: "continuation",
       savedAt: new Date().toISOString()
     });
@@ -531,7 +564,36 @@ const HomeScreen = ({
             ? tr("home.hero.loggedIn", { email: state.accountEmail })
             : tr("home.hero.anonymous")}
         </p>
+        <button className="secondary-action inline" onClick={() => setCourseSelectorOpen((open) => !open)}>
+          {tr("course.selector.button")}
+        </button>
       </header>
+      {courseSelectorOpen && (
+        <Panel title={tr("course.selector.title")}>
+          <div className="course-grid">
+            {COURSE_IDS.map((courseId) => {
+              const exposure = getCourseExposureForLocale(courseId, packId);
+              const status = getDerivedCourseStatus(state, courseId);
+              const disabled = exposure !== "visible";
+              return (
+                <button
+                  key={courseId}
+                  className={`course-card ${state.activeCourseId === courseId ? "active" : ""}`}
+                  disabled={disabled}
+                  onClick={() => {
+                    if (disabled) return;
+                    onPersist(updateActiveCourse(state, courseId));
+                    setCourseSelectorOpen(false);
+                  }}
+                >
+                  <strong>{tr(courseRegistry[courseId].titleKey as UiKey)}</strong>
+                  <span>{disabled ? tr("course.status.preparing") : tr(courseStatusUiKey[status])}</span>
+                </button>
+              );
+            })}
+          </div>
+        </Panel>
+      )}
       <div className="home-grid">
         <Metric
           label={tr("home.metric.todayLesson")}
@@ -615,16 +677,16 @@ export const ContinuationPathPanel = ({
       <div className="path-summary">
         <span className="review-badge">{tr("continuation.progress", { count: completedCount })}</span>
         <div>
-          <strong>{track.title}</strong>
-          <p className="muted">{track.promise}</p>
+          <strong>{resolveLocalized(track.title, packId)}</strong>
+          <p className="muted">{resolveLocalized(track.promise, packId)}</p>
         </div>
       </div>
       <div className="program-grid">
         {track.modules.map((module) => (
-          <div className="program-card" key={module.dayRange}>
-            <span>{module.dayRange}</span>
-            <strong>{module.title}</strong>
-            <p>{module.outcome}</p>
+          <div className="program-card" key={module.dayRange["us-en"]}>
+            <span>{resolveLocalized(module.dayRange, packId)}</span>
+            <strong>{resolveLocalized(module.title, packId)}</strong>
+            <p>{resolveLocalized(module.outcome, packId)}</p>
             <div className="continuation-phrases">
               {module.samplePhrases.map((phrase, phraseIndex) => {
                 const startDay = getContinuationStartDay(module);
@@ -717,13 +779,14 @@ const LessonScreen = ({
   onPause: () => void;
   onComplete: () => void;
 }) => {
-  const lesson = getLesson(lessonId);
+  const lesson = getCourseLesson(getLessonCourseId(lessonId), lessonId) ?? getLesson(lessonId);
   const activeProgress = progress ?? createLessonProgress(lesson.id);
   const step = getCurrentStep(activeProgress);
   const character = getCharacter(state.onboarding?.characterId);
   const countryPack = getCountryPack(state.onboarding?.countryPackId);
   const packId = countryPack.id;
   const tr = createTranslator(packId);
+  const stepText = getLessonStepText(step, packId);
   const meaning = lesson.meaningByCountry[countryPack.id];
   const audioTargetId = step.audioTargetId ?? "core";
   const audioTarget = lesson.audioTargets[audioTargetId] ?? lesson.audioTargets.core;
@@ -895,6 +958,22 @@ const LessonScreen = ({
     if (nextProgress.status === "completed") {
       const reviews = buildReviewItems(nextProgress, meaning, countryPack.id);
       nextState = upsertReviewItems(nextState, reviews);
+      if (lesson.id === "travel-day-14") {
+        const completedAt = new Date().toISOString();
+        const missionResult = {
+          lessonId: lesson.id,
+          completedAt,
+          checks: {
+            "first-sentence": "success",
+            "short-response": answeredCorrectly ? "success" : "practice-more",
+            "rescue-expression": "success"
+          }
+        } satisfies TravelMissionResult;
+        nextState = saveTravelMissionResult(nextState, missionResult);
+        if (isCourseRouteCompleted(nextState, "travel")) {
+          nextState = completeCourseRoute(nextState, "travel", completedAt);
+        }
+      }
       nextState = trackEvent(nextState, { name: "lesson_completed", lessonId: lesson.id, success: true });
       onPersist(nextState);
       onComplete();
@@ -907,9 +986,10 @@ const LessonScreen = ({
   return (
     <section className="flow">
       <ProgressHeader current={activeProgress.completedStepIds.length + 1} total={lesson.steps.length} title={lesson.title[countryPack.id]} />
-      <Panel title={step.title} kicker={tr("lesson.tutorKicker", { name: character.name })}>
+      <Panel title={stepText.title} kicker={tr("lesson.tutorKicker", { name: character.name })}>
         <LessonStepBody
           step={step}
+          stepBody={stepText.body}
           lesson={lesson}
           countryPackId={countryPack.id}
           meaning={meaning}
@@ -990,6 +1070,7 @@ const LessonScreen = ({
 
 const LessonStepBody = ({
   step,
+  stepBody,
   lesson,
   countryPackId,
   meaning,
@@ -1001,7 +1082,8 @@ const LessonStepBody = ({
   setSelectedChoice
 }: {
   step: LessonStep;
-  lesson: ReturnType<typeof getLesson>;
+  stepBody: string;
+  lesson: Lesson;
   countryPackId: CountryPackId;
   meaning: string;
   countryCulture: string;
@@ -1013,7 +1095,7 @@ const LessonStepBody = ({
 }) => (
   <div className="lesson-step">
     {step.kind === "character" && <p className="speech-bubble">{characterLine}</p>}
-    <p>{step.body}</p>
+    <p>{stepBody}</p>
     {step.kind === "dialogue" && (
       <div className="dialogue-box">
         {lesson.dialogue.map((line, index) => (
@@ -1171,6 +1253,29 @@ export const RecorderControls = ({
   );
 };
 
+const TravelMissionResultPanel = ({
+  result,
+  packId
+}: {
+  result: TravelMissionResult;
+  packId: CountryPackId;
+}) => {
+  const tr = createTranslator(packId);
+
+  return (
+    <Panel title={tr("travel.mission.title")}>
+      <div className="summary-list">
+        {Object.entries(result.checks).map(([id, value]) => (
+          <div key={id} className="mission-row">
+            <span>{tr(travelMissionCheckUiKey[id as TravelMissionCheckId])}</span>
+            <strong>{value === "success" ? tr("travel.mission.success") : tr("travel.mission.practiceMore")}</strong>
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+};
+
 export const ReviewScreen = ({
   state,
   onPersist,
@@ -1184,7 +1289,9 @@ export const ReviewScreen = ({
 }) => {
   const packId: CountryPackId = state.onboarding?.countryPackId ?? "us-en";
   const tr = createTranslator(packId);
-  const dueReviews = getDueReviewItems(state.reviewItems);
+  const courseReviewItems = getReviewItemsForCourse(state);
+  const dueReviews = getDueReviewItems(courseReviewItems);
+  const travelMissionResult = state.activeCourseId === "travel" ? state.travelMissionResults?.["travel-day-14"] : undefined;
   const canStartNextLesson = hasRemainingLessons(state);
   const [completedCount, setCompletedCount] = useState(0);
   const active = dueReviews[0];
@@ -1205,7 +1312,7 @@ export const ReviewScreen = ({
     onPersist(trackEvent(next, { name: "saved_phrase_removed", lessonId: phrase.lessonId, success: true }));
   };
 
-  if (!state.reviewItems.length) {
+  if (!courseReviewItems.length) {
     return (
       <section className="flow">
         <StatePanel
@@ -1213,6 +1320,7 @@ export const ReviewScreen = ({
           title={tr("review.empty.title")}
           body={tr("review.empty.body")}
         />
+        {travelMissionResult && <TravelMissionResultPanel result={travelMissionResult} packId={packId} />}
         <button className="primary-action" onClick={onStartLesson}>
           {tr("review.empty.cta")}
         </button>
@@ -1225,6 +1333,7 @@ export const ReviewScreen = ({
     return (
       <section className="flow">
         <ReviewOverview state={state} dueCount={dueReviews.length} packId={packId} />
+        {travelMissionResult && <TravelMissionResultPanel result={travelMissionResult} packId={packId} />}
         <StatePanel icon={<Check />} title={tr("review.done.title")} body={tr("review.done.body")} />
         <button className="primary-action" onClick={canStartNextLesson ? onStartLesson : (onReturnHome ?? onStartLesson)}>
           {canStartNextLesson ? tr("review.done.cta") : tr("common.close")}
@@ -1237,6 +1346,7 @@ export const ReviewScreen = ({
   return (
     <section className="flow">
       <ReviewOverview state={state} dueCount={dueReviews.length} packId={packId} />
+      {travelMissionResult && <TravelMissionResultPanel result={travelMissionResult} packId={packId} />}
       <ProgressHeader current={completedCount + 1} total={sessionTotal} title={tr("review.progressTitle")} />
       <Panel title={active.reason}>
         {active.kind && (

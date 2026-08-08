@@ -165,6 +165,171 @@ export const countryPacks: CountryPack[] = [
       settings: "Ajustes",
       lesson: "Clase"
     }
+  },
+  {
+    id: "id-id",
+    label: "Indonesia",
+    nativeLabel: "Bahasa Indonesia",
+    interfaceLanguage: "id",
+    onboardingNote: "Mulai dari satu kalimat yang langsung berguna, lalu tambahkan tata bahasa hanya saat itu membantu.",
+    cultureNote: "Dalam bahasa Korea, nada lembut dan akhiran sopan membuat percakapan pertama terasa lebih lancar.",
+    roleplaySituation: "Kamu menyapa pegawai kafe dekat stasiun dan mulai berbicara dengan sopan.",
+    feedback: ["Sudah terdengar jelas.", "Coba ulang bagian akhir sedikit lebih lembut.", "Kalimat itu sudah cukup natural untuk dipakai hari ini."],
+    reminders: ["Tiga menit cukup untuk satu kalimat penting.", "Kembali lagi untuk cek singkat mendengar dan berbicara."],
+    comebackMessage: "Lanjutkan lagi dari kalimat yang terakhir kamu latih.",
+    learningGuide: {
+      focus: "Utamakan kalimat yang benar-benar bisa dipakai hari ini, bukan penjelasan tata bahasa yang panjang.",
+      pronunciation: "Dengarkan akhiran kalimat dan ritmenya dulu. Bagian akhir sering membawa nuansa sopan.",
+      grammarBridge: "Bahasa Korea sering menaruh tempat atau benda sebelum tindakan, lalu menutup dengan akhiran sopan.",
+      reviewHabit: "Simpan kalimat yang terasa berguna untuk kerja, perjalanan, dan urusan harian, lalu ulangi dari lambat ke normal.",
+      offlineTip: "Siapkan audio ringan Day 1-14 supaya tetap bisa latihan saat sinyal lemah atau kuota terbatas."
+    },
+    preferredGoals: ["work", "daily", "travel"],
+    defaultDailyGoal: 10,
+    notificationWindow: "19:00-21:00",
+    dateTimeFormat: "dd/MM/yyyy HH:mm",
+    currency: "IDR",
+    disabledFeatures: [],
+    privacyNote: "Dalam prototipe saat ini, rekaman suara tetap tersimpan di perangkat ini.",
+    translations: {
+      start: "Mulai",
+      continue: "Lanjut",
+      review: "Ulangi",
+      settings: "Pengaturan",
+      lesson: "Pelajaran"
+    }
+  },
+  {
+    id: "kh-km",
+    label: "Cambodia",
+    nativeLabel: "ភាសាខ្មែរ",
+    interfaceLanguage: "km",
+    onboardingNote: "ចាប់ផ្តើមពីប្រយោគមួយដែលអាចយកទៅប្រើបានភ្លាមសិន បន្ទាប់មកទើបបន្ថែមវេយ្យាករណ៍នៅពេលដែលវាជួយអ្នកនិយាយវាម្តងទៀតបានកាន់តែងាយ។",
+    cultureNote: "សម្លេងទន់ និងចុងប្រយោគគួរសម ធ្វើឲ្យការសន្ទនាភាសាកូរ៉េលើកដំបូងរលូនជាងមុន។",
+    roleplaySituation: "អ្នកសួរសុខទុក្ខបុគ្គលិកកាហ្វេក្បែរស្ថានីយ៍ដោយគួរសម ហើយចាប់ផ្តើមសន្ទនាខ្លីមួយ។",
+    feedback: ["ឮច្បាស់ហើយ។", "សាកនិយាយចុងប្រយោគម្តងទៀតឲ្យទន់ជាងមុនបន្តិច។", "ប្រយោគនេះស្តាប់ទៅអាចយកទៅប្រើបានសម្រាប់ថ្ងៃនេះហើយ។"],
+    reminders: ["បីនាទីគ្រប់គ្រាន់សម្រាប់ប្រយោគសំខាន់មួយ។", "ត្រឡប់មកវិញសម្រាប់ការត្រួតពិនិត្យស្តាប់ និងនិយាយខ្លីមួយ។"],
+    comebackMessage: "បន្តពីប្រយោគដែលអ្នកបានហាត់ចុងក្រោយម្តងទៀត។",
+    learningGuide: {
+      focus: "ចាំ និងយកប្រយោគជាក់ស្តែងមកប្រើជាមុន ដើម្បីឲ្យការនិយាយមានអារម្មណ៍ថាអាចធ្វើបានតាំងពីដំបូង។",
+      pronunciation: "ស្តាប់ផ្នែកចុងប្រយោគជាមុនសិន។ ក្នុងភាសាកូរ៉េ ភាពគួរសមជាញឹកញាប់ស្ថិតនៅចុងប្រយោគ និងចង្វាក់របស់វា។",
+      grammarBridge: "គិតជាបន្ទះៗ: ទីកន្លែង ឬ វត្ថុ ជាមុន សកម្មភាពនៅក្រោយ ហើយបិទចុងដោយទម្រង់គួរសម។",
+      reviewHabit: "រក្សាប្រយោគមួយក្រុមតូចសម្រាប់ការងារ មន្ទីរពេទ្យ ការិយាល័យ និងជីវិតប្រចាំថ្ងៃ ដើម្បីរំលឹកប្តូរវិញរាល់ថ្ងៃ។",
+      offlineTip: "ប្រើកញ្ចប់សំឡេងស្រាលនៅពេលអ៊ីនធឺណិតខ្សោយ ដើម្បីកុំឲ្យការរំលឹកត្រូវផ្អាក។"
+    },
+    preferredGoals: ["work", "life", "daily"],
+    defaultDailyGoal: 10,
+    notificationWindow: "19:00-21:00",
+    dateTimeFormat: "dd/MM/yyyy HH:mm",
+    currency: "KHR",
+    disabledFeatures: [],
+    privacyNote: "នៅក្នុងគំរូបច្ចុប្បន្ន ការថតសំឡេងនឹងស្ថិតនៅលើឧបករណ៍នេះប៉ុណ្ណោះ។",
+    translations: {
+      start: "ចាប់ផ្តើម",
+      continue: "បន្ត",
+      review: "រំលឹកឡើងវិញ",
+      settings: "ការកំណត់",
+      lesson: "មេរៀន"
+    }
+  },
+  {
+    id: "mm-my",
+    label: "Myanmar",
+    nativeLabel: "မြန်မာ",
+    interfaceLanguage: "my",
+    onboardingNote: "အခုချက်ချင်း အသုံးပြုနိုင်မယ့် ဝါကျတစ်ခုနဲ့ စတင်ပြီး တည်ငြိမ်လာတဲ့အထိ အဲဒီပုံစံကိုပဲ ပြန်လေ့ကျင့်ပါ။",
+    cultureNote: "တည်ငြိမ်တဲ့အသံနဲ့ ယဉ်ကျေးတဲ့ အဆုံးသတ်က ကိုရီးယားနေ့စဉ်စကားပြောကို ပိုချောမွေ့စေပါတယ်။",
+    roleplaySituation: "ဘူတာအနီးက ကဖေးဝန်ထမ်းကို ယဉ်ကျေးစွာနှုတ်ဆက်ပြီး အသုံးဝင်တဲ့ စကားပြန်လဲမှုတိုတစ်ခုကို လေ့ကျင့်ပါ။",
+    feedback: ["ရှင်းရှင်းလင်းလင်းကြားရပါတယ်။", "ဝါကျအဆုံးသတ်ကို တစ်ခါထပ်ပြောကြည့်ပါ။", "ဒီဝါကျကို တကယ်အသုံးချနိုင်လောက်ပြီ။"],
+    reminders: ["နေ့စဉ်တိုတောင်းတဲ့စစ်ဆေးမှုတစ်ခုနဲ့ပဲ ဝါကျတစ်ခုကို အသက်ဝင်နေစေနိုင်ပါတယ်။", "နောက်ထပ် တစ်ကြိမ် နားထောင်ပြီး ပြောတဲ့လေ့ကျင့်မှုအတွက် ပြန်လာပါ။"],
+    comebackMessage: "ပြီးခဲ့တဲ့အကြိမ်တုန်းက တည်ဆောက်နေတဲ့ဝါကျကနေ ပြန်စပါ။",
+    learningGuide: {
+      focus: "အက်ဘ်စထရက်ဝေယျာကရဓာတ်တွေမတိုင်မီ အလုပ်၊ ချိန်းဆိုမှု၊ ပြန်မေးခြင်းနဲ့ နေ့စဉ်အကူအညီအတွက် သုံးနိုင်တဲ့ဝါကျတွေကို အရင်သင်ပါ။",
+      pronunciation: "ဝါကျတစ်ခုလုံးရဲ့ ရစ်သမ်ကို အရင်ကိုက်အောင်လုပ်ပြီးမှ အသံတစ်လုံးချင်းကို ပြင်ပါ။ ကိုရီးယားလိုမှာ အဆုံးသတ်က အဓိပ္ပာယ်အများကြီးကို သယ်ဆောင်ပါတယ်။",
+      grammarBridge: "ကိုရီးယားကို ပြန်သုံးလို့ရတဲ့ ဝါကျပုံစံလို စဉ်းစားပါ: ဘယ်သူ သို့မဟုတ် ဘာဆိုတာ အရင်, ပြီးတော့ လုပ်ဆောင်ချက်, နောက်ဆုံးမှာ ယဉ်ကျေးတဲ့ ပိတ်သတ်မှု။",
+      reviewHabit: "ဖိအားရှိတဲ့အချိန်တောင် အဆင်သင့်ဖြစ်နေစေဖို့ အဓိကဝါကျတစ်ခုတည်းကို နားထောင်ခြင်း၊ ပြောခြင်း၊ roleplay တိုတိုနဲ့ ထပ်ခါထပ်ခါ review လုပ်ပါ။",
+      offlineTip: "ကွန်နက်ရှင်မတည်ငြိမ်တဲ့အချိန်နဲ့ သွားလာနေချိန်မှာ လေ့ကျင့်နိုင်ဖို့ အသံဖိုင်အစုအတိုကို အဆင်သင့်ထားပါ။"
+    },
+    preferredGoals: ["work", "daily", "life"],
+    defaultDailyGoal: 10,
+    notificationWindow: "19:30-21:30",
+    dateTimeFormat: "dd/MM/yyyy HH:mm",
+    currency: "MMK",
+    disabledFeatures: [],
+    privacyNote: "ဒီ prototype မှာ သင့်အသံဒေတာက လက်ရှိစက်ပေါ်မှာပဲ ရှိနေပါတယ်။",
+    translations: {
+      start: "စတင်ရန်",
+      continue: "ဆက်လုပ်ရန်",
+      review: "ပြန်လေ့ကျင့်ရန်",
+      settings: "ဆက်တင်များ",
+      lesson: "သင်ခန်းစာ"
+    }
+  },
+  {
+    id: "th-th",
+    label: "Thailand",
+    nativeLabel: "ไทย",
+    interfaceLanguage: "th",
+    onboardingNote: "เริ่มจากประโยคที่ใช้ได้จริงก่อน แล้วค่อยเติมไวยากรณ์เมื่อช่วยให้พูดซ้ำได้ดีขึ้น",
+    cultureNote: "ในภาษาเกาหลี น้ำเสียงสุภาพและการลงท้ายที่พอดีช่วยให้บทสนทนาแรกไหลลื่นขึ้นมาก",
+    roleplaySituation: "คุณทักพนักงานคาเฟ่ใกล้สถานีรถไฟฟ้าอย่างสุภาพและเริ่มคุยสั้นๆ",
+    feedback: ["ฟังชัดดีแล้ว", "ลองเก็บน้ำเสียงช่วงท้ายอีกครั้ง", "ประโยคนี้พร้อมใช้ในชีวิตจริงได้แล้ววันนี้"],
+    reminders: ["สามนาทีก็พอสำหรับหนึ่งประโยคสำคัญ", "กลับมาฝึกฟังและพูดสั้นๆ อีกครั้ง"],
+    comebackMessage: "กลับมาต่อจากประโยคที่คุณเพิ่งฝึกไว้ล่าสุด",
+    learningGuide: {
+      focus: "เน้นประโยคที่ใช้ได้จริงในงาน เดินทาง และชีวิตประจำวันก่อนคำอธิบายยาวๆ",
+      pronunciation: "ฟังช่วงลงท้ายของประโยคก่อน เพราะความสุภาพและจังหวะมักอยู่ตรงนั้น",
+      grammarBridge: "ภาษาเกาหลีมักวางสถานที่หรือสิ่งของก่อนการกระทำ แล้วปิดท้ายด้วยรูปสุภาพ",
+      reviewHabit: "บันทึกประโยคที่อยากใช้จริง แล้วทวนจากช้าไปปกติทุกวัน",
+      offlineTip: "เตรียมชุดเสียงขนาดเล็กไว้ใช้ตอนเน็ตไม่ดี เพื่อให้การทบทวนไม่สะดุด"
+    },
+    preferredGoals: ["travel", "daily", "work"],
+    defaultDailyGoal: 5,
+    notificationWindow: "19:00-21:00",
+    dateTimeFormat: "d/M/yyyy HH:mm",
+    currency: "THB",
+    disabledFeatures: [],
+    privacyNote: "ต้นแบบปัจจุบันเก็บเสียงของคุณไว้บนอุปกรณ์นี้",
+    translations: {
+      start: "เริ่ม",
+      continue: "ต่อ",
+      review: "ทบทวน",
+      settings: "ตั้งค่า",
+      lesson: "บทเรียน"
+    }
+  },
+  {
+    id: "my-ms",
+    label: "Malaysia",
+    nativeLabel: "Bahasa Melayu",
+    interfaceLanguage: "ms",
+    onboardingNote: "Mulakan dengan satu ayat yang berguna dahulu, kemudian tambah tatabahasa hanya apabila ia membantu anda bercakap lagi.",
+    cultureNote: "Dalam bahasa Korea, nada yang lembut dan akhiran sopan banyak membantu perbualan pertama terasa lebih lancar.",
+    roleplaySituation: "Anda menyapa pekerja kafe berhampiran stesen dengan sopan dan memulakan perbualan ringkas.",
+    feedback: ["Itu sudah jelas didengar.", "Cuba sekali lagi pada bahagian akhir ayat.", "Ayat itu sudah cukup semula jadi untuk digunakan hari ini."],
+    reminders: ["Tiga minit sudah cukup untuk satu ayat penting.", "Datang semula untuk semakan mendengar dan bercakap yang ringkas."],
+    comebackMessage: "Sambung semula daripada ayat yang anda latih sebelum ini.",
+    learningGuide: {
+      focus: "Utamakan ayat yang boleh terus digunakan dalam urusan harian, kerja, dan perjalanan.",
+      pronunciation: "Dengar penghujung ayat dahulu. Dalam bahasa Korea, nada sopan banyak terletak pada bunyi akhir dan ritma.",
+      grammarBridge: "Bayangkan pola ayatnya mengikut kelompok: tempat atau benda dahulu, tindakan kemudian, dan penutup sopan di hujung.",
+      reviewHabit: "Simpan ayat yang benar-benar mahu digunakan dan ulang dari kelajuan perlahan ke biasa setiap hari.",
+      offlineTip: "Sediakan pek audio ringan Day 1-14 supaya latihan boleh diteruskan walaupun rangkaian lemah."
+    },
+    preferredGoals: ["travel", "daily", "k-content"],
+    defaultDailyGoal: 5,
+    notificationWindow: "19:00-21:00",
+    dateTimeFormat: "dd/MM/yyyy HH:mm",
+    currency: "MYR",
+    disabledFeatures: [],
+    privacyNote: "Dalam prototaip semasa, rakaman suara kekal pada peranti ini.",
+    translations: {
+      start: "Mula",
+      continue: "Teruskan",
+      review: "Ulang kaji",
+      settings: "Tetapan",
+      lesson: "Pelajaran"
+    }
   }
 ];
 

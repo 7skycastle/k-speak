@@ -5,8 +5,19 @@ import type {
   SavedPhrase,
   SavedPhraseTombstone,
   SyncChange,
+  CourseId,
+  TravelMissionResult,
   UserState
 } from "../types";
+import { courseRegistry, FOUNDATION_COURSE_ID } from "../data/courses/courseRegistry";
+import { mergeEpsAssessmentAttempts } from "../engine/epsAssessmentEngine";
+import {
+  LEGACY_INFERRED_AT,
+  getCourseLessonIds,
+  mergeActiveCoursePreference,
+  mergeCourseEnrollments,
+  normalizeUserCourses
+} from "../engine/courseEngine";
 
 const STATE_KEY = "korean-first-talk:user-state:v1";
 const CLOUD_PREFIX = "korean-first-talk:cloud-profile:";
@@ -130,8 +141,28 @@ const resolveSavedPhraseState = (
   };
 };
 
+const mergeTravelMissionResults = (
+  account: UserState["travelMissionResults"] = {},
+  guest: UserState["travelMissionResults"] = {}
+) => {
+  const merged = { ...account };
+  for (const [lessonId, result] of Object.entries(guest)) {
+    const current = merged[lessonId];
+    if (!current || compareIso(current.completedAt, result.completedAt) <= 0) {
+      merged[lessonId] = result;
+    }
+  }
+  return merged;
+};
+
 export const createInitialState = (): UserState => ({
   anonymousId: createId("guest"),
+  activeCourseId: FOUNDATION_COURSE_ID,
+  activeCourseChangedAt: LEGACY_INFERRED_AT,
+  courseEnrollments: {},
+  epsAssessmentAttempts: {},
+  epsAssessmentResults: {},
+  travelMissionResults: {},
   lessonProgress: {},
   reviewItems: [],
   savedPhrases: [],
@@ -161,7 +192,7 @@ export const loadState = (): UserState => {
       parsed.savedPhrases ?? [],
       parsed.savedPhraseTombstones ?? []
     );
-    return {
+    return normalizeUserCourses({
       ...parsed,
       reviewItems: (parsed.reviewItems ?? []).map(normalizeReviewItem),
       savedPhrases: resolvedSavedPhrases.savedPhrases,
@@ -170,7 +201,7 @@ export const loadState = (): UserState => {
         ...parsed.sync,
         pendingChanges: parsed.sync.pendingChanges ?? []
       }
-    };
+    });
   } catch {
     return createInitialState();
   }
@@ -194,6 +225,82 @@ export const updateOnboarding = (state: UserState, onboarding: OnboardingProfile
       completedAt: onboarding.completedAt ?? now()
     }
   });
+
+export const updateActiveCourse = (state: UserState, courseId: UserState["activeCourseId"]): UserState => {
+  const changedAt = now();
+  return saveState(
+    withPendingChanges(
+      {
+        ...normalizeUserCourses(state),
+        activeCourseId: courseId,
+        activeCourseChangedAt: changedAt
+      },
+      [
+        {
+          entity: "profile-course-preference",
+          entityId: "active-course",
+          operation: "upsert",
+          changedAt
+        }
+      ]
+    )
+  );
+};
+
+export const completeCourseRoute = (state: UserState, courseId: CourseId, completedAt = now()): UserState => {
+  const normalized = normalizeUserCourses(state);
+  const entry = courseRegistry[courseId];
+  const current = normalized.courseEnrollments[courseId];
+  const completion = {
+    courseId,
+    routeVersion: entry.routeVersion,
+    completedAt,
+    completedLessonIds: getCourseLessonIds(courseId)
+  };
+  const completions = [
+    ...(current?.completions ?? []).filter((item) => item.routeVersion !== entry.routeVersion),
+    completion
+  ];
+
+  return saveState(
+    withPendingChanges(
+      {
+        ...normalized,
+        courseEnrollments: {
+          ...normalized.courseEnrollments,
+          [courseId]: {
+            courseId,
+            routeVersion: entry.routeVersion,
+            startedAt: current?.startedAt ?? completedAt,
+            lastOpenedAt: completedAt,
+            routeSlots: current?.routeSlots,
+            completions,
+            fieldUpdatedAt: {
+              ...current?.fieldUpdatedAt,
+              completions: completedAt,
+              lastOpenedAt: completedAt
+            }
+          }
+        }
+      },
+      [{ entity: "course-enrollment", entityId: courseId, operation: "upsert", changedAt: completedAt }]
+    )
+  );
+};
+
+export const saveTravelMissionResult = (state: UserState, result: TravelMissionResult): UserState =>
+  saveState(
+    withPendingChanges(
+      {
+        ...state,
+        travelMissionResults: {
+          ...(state.travelMissionResults ?? {}),
+          [result.lessonId]: result
+        }
+      },
+      [{ entity: "course-enrollment", entityId: "travel", operation: "upsert", changedAt: result.completedAt }]
+    )
+  );
 
 export const upsertLessonProgress = (
   state: UserState,
@@ -344,6 +451,36 @@ export const removeSavedPhrase = (state: UserState, phraseId: string): UserState
   );
 };
 
+export const upsertEpsAssessmentAttempt = (
+  state: UserState,
+  attempt: UserState["epsAssessmentAttempts"][string]
+): UserState => {
+  const current = state.epsAssessmentAttempts?.[attempt.attemptId];
+  const merged = current
+    ? mergeEpsAssessmentAttempts({ [attempt.attemptId]: current }, { [attempt.attemptId]: attempt })[attempt.attemptId]
+    : attempt;
+
+  return saveState(
+    withPendingChanges(
+      {
+        ...state,
+        epsAssessmentAttempts: {
+          ...(state.epsAssessmentAttempts ?? {}),
+          [attempt.attemptId]: merged
+        }
+      },
+      [
+        {
+          entity: "eps-assessment-attempt",
+          entityId: attempt.attemptId,
+          operation: "upsert",
+          changedAt: attempt.lastSavedAt
+        }
+      ]
+    )
+  );
+};
+
 export const mergeGuestIntoAccount = (state: UserState, email: string): UserState => {
   const normalizedEmail = normalizeEmail(email);
   const cloudKey = `${CLOUD_PREFIX}${normalizedEmail}`;
@@ -387,9 +524,13 @@ const loadCloudState = (key: string): UserState | undefined => {
 };
 
 export const mergeUserStates = (account: UserState, guest: UserState, email?: string): UserState => {
-  const lessonProgress = { ...account.lessonProgress };
+  const normalizedAccount = normalizeUserCourses(account);
+  const normalizedGuest = normalizeUserCourses(guest);
+  const activeCourse = mergeActiveCoursePreference(normalizedAccount, normalizedGuest);
+  const courseEnrollments = mergeCourseEnrollments(normalizedAccount, normalizedGuest);
+  const lessonProgress = { ...normalizedAccount.lessonProgress };
 
-  for (const [lessonId, guestProgress] of Object.entries(guest.lessonProgress)) {
+  for (const [lessonId, guestProgress] of Object.entries(normalizedGuest.lessonProgress)) {
     const accountProgress = lessonProgress[lessonId];
     if (!accountProgress) {
       lessonProgress[lessonId] = guestProgress;
@@ -417,8 +558,8 @@ export const mergeUserStates = (account: UserState, guest: UserState, email?: st
     };
   }
 
-  const reviewItems = new Map(account.reviewItems.map((item) => [item.id, normalizeReviewItem(item)]));
-  for (const item of guest.reviewItems.map(normalizeReviewItem)) {
+  const reviewItems = new Map(normalizedAccount.reviewItems.map((item) => [item.id, normalizeReviewItem(item)]));
+  for (const item of normalizedGuest.reviewItems.map(normalizeReviewItem)) {
     const current = reviewItems.get(item.id);
     if (!current) {
       reviewItems.set(item.id, item);
@@ -429,25 +570,40 @@ export const mergeUserStates = (account: UserState, guest: UserState, email?: st
   }
 
   const resolvedSavedPhrases = resolveSavedPhraseState(
-    [...(account.savedPhrases ?? []), ...(guest.savedPhrases ?? [])],
-    [...(account.savedPhraseTombstones ?? []), ...(guest.savedPhraseTombstones ?? [])]
+    [...(normalizedAccount.savedPhrases ?? []), ...(normalizedGuest.savedPhrases ?? [])],
+    [...(normalizedAccount.savedPhraseTombstones ?? []), ...(normalizedGuest.savedPhraseTombstones ?? [])]
   );
 
   return {
-    ...account,
-    anonymousId: guest.anonymousId,
-    accountEmail: email ?? guest.accountEmail ?? account.accountEmail,
-    onboarding: guest.onboarding ?? account.onboarding,
+    ...normalizedAccount,
+    anonymousId: normalizedGuest.anonymousId,
+    accountEmail: email ?? normalizedGuest.accountEmail ?? normalizedAccount.accountEmail,
+    onboarding: normalizedGuest.onboarding ?? normalizedAccount.onboarding,
+    activeCourseId: activeCourse.activeCourseId,
+    activeCourseChangedAt: activeCourse.activeCourseChangedAt,
+    courseEnrollments,
     lessonProgress,
     reviewItems: Array.from(reviewItems.values()),
     savedPhrases: resolvedSavedPhrases.savedPhrases,
     savedPhraseTombstones: resolvedSavedPhrases.savedPhraseTombstones,
-    analyticsEvents: [...account.analyticsEvents, ...guest.analyticsEvents],
+    epsAssessmentAttempts: mergeEpsAssessmentAttempts(
+      normalizedAccount.epsAssessmentAttempts,
+      normalizedGuest.epsAssessmentAttempts
+    ),
+    epsAssessmentResults: {
+      ...normalizedAccount.epsAssessmentResults,
+      ...normalizedGuest.epsAssessmentResults
+    },
+    travelMissionResults: mergeTravelMissionResults(
+      normalizedAccount.travelMissionResults,
+      normalizedGuest.travelMissionResults
+    ),
+    analyticsEvents: [...normalizedAccount.analyticsEvents, ...normalizedGuest.analyticsEvents],
     sync: {
-      ...account.sync,
-      ...guest.sync,
-      pending: account.sync.pending || guest.sync.pending,
-      pendingChanges: mergeSyncChanges(account.sync.pendingChanges, guest.sync.pendingChanges)
+      ...normalizedAccount.sync,
+      ...normalizedGuest.sync,
+      pending: normalizedAccount.sync.pending || normalizedGuest.sync.pending,
+      pendingChanges: mergeSyncChanges(normalizedAccount.sync.pendingChanges, normalizedGuest.sync.pendingChanges)
     },
     updatedAt: now()
   };

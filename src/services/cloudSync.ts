@@ -13,6 +13,8 @@ interface ProfileRow {
   character_id: OnboardingProfile["characterId"];
   reminder_time: string;
   completed_at?: string | null;
+  preferred_course_id?: UserState["activeCourseId"] | null;
+  preferred_course_changed_at?: string | null;
 }
 
 interface LessonProgressRow {
@@ -56,6 +58,32 @@ interface SavedPhraseRow {
   last_played_at?: string | null;
   updated_at?: string | null;
   deleted_at?: string | null;
+}
+
+type CourseEnrollment = NonNullable<UserState["courseEnrollments"][UserState["activeCourseId"]]>;
+
+interface CourseEnrollmentRow {
+  course_id: UserState["activeCourseId"];
+  route_version: string;
+  started_at?: string | null;
+  last_opened_at?: string | null;
+  route_slots?: CourseEnrollment["routeSlots"] | null;
+  completions?: CourseEnrollment["completions"] | null;
+  field_updated_at?: CourseEnrollment["fieldUpdatedAt"] | null;
+}
+
+interface EpsAssessmentAttemptRow {
+  attempt_id: string;
+  kind: UserState["epsAssessmentAttempts"][string]["kind"];
+  assessment_version: string;
+  question_order: string[];
+  answers: UserState["epsAssessmentAttempts"][string]["answers"];
+  current_index: number;
+  status: UserState["epsAssessmentAttempts"][string]["status"];
+  started_at: string;
+  expires_at?: string | null;
+  last_saved_at: string;
+  unavailable_question_ids: string[];
 }
 
 type SavedPhraseRecord = SavedPhrase | UserState["savedPhraseTombstones"][number];
@@ -135,7 +163,22 @@ export const syncWithSupabase = async (state: UserState, session?: Session | nul
   const supabase = getSupabaseClient();
   const cloudState = await loadCloudState(supabase, activeSession.user, state.anonymousId);
   const merged = mergeUserStates(cloudState, state, activeSession.user.email);
-  await persistCloudState(supabase, activeSession.user, merged);
+  try {
+    await persistCloudState(supabase, activeSession.user, merged);
+  } catch (error) {
+    saveState({
+      ...merged,
+      sync: {
+        ...merged.sync,
+        mode: "supabase-ready",
+        cloudUserId: activeSession.user.id,
+        pending: true,
+        messageKey: "sync.pendingRetry",
+        message: "Cloud sync failed. Changes are saved on this device and will retry."
+      }
+    });
+    throw error;
+  }
 
   return saveState({
     ...merged,
@@ -153,22 +196,30 @@ export const syncWithSupabase = async (state: UserState, session?: Session | nul
 };
 
 const loadCloudState = async (supabase: SupabaseClient, user: User, anonymousId: string): Promise<UserState> => {
-  const [profileResult, progressResult, reviewResult, savedPhraseResult] = await Promise.all([
+  const [profileResult, progressResult, reviewResult, savedPhraseResult, courseEnrollmentResult, epsAttemptResult] =
+    await Promise.all([
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle<ProfileRow>(),
     supabase.from("lesson_progress").select("*").eq("user_id", user.id).returns<LessonProgressRow[]>(),
     supabase.from("review_items").select("*").eq("user_id", user.id).returns<ReviewItemRow[]>(),
-    supabase.from("saved_phrases").select("*").eq("user_id", user.id).returns<SavedPhraseRow[]>()
+    supabase.from("saved_phrases").select("*").eq("user_id", user.id).returns<SavedPhraseRow[]>(),
+    supabase.from("course_enrollments").select("*").eq("user_id", user.id).returns<CourseEnrollmentRow[]>(),
+    supabase.from("eps_assessment_attempts").select("*").eq("user_id", user.id).returns<EpsAssessmentAttemptRow[]>()
   ]);
 
   if (profileResult.error) throw profileResult.error;
   if (progressResult.error) throw progressResult.error;
   if (reviewResult.error) throw reviewResult.error;
   if (savedPhraseResult.error) throw savedPhraseResult.error;
+  if (courseEnrollmentResult.error) throw courseEnrollmentResult.error;
+  if (epsAttemptResult.error) throw epsAttemptResult.error;
 
   const cloud = createInitialState();
   cloud.anonymousId = anonymousId;
   cloud.accountEmail = user.email;
   cloud.onboarding = profileResult.data ? profileRowToOnboarding(profileResult.data) : undefined;
+  cloud.activeCourseId = profileResult.data?.preferred_course_id ?? "foundation";
+  cloud.activeCourseChangedAt =
+    profileResult.data?.preferred_course_changed_at ?? "1970-01-01T00:00:00.000Z";
   cloud.lessonProgress = Object.fromEntries((progressResult.data ?? []).map((row) => [row.lesson_id, progressRowToState(row)]));
   cloud.reviewItems = (reviewResult.data ?? []).map(reviewRowToState);
   const savedPhraseRows = (savedPhraseResult.data ?? []).map(savedPhraseRowToState);
@@ -176,12 +227,18 @@ const loadCloudState = async (supabase: SupabaseClient, user: User, anonymousId:
   cloud.savedPhraseTombstones = savedPhraseRows.filter(
     (row): row is UserState["savedPhraseTombstones"][number] => "deletedAt" in row
   );
+  cloud.courseEnrollments = Object.fromEntries(
+    (courseEnrollmentResult.data ?? []).map((row) => [row.course_id, courseEnrollmentRowToState(row)])
+  );
+  cloud.epsAssessmentAttempts = Object.fromEntries(
+    (epsAttemptResult.data ?? []).map((row) => [row.attempt_id, epsAssessmentAttemptRowToState(row)])
+  );
   return cloud;
 };
 
 const persistCloudState = async (supabase: SupabaseClient, user: User, state: UserState) => {
   if (state.onboarding) {
-    const { error } = await supabase.from("profiles").upsert(profileToRow(user.id, state.onboarding), { onConflict: "id" });
+    const { error } = await supabase.from("profiles").upsert(profileToRow(user.id, state.onboarding, state), { onConflict: "id" });
     if (error) throw error;
   }
 
@@ -206,6 +263,24 @@ const persistCloudState = async (supabase: SupabaseClient, user: User, state: Us
 
   if (savedPhraseRows.length) {
     const { error } = await supabase.from("saved_phrases").upsert(savedPhraseRows, { onConflict: "id,user_id" });
+    if (error) throw error;
+  }
+
+  const courseRows = Object.values(state.courseEnrollments ?? {})
+    .filter((enrollment): enrollment is CourseEnrollment => Boolean(enrollment))
+    .map((enrollment) => courseEnrollmentToRow(user.id, enrollment));
+  if (courseRows.length) {
+    const { error } = await supabase.from("course_enrollments").upsert(courseRows, { onConflict: "user_id,course_id" });
+    if (error) throw error;
+  }
+
+  const epsAttemptRows = Object.values(state.epsAssessmentAttempts ?? {}).map((attempt) =>
+    epsAssessmentAttemptToRow(user.id, attempt)
+  );
+  if (epsAttemptRows.length) {
+    const { error } = await supabase.from("eps_assessment_attempts").upsert(epsAttemptRows, {
+      onConflict: "user_id,attempt_id"
+    });
     if (error) throw error;
   }
 
@@ -280,7 +355,7 @@ const savedPhraseRowToState = (row: SavedPhraseRow): SavedPhraseRecord => {
   return base;
 };
 
-const profileToRow = (userId: string, profile: OnboardingProfile): ProfileRow => ({
+const profileToRow = (userId: string, profile: OnboardingProfile, state?: UserState): ProfileRow => ({
   id: userId,
   country_pack_id: profile.countryPackId,
   native_language: profile.nativeLanguage,
@@ -289,7 +364,9 @@ const profileToRow = (userId: string, profile: OnboardingProfile): ProfileRow =>
   daily_goal_minutes: profile.dailyGoalMinutes,
   character_id: profile.characterId,
   reminder_time: profile.reminderTime,
-  completed_at: profile.completedAt
+  completed_at: profile.completedAt,
+  preferred_course_id: state?.activeCourseId ?? "foundation",
+  preferred_course_changed_at: state?.activeCourseChangedAt
 });
 
 const progressToRow = (userId: string, progress: LessonProgress) => ({
@@ -352,6 +429,56 @@ const savedPhraseTombstoneToRow = (userId: string, item: UserState["savedPhraseT
   last_played_at: item.lastPlayedAt,
   updated_at: item.updatedAt,
   deleted_at: item.deletedAt
+});
+
+const courseEnrollmentRowToState = (row: CourseEnrollmentRow): CourseEnrollment => ({
+  courseId: row.course_id,
+  routeVersion: row.route_version,
+  startedAt: row.started_at ?? undefined,
+  lastOpenedAt: row.last_opened_at ?? undefined,
+  routeSlots: row.route_slots ?? undefined,
+  completions: row.completions ?? [],
+  fieldUpdatedAt: row.field_updated_at ?? {}
+});
+
+const courseEnrollmentToRow = (userId: string, enrollment: CourseEnrollment) => ({
+  user_id: userId,
+  course_id: enrollment.courseId,
+  route_version: enrollment.routeVersion,
+  started_at: enrollment.startedAt,
+  last_opened_at: enrollment.lastOpenedAt,
+  route_slots: enrollment.routeSlots ?? null,
+  completions: enrollment.completions,
+  field_updated_at: enrollment.fieldUpdatedAt ?? {}
+});
+
+const epsAssessmentAttemptRowToState = (row: EpsAssessmentAttemptRow): UserState["epsAssessmentAttempts"][string] => ({
+  attemptId: row.attempt_id,
+  kind: row.kind,
+  assessmentVersion: row.assessment_version,
+  questionOrder: row.question_order,
+  answers: row.answers ?? {},
+  currentIndex: row.current_index,
+  status: row.status,
+  startedAt: row.started_at,
+  expiresAt: row.expires_at ?? undefined,
+  lastSavedAt: row.last_saved_at,
+  unavailableQuestionIds: row.unavailable_question_ids ?? []
+});
+
+const epsAssessmentAttemptToRow = (userId: string, attempt: UserState["epsAssessmentAttempts"][string]) => ({
+  user_id: userId,
+  attempt_id: attempt.attemptId,
+  kind: attempt.kind,
+  assessment_version: attempt.assessmentVersion,
+  question_order: attempt.questionOrder,
+  answers: attempt.answers,
+  current_index: attempt.currentIndex,
+  status: attempt.status,
+  started_at: attempt.startedAt,
+  expires_at: attempt.expiresAt,
+  last_saved_at: attempt.lastSavedAt,
+  unavailable_question_ids: attempt.unavailableQuestionIds
 });
 
 const analyticsToRow = (userId: string, anonymousId: string, event: AnalyticsEvent) => ({

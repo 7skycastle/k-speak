@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { audioCatalog, createStaticAudioSlot, findAudioSlot, resolveStaticAudioUrl } from "./audioCatalog";
 import { tutorCharacters } from "./characters";
+import { travelLessons } from "./courses/travelLessons";
 import { lessons } from "./lessons";
 
 const paidProviderPattern = /elevenlabs|typecast|openai|azure|google|aws|polly|naver|clova/i;
@@ -42,6 +43,17 @@ describe("audio catalog", () => {
     expect(rescue.sentenceId).toBe("rescue");
     expect(swap.sentenceId).toBe("swap-1");
     expect(dialogue.usesTtsFallback).toBe(true);
+  });
+
+  it("allows Travel lessons to use browser TTS fallback when static audio is absent", () => {
+    for (const lesson of travelLessons) {
+      for (const sentenceId of Object.keys(lesson.audioTargets)) {
+        const slot = findAudioSlot(lesson.id, "haneul", sentenceId);
+        expect(slot.fallback.type).toBe("browser_speech_synthesis");
+        expect(slot.usesTtsFallback).toBe(true);
+        expect(slot.sourceType).toBe("browser_speech_synthesis");
+      }
+    }
   });
 
   it("uses wav paths for static audio targets so generated local files match runtime lookup", () => {

@@ -1,20 +1,30 @@
-import type { CountryPackId } from "../types";
+﻿import type { CountryPackId } from "../types";
 
 export const localized = (
   en: string,
   ja: string,
   zh: string,
   vi: string,
-  es: string
+  es: string,
+  id = en,
+  km = en,
+  my = en,
+  th = en,
+  ms = en
 ): Record<CountryPackId, string> => ({
   "us-en": en,
   "jp-ja": ja,
   "cn-zh": zh,
   "vn-vi": vi,
-  "mx-es": es
+  "mx-es": es,
+  "id-id": id,
+  "kh-km": km,
+  "mm-my": my,
+  "th-th": th,
+  "my-ms": ms
 });
 
-const en = (s: string) => localized(s, s, s, s, s);
+const en = (s: string) => localized(s, s, s, s, s, s, s, s, s, s);
 
 export const uiCatalog = {
   // Nav
@@ -30,6 +40,205 @@ export const uiCatalog = {
   "common.next": localized("Next", "次へ", "下一步", "Tiếp theo", "Siguiente"),
   "common.prev": localized("Back", "戻る", "返回", "Quay lại", "Atrás"),
   "common.close": localized("Close", "閉じる", "关闭", "Đóng", "Cerrar"),
+
+  // Course selector
+  "course.selector.button": localized(
+    "Change course",
+    "コースを変更",
+    "更换课程",
+    "Đổi khóa học",
+    "Cambiar curso",
+    "Ganti kursus",
+    "ប្តូរវគ្គ",
+    "သင်တန်းပြောင်းရန်",
+    "เปลี่ยนคอร์ส",
+    "Tukar kursus"
+  ),
+  "course.selector.title": localized(
+    "Choose course",
+    "コースを選択",
+    "选择课程",
+    "Chọn khóa học",
+    "Elige curso",
+    "Pilih kursus",
+    "ជ្រើសវគ្គ",
+    "သင်တန်းရွေးပါ",
+    "เลือกคอร์ส",
+    "Pilih kursus"
+  ),
+  "course.foundation.title": localized(
+    "Korean First Talk",
+    "韓国語ファーストトーク",
+    "韩语第一句话",
+    "Korean First Talk",
+    "Korean First Talk",
+    "Korean First Talk",
+    "Korean First Talk",
+    "Korean First Talk",
+    "Korean First Talk",
+    "Korean First Talk"
+  ),
+  "course.travel.title": localized(
+    "Korean Travel",
+    "旅行韓国語",
+    "旅行韩语",
+    "Tiếng Hàn du lịch",
+    "Coreano para viajar",
+    "Bahasa Korea perjalanan",
+    "កូរ៉េសម្រាប់ធ្វើដំណើរ",
+    "ခရီးသွားကိုရီးယားစာ",
+    "ภาษาเกาหลีสำหรับท่องเที่ยว",
+    "Korea untuk melancong"
+  ),
+  "course.kCulture.title": localized(
+    "K-Culture Korean",
+    "Kカルチャー韓国語",
+    "韩流文化韩语",
+    "Tiếng Hàn K-Culture",
+    "Coreano K-Culture",
+    "Korea K-Culture",
+    "កូរ៉េ K-Culture",
+    "K-Culture ကိုရီးယားစာ",
+    "เกาหลี K-Culture",
+    "Korea K-Culture"
+  ),
+  "course.epsTopik.title": localized(
+    "EPS-TOPIK Prep",
+    "EPS-TOPIK対策",
+    "EPS-TOPIK备考",
+    "Luyện EPS-TOPIK",
+    "Preparación EPS-TOPIK",
+    "Persiapan EPS-TOPIK",
+    "ត្រៀម EPS-TOPIK",
+    "EPS-TOPIK ပြင်ဆင်မှု",
+    "เตรียม EPS-TOPIK",
+    "Persediaan EPS-TOPIK"
+  ),
+  "course.status.notStarted": localized(
+    "Not started",
+    "未開始",
+    "未开始",
+    "Chưa bắt đầu",
+    "No iniciado",
+    "Belum mulai",
+    "មិនទាន់ចាប់ផ្តើម",
+    "မစရသေးပါ",
+    "ยังไม่เริ่ม",
+    "Belum bermula"
+  ),
+  "course.status.inProgress": localized(
+    "In progress",
+    "進行中",
+    "进行中",
+    "Đang học",
+    "En progreso",
+    "Sedang berjalan",
+    "កំពុងរៀន",
+    "လေ့လာနေသည်",
+    "กำลังเรียน",
+    "Sedang berjalan"
+  ),
+  "course.status.completed": localized(
+    "Completed",
+    "完了",
+    "已完成",
+    "Đã hoàn thành",
+    "Completado",
+    "Selesai",
+    "បានបញ្ចប់",
+    "ပြီးဆုံးပါပြီ",
+    "เสร็จแล้ว",
+    "Selesai"
+  ),
+  "course.status.preparing": localized(
+    "Preparing",
+    "準備中",
+    "准备中",
+    "Đang chuẩn bị",
+    "En preparación",
+    "Sedang disiapkan",
+    "កំពុងរៀបចំ",
+    "ပြင်ဆင်နေသည်",
+    "กำลังเตรียม",
+    "Sedang disediakan"
+  ),
+  "course.action.start": localized("Start", "開始", "开始", "Bắt đầu", "Comenzar"),
+  "course.action.resume": localized("Resume", "再開", "继续", "Tiếp tục", "Continuar"),
+  "course.action.switch": localized("Switch", "切替", "切换", "Chuyển", "Cambiar"),
+
+  // Travel mission
+  "travel.mission.title": localized(
+    "Travel mission",
+    "旅行ミッション",
+    "旅行任务",
+    "Nhiệm vụ du lịch",
+    "Misión de viaje",
+    "Misi perjalanan",
+    "បេសកកម្មធ្វើដំណើរ",
+    "ခရီးသွားမစ်ရှင်",
+    "ภารกิจท่องเที่ยว",
+    "Misi perjalanan"
+  ),
+  "travel.mission.firstSentence": localized(
+    "First sentence",
+    "最初の一文",
+    "第一句话",
+    "Câu đầu tiên",
+    "Primera frase",
+    "Kalimat pertama",
+    "ប្រយោគដំបូង",
+    "ပထမစာကြောင်း",
+    "ประโยคแรก",
+    "Ayat pertama"
+  ),
+  "travel.mission.shortResponse": localized(
+    "Short response",
+    "短い返答",
+    "简短回答",
+    "Câu trả lời ngắn",
+    "Respuesta corta",
+    "Jawaban singkat",
+    "ចម្លើយខ្លី",
+    "အဖြေတို",
+    "คำตอบสั้น",
+    "Jawapan ringkas"
+  ),
+  "travel.mission.rescueExpression": localized(
+    "Rescue expression",
+    "助け舟の表現",
+    "应急表达",
+    "Câu cứu trợ",
+    "Frase de ayuda",
+    "Ungkapan bantuan",
+    "ឃ្លាជំនួយ",
+    "အကူအညီစကားစု",
+    "ประโยคช่วยเหลือ",
+    "Ungkapan bantuan"
+  ),
+  "travel.mission.success": localized(
+    "You did it",
+    "できました",
+    "你做到了",
+    "Bạn làm được rồi",
+    "Lo lograste",
+    "Berhasil",
+    "អ្នកធ្វើបានហើយ",
+    "သင်လုပ်နိုင်ခဲ့ပြီ",
+    "คุณทำได้แล้ว",
+    "Anda berjaya"
+  ),
+  "travel.mission.practiceMore": localized(
+    "Practice more",
+    "もう少し練習",
+    "继续练习",
+    "Luyện thêm",
+    "Practica más",
+    "Latihan lagi",
+    "ហាត់បន្ថែម",
+    "ထပ်လေ့ကျင့်ပါ",
+    "ฝึกเพิ่ม",
+    "Berlatih lagi"
+  ),
 
   // Loading state
   "state.loading.title": localized(

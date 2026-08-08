@@ -2,10 +2,14 @@ import { beforeEach, describe, expect, it } from "vitest";
 import type { LessonProgress, ReviewItem, SavedPhrase, UserState } from "../types";
 import {
   completeReviewItem,
+  completeCourseRoute,
   createInitialState,
+  loadState,
   mergeGuestIntoAccount,
   mergeUserStates,
   removeSavedPhrase,
+  saveTravelMissionResult,
+  upsertEpsAssessmentAttempt,
   upsertSavedPhrase
 } from "./storage";
 
@@ -318,5 +322,161 @@ describe("storage sync persistence", () => {
         operation: "upsert"
       })
     ]);
+  });
+
+  it("migrates a legacy saved state to foundation course metadata on load", () => {
+    localStorage.setItem(
+      "korean-first-talk:user-state:v1",
+      JSON.stringify({
+        anonymousId: "guest-legacy",
+        lessonProgress: {
+          "day-1": progress("completed", ["summary"], "summary")
+        },
+        reviewItems: [reviewItem()],
+        savedPhrases: [savedPhrase()],
+        savedPhraseTombstones: [],
+        analyticsEvents: [],
+        sync: {
+          mode: "local-only",
+          pending: false,
+          message: "legacy"
+        },
+        updatedAt: "2026-08-01T00:00:00.000Z"
+      })
+    );
+
+    const state = loadState();
+
+    expect(state.activeCourseId).toBe("foundation");
+    expect(state.lessonProgress["day-1"].courseId).toBe("foundation");
+    expect(state.reviewItems[0].courseId).toBe("foundation");
+    expect(state.savedPhrases[0].courseId).toBe("foundation");
+  });
+
+  it("keeps the latest active course preference by timestamp", () => {
+    const account = buildState({
+      activeCourseId: "travel",
+      activeCourseChangedAt: "2026-08-04T00:00:00.000Z"
+    });
+    const guest = buildState({
+      activeCourseId: "foundation",
+      activeCourseChangedAt: "2026-08-05T00:00:00.000Z"
+    });
+
+    const merged = mergeUserStates(account, guest, "learner@example.com");
+
+    expect(merged.activeCourseId).toBe("foundation");
+    expect(merged.activeCourseChangedAt).toBe("2026-08-05T00:00:00.000Z");
+  });
+
+  it("unions completion history by course and route version", () => {
+    const account = buildState({
+      courseEnrollments: {
+        foundation: {
+          courseId: "foundation",
+          routeVersion: "foundation-v1",
+          startedAt: "2026-08-01T00:00:00.000Z",
+          completions: [
+            {
+              courseId: "foundation",
+              routeVersion: "foundation-v1",
+              completedAt: "2026-08-14T00:00:00.000Z",
+              completedLessonIds: ["day-1"]
+            }
+          ]
+        }
+      }
+    });
+    const guest = buildState({
+      courseEnrollments: {
+        foundation: {
+          courseId: "foundation",
+          routeVersion: "foundation-v2",
+          startedAt: "2026-08-02T00:00:00.000Z",
+          completions: [
+            {
+              courseId: "foundation",
+              routeVersion: "foundation-v2",
+              completedAt: "2026-08-20T00:00:00.000Z",
+              completedLessonIds: ["day-1", "day-2"]
+            }
+          ]
+        }
+      }
+    });
+
+    const merged = mergeUserStates(account, guest, "learner@example.com");
+
+    expect(merged.courseEnrollments.foundation?.completions.map((item) => item.routeVersion).sort()).toEqual([
+      "foundation-v1",
+      "foundation-v2"
+    ]);
+  });
+
+  it("stores EPS assessment attempts in the persistent outbox", () => {
+    const next = upsertEpsAssessmentAttempt(buildState(), {
+      attemptId: "attempt-1",
+      kind: "placement",
+      assessmentVersion: "eps-v1",
+      questionOrder: ["q1"],
+      answers: {},
+      currentIndex: 0,
+      status: "in-progress",
+      startedAt: "2026-08-01T00:00:00.000Z",
+      lastSavedAt: "2026-08-01T00:01:00.000Z",
+      unavailableQuestionIds: []
+    });
+
+    expect(next.epsAssessmentAttempts["attempt-1"].status).toBe("in-progress");
+    expect(next.sync.pendingChanges).toEqual([
+      expect.objectContaining({
+        entity: "eps-assessment-attempt",
+        entityId: "attempt-1",
+        operation: "upsert"
+      })
+    ]);
+  });
+
+  it("stores Travel route completion separately from Day 14 behavior checks", () => {
+    const completed = completeCourseRoute(
+      buildState({
+        activeCourseId: "travel",
+        lessonProgress: Object.fromEntries(
+          Array.from({ length: 14 }, (_, index) => {
+            const lessonId = `travel-day-${index + 1}`;
+            return [
+              lessonId,
+              {
+                lessonId,
+                courseId: "travel",
+                status: "completed" as const,
+                currentStepId: "summary",
+                completedStepIds: ["summary"],
+                metrics: {}
+              }
+            ];
+          })
+        )
+      }),
+      "travel",
+      "2026-08-14T00:00:00.000Z"
+    );
+
+    const withMission = saveTravelMissionResult(completed, {
+      lessonId: "travel-day-14",
+      completedAt: "2026-08-14T00:01:00.000Z",
+      checks: {
+        "first-sentence": "success",
+        "short-response": "practice-more",
+        "rescue-expression": "success"
+      }
+    });
+
+    expect(withMission.courseEnrollments.travel?.completions[0].routeVersion).toBe("travel-v1");
+    expect(withMission.travelMissionResults?.["travel-day-14"].checks["short-response"]).toBe("practice-more");
+    expect(JSON.stringify(withMission.travelMissionResults)).not.toMatch(/%|accuracy|percent/i);
+    expect(withMission.sync.pendingChanges).toEqual(
+      expect.arrayContaining([expect.objectContaining({ entity: "course-enrollment", entityId: "travel" })])
+    );
   });
 });

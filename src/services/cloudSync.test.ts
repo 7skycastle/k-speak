@@ -30,12 +30,16 @@ const buildSupabaseClient = ({
   lessonProgress = [],
   reviewItems = [],
   savedPhrases = [],
+  courseEnrollments = [],
+  epsAssessmentAttempts = [],
   upsertError = null
 }: {
   profile?: unknown;
   lessonProgress?: unknown[];
   reviewItems?: unknown[];
   savedPhrases?: unknown[];
+  courseEnrollments?: unknown[];
+  epsAssessmentAttempts?: unknown[];
   upsertError?: unknown;
 }) => {
   const builders = {
@@ -43,6 +47,8 @@ const buildSupabaseClient = ({
     lesson_progress: createQueryBuilder(lessonProgress, null),
     review_items: createQueryBuilder(reviewItems, null),
     saved_phrases: createQueryBuilder(savedPhrases, null),
+    course_enrollments: createQueryBuilder(courseEnrollments, null),
+    eps_assessment_attempts: createQueryBuilder(epsAssessmentAttempts, null),
     analytics_events: createQueryBuilder([], null)
   };
 
@@ -50,6 +56,8 @@ const buildSupabaseClient = ({
   builders.lesson_progress.upsert = vi.fn().mockResolvedValue({ error: upsertError });
   builders.review_items.upsert = vi.fn().mockResolvedValue({ error: upsertError });
   builders.saved_phrases.upsert = vi.fn().mockResolvedValue({ error: upsertError });
+  builders.course_enrollments.upsert = vi.fn().mockResolvedValue({ error: upsertError });
+  builders.eps_assessment_attempts.upsert = vi.fn().mockResolvedValue({ error: upsertError });
   builders.analytics_events.upsert = vi.fn().mockResolvedValue({ error: upsertError });
 
   return {
@@ -160,5 +168,51 @@ describe("syncWithSupabase", () => {
     expect(next.savedPhrases).toEqual([]);
     expect(next.savedPhraseTombstones).toHaveLength(1);
     expect(next.savedPhraseTombstones[0].id).toBe("day-1:core");
+  });
+
+  it("loads and persists course preference and enrollments", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true);
+    const supabase = buildSupabaseClient({
+      profile: {
+        id: "user-1",
+        country_pack_id: "us-en",
+        native_language: "English",
+        korean_level: "first-time",
+        learning_goal: "daily",
+        daily_goal_minutes: 5,
+        character_id: "haneul",
+        reminder_time: "19:00",
+        completed_at: "2026-08-01T00:00:00.000Z",
+        preferred_course_id: "travel",
+        preferred_course_changed_at: "2026-08-04T00:00:00.000Z"
+      },
+      courseEnrollments: [
+        {
+          course_id: "foundation",
+          route_version: "foundation-v1",
+          started_at: "2026-08-01T00:00:00.000Z",
+          last_opened_at: "2026-08-02T00:00:00.000Z",
+          route_slots: null,
+          completions: []
+        }
+      ]
+    });
+    mockGetSupabaseClient.mockReturnValue(supabase);
+
+    const next = await syncWithSupabase(buildState(), session as never);
+
+    expect(next.activeCourseId).toBe("travel");
+    expect(next.courseEnrollments.foundation?.routeVersion).toBe("foundation-v1");
+    expect(supabase.from).toHaveBeenCalledWith("course_enrollments");
+  });
+
+  it("keeps pending changes when cloud upsert fails", async () => {
+    mockIsSupabaseConfigured.mockReturnValue(true);
+    mockGetSupabaseClient.mockReturnValue(buildSupabaseClient({ upsertError: new Error("temporary") }));
+
+    await expect(syncWithSupabase(buildState(), session as never)).rejects.toThrow("temporary");
+
+    const stored = JSON.parse(localStorage.getItem("korean-first-talk:user-state:v1") ?? "{}") as UserState;
+    expect(stored.sync.pendingChanges?.length).toBeGreaterThan(0);
   });
 });

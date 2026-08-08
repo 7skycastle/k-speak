@@ -32,6 +32,12 @@ const server = createServer((request, response) => {
 
 const state = {
   anonymousId: "mobile-qa",
+  activeCourseId: "foundation",
+  activeCourseChangedAt: "1970-01-01T00:00:00.000Z",
+  courseEnrollments: {},
+  epsAssessmentAttempts: {},
+  epsAssessmentResults: {},
+  travelMissionResults: {},
   onboarding: {
     countryPackId: "us-en",
     nativeLanguage: "English",
@@ -178,6 +184,12 @@ try {
     await page.getByText("What comes after Day 14").waitFor();
     await page.getByText("Offline audio pack status").waitFor();
     await page.getByText("Saved phrases").waitFor();
+    await page.getByRole("button", { name: "Change course" }).click();
+    await page.getByRole("button", { name: /Korean Travel/ }).click();
+    await page.getByText("Airport Arrival").waitFor();
+    await page.getByRole("button", { name: "Change course" }).click();
+    await page.getByRole("button", { name: /Korean First Talk/ }).click();
+    await page.getByText(/Day 1\./).waitFor();
 
     await assertNoOverflow(page, viewport.name);
     await assertBottomContentVisible(page, viewport.name);

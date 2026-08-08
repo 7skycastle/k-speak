@@ -4,8 +4,15 @@ import { continuationTracks, getContinuationTrack } from "./continuationProgram"
 import { findAudioSlot } from "./audioCatalog";
 import { lessons } from "./lessons";
 import { tutorCharacters } from "./characters";
+import { getLessonStepText } from "../i18n/lessonStepOverrides";
 
 describe("lesson catalog", () => {
+  it("includes the five additional Southeast Asia country packs", () => {
+    expect(countryPacks.map((pack) => pack.id)).toEqual(
+      expect.arrayContaining(["id-id", "kh-km", "mm-my", "th-th", "my-ms"])
+    );
+  });
+
   it("contains reusable Day 1 through Day 30 lessons", () => {
     expect(lessons.map((lesson) => lesson.day)).toEqual(Array.from({ length: 30 }, (_, index) => index + 1));
 
@@ -104,6 +111,30 @@ describe("lesson catalog", () => {
     }
   });
 
+  it("localizes starter-course guidance for Indonesia, Cambodia, and Myanmar", () => {
+    const day1 = lessons[0];
+
+    expect(day1.structure.explanationByCountry["id-id"]).toContain("Akhiran");
+    expect(day1.structure.explanationByCountry["kh-km"]).toContain("បច្ច័យ");
+    expect(day1.structure.explanationByCountry["mm-my"]).toContain("အဆုံးသတ်");
+
+    expect(day1.pronunciationByCountry["kh-km"]).toContain("안녕하세요");
+    expect(day1.pronunciationByCountry["mm-my"]).toContain("안녕하세요");
+    expect(day1.reviewCards[0].reasonByCountry["kh-km"]).toContain("ប្រយោគស្នូល");
+    expect(day1.reviewCards[1].reasonByCountry["mm-my"]).toContain("မော်ဒယ်ဝါကျ");
+  });
+
+  it("localizes extra dialogue meanings for the new Southeast Asia packs", () => {
+    const day2 = lessons[1];
+    const day30 = lessons[29];
+
+    expect(day2.dialogue[0].meaningByCountry["id-id"]).toContain("pesan");
+    expect(day2.dialogue[0].meaningByCountry["kh-km"]).toContain("កុម្ម៉ង់");
+    expect(day2.dialogue[0].meaningByCountry["mm-my"]).toContain("မှာယူ");
+    expect(day30.dialogue[0].meaningByCountry["th-th"]).toContain("ครั้งหน้า");
+    expect(day30.dialogue[0].meaningByCountry["my-ms"]).toContain("selepas");
+  });
+
   it("maps every learning goal to a Day 15 through Day 30 continuation program", () => {
     const expectedGoals = ["travel", "daily", "study", "work", "life", "k-content"];
 
@@ -111,10 +142,33 @@ describe("lesson catalog", () => {
 
     for (const goal of expectedGoals) {
       const track = getContinuationTrack(goal as (typeof continuationTracks)[number]["id"]);
-      expect(track.title).toContain("Day 15-30");
+      expect(track.title["us-en"]).toContain("Day 15-30");
       expect(track.modules).toHaveLength(3);
       expect(track.modules.every((module) => module.samplePhrases.length >= 3)).toBe(true);
     }
+  });
+
+  it("localizes continuation tracks for the new Southeast Asia packs", () => {
+    const travelTrack = getContinuationTrack("travel");
+    const workTrack = getContinuationTrack("work");
+
+    expect(travelTrack.title["id-id"]).toContain("Bahasa Korea");
+    expect(travelTrack.promise["kh-km"]).toContain("ធ្វើដំណើរ");
+    expect(workTrack.modules[0].title["mm-my"]).toContain("အချိန်ဇယား");
+    expect(workTrack.modules[2].outcome["th-th"]).toContain("ความช่วยเหลือ");
+    expect(travelTrack.modules[1].samplePhrases).toEqual(["맵지 않게 해 주세요.", "계산해 주세요.", "따로 포장해 주세요."]);
+  });
+
+  it("localizes lesson step titles and bodies for the new Southeast Asia packs", () => {
+    const dialogueStep = lessons[0].steps.find((step) => step.id === "dialogue");
+    const quizStep = lessons[0].steps.find((step) => step.id === "quiz");
+
+    expect(dialogueStep).toBeTruthy();
+    expect(quizStep).toBeTruthy();
+
+    expect(getLessonStepText(dialogueStep!, "id-id").title).toBe("Dengarkan dialog lengkap");
+    expect(getLessonStepText(dialogueStep!, "th-th").body).toContain("บทสนทนา");
+    expect(getLessonStepText(quizStep!, "my-ms").title).toBe("Semakan pantas");
   });
 
   it("returns explicit TTS fallback audio metadata for every tutor and lesson", () => {

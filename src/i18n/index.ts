@@ -1,5 +1,7 @@
 import type { CountryPackId } from "../types";
 import { uiCatalog, localized } from "./ui";
+import { seaUiRichOverrides } from "./seaUiRichOverrides";
+import { seaUiOverrides } from "./seaUiOverrides";
 
 export { localized };
 
@@ -27,7 +29,8 @@ export const resolveLocalized = (entry: Record<CountryPackId, string>, packId: C
 };
 
 export const t = (key: UiKey, packId: CountryPackId, params?: Record<string, string | number>): string => {
-  const resolved = resolveLocalized(uiCatalog[key], packId);
+  const override = seaUiRichOverrides[key]?.[packId] || seaUiOverrides[key]?.[packId];
+  const resolved = override || resolveLocalized(uiCatalog[key], packId);
   return interpolate(resolved, params);
 };
 

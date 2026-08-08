@@ -80,4 +80,21 @@ describe("reviewEngine", () => {
     expect(reviews[0].reason).toContain("frase clave");
     expect(reviews[0].reason).not.toContain("복습");
   });
+
+  it("assigns foundation course id to review cards built from existing lessons", () => {
+    const items = buildReviewItems(
+      {
+        lessonId: "day-1",
+        status: "completed",
+        currentStepId: "summary",
+        completedStepIds: ["summary"],
+        metrics: {}
+      },
+      "Hello",
+      "us-en"
+    );
+
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every((item) => item.courseId === "foundation")).toBe(true);
+  });
 });

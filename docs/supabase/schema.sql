@@ -94,3 +94,45 @@ grant select, insert, update on public.saved_phrases to authenticated;
 grant insert, update on public.analytics_events to authenticated;
 grant insert on public.guest_merge_requests to authenticated;
 grant select on public.country_pack_snapshots to anon, authenticated;
+
+alter table public.profiles
+  add column if not exists preferred_course_id text,
+  add column if not exists preferred_course_changed_at timestamptz;
+
+update public.profiles
+set preferred_course_id = 'foundation',
+    preferred_course_changed_at = coalesce(updated_at, created_at, now())
+where preferred_course_id is null;
+
+create table if not exists public.course_enrollments (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  course_id text not null,
+  route_version text not null,
+  started_at timestamptz,
+  last_opened_at timestamptz,
+  route_slots jsonb,
+  completions jsonb not null default '[]'::jsonb,
+  field_updated_at jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, course_id)
+);
+
+create table if not exists public.eps_assessment_attempts (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  attempt_id text not null,
+  kind text not null,
+  assessment_version text not null,
+  question_order text[] not null default '{}',
+  answers jsonb not null default '{}'::jsonb,
+  current_index integer not null default 0,
+  status text not null,
+  started_at timestamptz not null,
+  expires_at timestamptz,
+  last_saved_at timestamptz not null,
+  unavailable_question_ids text[] not null default '{}',
+  updated_at timestamptz not null default now(),
+  primary key (user_id, attempt_id)
+);
+
+grant select, insert, update on public.course_enrollments to authenticated;
+grant select, insert, update on public.eps_assessment_attempts to authenticated;
