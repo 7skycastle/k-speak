@@ -2,6 +2,23 @@ import { describe, expect, it } from "vitest";
 import type { CourseEnrollment, UserState } from "../types";
 import { createCultureRoute, isCultureRouteLocked, updateCultureRouteSelection } from "./culturePathEngine";
 
+const POP_PRIMARY_DRAMA_SAMPLER_V1 = [
+  "k-culture-common-1",
+  "k-culture-k-pop-1",
+  "k-culture-common-2",
+  "k-culture-k-pop-2",
+  "k-culture-k-drama-1",
+  "k-culture-k-pop-3",
+  "k-culture-common-3",
+  "k-culture-k-pop-4",
+  "k-culture-k-drama-2",
+  "k-culture-common-4",
+  "k-culture-k-pop-5",
+  "k-culture-k-pop-6",
+  "k-culture-synthesis-1",
+  "k-culture-synthesis-2"
+];
+
 describe("culturePathEngine", () => {
   it("builds a stable 14-slot K-Pop primary and K-Drama sampler route", () => {
     const route = createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" });
@@ -12,23 +29,14 @@ describe("culturePathEngine", () => {
     expect(route.filter((slot) => slot.kind === "sampler")).toHaveLength(2);
     expect(route.filter((slot) => slot.kind === "synthesis")).toHaveLength(2);
     expect(route.map((slot) => slot.slot)).toEqual(Array.from({ length: 14 }, (_, index) => index + 1));
-    expect(route.map((slot) => slot.lessonId)).toEqual([
-      "k-culture-common-1",
-      "k-culture-k-pop-1",
-      "k-culture-common-2",
-      "k-culture-k-pop-2",
-      "k-culture-k-drama-1",
-      "k-culture-k-pop-3",
-      "k-culture-common-3",
-      "k-culture-k-pop-4",
-      "k-culture-k-drama-2",
-      "k-culture-common-4",
-      "k-culture-k-pop-5",
-      "k-culture-k-pop-6",
-      "k-culture-synthesis-1",
-      "k-culture-synthesis-2"
-    ]);
+    expect(route.map((slot) => slot.lessonId)).toEqual(POP_PRIMARY_DRAMA_SAMPLER_V1);
     expect(createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" })).toEqual(route);
+  });
+
+  it("never rewrites the published Pop/Drama v1 route", () => {
+    expect(createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" }).map((slot) => slot.lessonId)).toEqual(
+      POP_PRIMARY_DRAMA_SAMPLER_V1
+    );
   });
 
   it("rejects identical primary and sampler packs", () => {

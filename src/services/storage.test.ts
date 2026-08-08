@@ -495,6 +495,55 @@ describe("storage sync persistence", () => {
     expect(merged.courseEnrollments["k-culture"]?.routeSlots).toEqual(lockedRoute);
   });
 
+  it("preserves a completed Pop/Drama route when a newer app knows Beauty and Webtoon packs", () => {
+    const publishedRoute = createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" });
+    const expandedAlternateRoute = createCultureRoute({ primaryPackId: "k-beauty", samplerPackId: "k-webtoon" });
+    const account = buildState({
+      courseEnrollments: {
+        "k-culture": {
+          courseId: "k-culture",
+          routeVersion: "k-culture-v1",
+          routeLockedAt: "2026-08-08T09:30:00.000Z",
+          routeSlots: publishedRoute,
+          completions: [
+            {
+              courseId: "k-culture",
+              routeVersion: "k-culture-v1",
+              completedAt: "2026-08-09T00:00:00.000Z",
+              completedLessonIds: publishedRoute.map((slot) => slot.lessonId)
+            }
+          ],
+          fieldUpdatedAt: {
+            routeLockedAt: "2026-08-08T09:30:00.000Z",
+            routeSlots: "2026-08-08T09:00:00.000Z",
+            completions: "2026-08-09T00:00:00.000Z"
+          }
+        }
+      }
+    });
+    const guest = buildState({
+      courseEnrollments: {
+        "k-culture": {
+          courseId: "k-culture",
+          routeVersion: "k-culture-v1",
+          startedAt: "2026-08-10T00:00:00.000Z",
+          routeSlots: expandedAlternateRoute,
+          completions: [],
+          fieldUpdatedAt: {
+            routeSlots: "2026-08-10T00:00:00.000Z"
+          }
+        }
+      }
+    });
+
+    const merged = mergeUserStates(account, guest, "learner@example.com");
+
+    expect(merged.courseEnrollments["k-culture"]?.routeSlots).toEqual(publishedRoute);
+    expect(merged.courseEnrollments["k-culture"]?.completions[0].completedLessonIds).toEqual(
+      publishedRoute.map((slot) => slot.lessonId)
+    );
+  });
+
   it("stores EPS assessment attempts in the persistent outbox", () => {
     const next = upsertEpsAssessmentAttempt(buildState(), {
       attemptId: "attempt-1",
