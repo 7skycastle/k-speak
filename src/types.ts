@@ -15,7 +15,19 @@ export type LearningGoal = "travel" | "daily" | "study" | "work" | "life" | "k-c
 export type CourseId = "foundation" | "travel" | "k-food" | "k-culture" | "eps-topik";
 export type CourseExposure = "visible" | "preparing" | "hidden";
 export type CourseStatus = "not-started" | "in-progress" | "completed";
-export type CourseRouteSlotKind = "lesson" | "common" | "primary" | "sampler" | "capstone" | "assessment";
+export type CulturePackId = "k-pop" | "k-drama" | "k-beauty" | "k-webtoon";
+export interface CultureRouteSelection {
+  primaryPackId: CulturePackId;
+  samplerPackId: CulturePackId;
+}
+export type CourseRouteSlotKind =
+  | "lesson"
+  | "common"
+  | "primary"
+  | "sampler"
+  | "synthesis"
+  | "capstone"
+  | "assessment";
 export type DailyGoalMinutes = 3 | 5 | 10 | 15;
 export type LessonStatus = "not-started" | "in-progress" | "completed";
 
@@ -39,9 +51,10 @@ export interface CourseEnrollment {
   routeVersion: string;
   startedAt?: string;
   lastOpenedAt?: string;
+  routeLockedAt?: string;
   routeSlots?: CourseRouteSlot[];
   completions: CourseCompletion[];
-  fieldUpdatedAt?: Partial<Record<"startedAt" | "lastOpenedAt" | "routeSlots" | "completions", string>>;
+  fieldUpdatedAt?: Partial<Record<"startedAt" | "lastOpenedAt" | "routeLockedAt" | "routeSlots" | "completions", string>>;
 }
 
 export type EpsAssessmentKind = "placement" | "stage-check" | "reading-practice" | "listening-practice" | "mock";
