@@ -4,7 +4,7 @@ import { createTranslator } from "../../i18n";
 import type { CountryPackId, CourseEnrollment, CulturePackId, CultureRouteSelection, UserState } from "../../types";
 import { CultureRouteSummary } from "./CultureRouteSummary";
 
-const culturePackIds: CulturePackId[] = ["k-pop", "k-drama"];
+const culturePackIds: CulturePackId[] = ["k-pop", "k-drama", "k-beauty", "k-webtoon"];
 
 const packLabelKey = {
   "k-pop": "culture.pack.kPop",

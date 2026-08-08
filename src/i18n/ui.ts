@@ -210,6 +210,34 @@ export const uiCatalog = {
   "culture.pack.kDrama": localized("K-Drama", "Kドラマ", "韩剧", "K-Drama", "K-Drama"),
   "culture.pack.kBeauty": localized("K-Beauty", "Kビューティー", "韩妆", "K-Beauty", "K-Beauty"),
   "culture.pack.kWebtoon": localized("K-Webtoon", "Kウェブトゥーン", "韩漫", "K-Webtoon", "K-Webtoon"),
+  "culture.pack.kBeauty.description": localized(
+    "Beauty words for color, label order, caution checks, and neutral personal impressions.",
+    "色、ラベルの順序、注意事項、自然な感想を学ぶ美容表現です。",
+    "学习颜色、标签顺序、注意事项和中立个人感受的美妆韩语。",
+    "Từ vựng làm đẹp cho màu sắc, thứ tự nhãn, lưu ý và cảm nhận cá nhân trung lập.",
+    "Vocabulario de belleza para color, orden de etiqueta, precauciones e impresiones personales neutrales."
+  ),
+  "culture.pack.kWebtoon.description": localized(
+    "Original story scenes for sequence, emotion, relationships, context, and polite everyday speech.",
+    "順序、感情、人間関係、文脈、丁寧な日常表現を学ぶ独自ストーリー場面です。",
+    "原创故事场景，用于学习顺序、情绪、人物关系、语境和礼貌日常表达。",
+    "Cảnh truyện gốc để học thứ tự, cảm xúc, quan hệ, ngữ cảnh và lời nói lịch sự hằng ngày.",
+    "Escenas originales para aprender secuencia, emoción, relaciones, contexto y habla cotidiana cortés."
+  ),
+  "culture.pack.medicalDisclaimer": localized(
+    "K-Beauty lessons are language practice, not medical or product advice.",
+    "Kビューティーレッスンは語学練習であり、医療や商品アドバイスではありません。",
+    "K-Beauty 课程是语言练习，不是医疗或产品建议。",
+    "Bài K-Beauty là luyện ngôn ngữ, không phải tư vấn y tế hay sản phẩm.",
+    "Las lecciones K-Beauty son práctica de idioma, no consejo médico ni de producto."
+  ),
+  "culture.pack.webtoonNotice": localized(
+    "K-Webtoon lessons use only K-Speak fictional scenes.",
+    "KウェブトゥーンレッスンはK-Speakの架空場面のみを使います。",
+    "K-Webtoon 课程仅使用 K-Speak 虚构场景。",
+    "Bài K-Webtoon chỉ dùng cảnh hư cấu của K-Speak.",
+    "Las lecciones K-Webtoon usan solo escenas ficticias de K-Speak."
+  ),
   "culture.route.summaryAriaLabel": localized("K-Culture route summary", "Kカルチャールート概要", "韩流文化路线摘要", "Tóm tắt lộ trình K-Culture", "Resumen de ruta K-Culture"),
   "culture.route.position": localized("Route position", "ルート位置", "路线位置", "Vị trí lộ trình", "Posición de ruta"),
   "culture.route.notCreated": localized("Not created yet", "未作成", "尚未创建", "Chưa tạo", "Aún no creada"),

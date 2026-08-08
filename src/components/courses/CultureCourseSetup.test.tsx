@@ -24,4 +24,16 @@ describe("CultureCourseSetup", () => {
 
     expect(screen.getByText(/K-Speak original learning scenes/i)).toBeInTheDocument();
   });
+
+  it("allows Beauty and Webtoon as different route packs", () => {
+    const onSave = vi.fn();
+    renderCultureSetup(onSave);
+
+    fireEvent.click(screen.getByLabelText("K-Beauty primary"));
+    expect(screen.getByLabelText("K-Beauty sampler")).toBeDisabled();
+    fireEvent.click(screen.getByLabelText("K-Webtoon sampler"));
+    fireEvent.click(screen.getByRole("button", { name: "Create my route" }));
+
+    expect(onSave).toHaveBeenCalledWith({ primaryPackId: "k-beauty", samplerPackId: "k-webtoon" });
+  });
 });

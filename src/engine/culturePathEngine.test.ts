@@ -45,6 +45,18 @@ describe("culturePathEngine", () => {
     );
   });
 
+  it.each([
+    ["k-beauty", "k-webtoon"],
+    ["k-webtoon", "k-pop"],
+    ["k-drama", "k-beauty"]
+  ] as const)("builds %s primary with %s sampler", (primaryPackId, samplerPackId) => {
+    const route = createCultureRoute({ primaryPackId, samplerPackId });
+
+    expect(route).toHaveLength(14);
+    expect(route.filter((slot) => slot.kind === "primary").every((slot) => slot.packId === primaryPackId)).toBe(true);
+    expect(route.filter((slot) => slot.kind === "sampler").every((slot) => slot.packId === samplerPackId)).toBe(true);
+  });
+
   it("locks the route after the first pack-specific lesson starts", () => {
     const routeSlots = createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" });
     const progress: UserState["lessonProgress"] = {

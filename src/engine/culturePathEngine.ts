@@ -1,4 +1,5 @@
 import { courseRegistry } from "../data/courses/courseRegistry";
+import { getCulturePackLessonIds } from "../data/courses/cultureLessons";
 import type { CourseEnrollment, CourseRouteSlot, CulturePackId, CultureRouteSelection, UserState } from "../types";
 
 const CULTURE_ROUTE_VERSION = courseRegistry["k-culture"].routeVersion;
@@ -42,6 +43,11 @@ const packIdForSlot = (
 export const createCultureRoute = (selection: CultureRouteSelection): CourseRouteSlot[] => {
   if (selection.primaryPackId === selection.samplerPackId) {
     throw new Error("Primary and sampler culture packs must differ");
+  }
+  for (const packId of [selection.primaryPackId, selection.samplerPackId]) {
+    if (getCulturePackLessonIds(packId).length < 6) {
+      throw new Error(`Culture pack is incomplete: ${packId}`);
+    }
   }
 
   return CULTURE_SLOT_ORDER.map(([kind, index], slotIndex) => ({
