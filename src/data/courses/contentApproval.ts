@@ -1,4 +1,4 @@
-import type { CourseExposure, CourseId, CountryPackId } from "../../types";
+import type { CourseExposure, CourseId, CountryPackId, CulturePackId } from "../../types";
 import { courseRegistry } from "./courseRegistry";
 
 export type CourseLocaleApprovalStatus = "draft" | "native-review" | "approved";
@@ -10,6 +10,15 @@ export interface CourseLocaleApproval {
   status: CourseLocaleApprovalStatus;
   reviewerRole: "internal" | "native-reviewer";
   reviewedAt?: string;
+}
+
+export interface CulturePackLocaleApproval {
+  packId: CulturePackId;
+  countryPackId: CountryPackId;
+  contentVersion: string;
+  status: "draft" | "approved";
+  reviewerRole: "internal" | "native-reviewer";
+  approvedAt?: string;
 }
 
 const countryPackIds: CountryPackId[] = [
@@ -68,6 +77,40 @@ export const courseLocaleApprovals: CourseLocaleApproval[] = [
   ])
 ];
 
+export const culturePackLocaleApprovals: CulturePackLocaleApproval[] = [
+  {
+    packId: "k-pop",
+    countryPackId: "us-en",
+    contentVersion: "k-pop-v1",
+    status: "approved",
+    reviewerRole: "internal",
+    approvedAt: "2026-08-08T00:00:00.000Z"
+  },
+  {
+    packId: "k-drama",
+    countryPackId: "us-en",
+    contentVersion: "k-drama-v1",
+    status: "approved",
+    reviewerRole: "internal",
+    approvedAt: "2026-08-08T00:00:00.000Z"
+  },
+  ...countryPackIds.flatMap((countryPackId) =>
+    (["k-pop", "k-drama", "k-beauty", "k-webtoon"] as const).flatMap((packId) =>
+      countryPackId === "us-en" && (packId === "k-pop" || packId === "k-drama")
+        ? []
+        : [
+            {
+              packId,
+              countryPackId,
+              contentVersion: `${packId}-v1`,
+              status: "draft" as const,
+              reviewerRole: "internal" as const
+            }
+          ]
+    )
+  )
+];
+
 export const isCourseLocaleApproved = (courseId: CourseId, countryPackId: CountryPackId) =>
   courseLocaleApprovals.some(
     (approval) =>
@@ -76,8 +119,15 @@ export const isCourseLocaleApproved = (courseId: CourseId, countryPackId: Countr
       approval.status === "approved"
   );
 
+export const getApprovedCulturePacks = (countryPackId: CountryPackId): CulturePackId[] =>
+  culturePackLocaleApprovals
+    .filter((approval) => approval.countryPackId === countryPackId && approval.status === "approved")
+    .map((approval) => approval.packId)
+    .filter((packId, index, packIds) => packIds.indexOf(packId) === index);
+
 export const getCourseExposureForLocale = (courseId: CourseId, countryPackId: CountryPackId): CourseExposure => {
   if (courseId === "foundation") return "visible";
   if (courseRegistry[courseId].exposure === "hidden") return "hidden";
+  if (courseId === "k-culture") return getApprovedCulturePacks(countryPackId).length >= 2 ? "visible" : "preparing";
   return isCourseLocaleApproved(courseId, countryPackId) ? "visible" : "preparing";
 };

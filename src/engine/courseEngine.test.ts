@@ -33,7 +33,7 @@ describe("course registry", () => {
     expect(courseRegistry["k-food"].coreLessonIds).toEqual(
       Array.from({ length: 14 }, (_, index) => `k-food-day-${index + 1}`)
     );
-    expect(courseRegistry["k-culture"].exposure).toBe("hidden");
+    expect(courseRegistry["k-culture"].exposure).toBe("preparing");
     expect(courseRegistry["eps-topik"].exposure).toBe("hidden");
   });
 

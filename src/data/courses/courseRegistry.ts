@@ -48,7 +48,7 @@ export const courseRegistry: Record<CourseId, CourseRegistryEntry> = {
     id: "k-culture",
     titleKey: "course.kCulture.title",
     routeVersion: "k-culture-v1",
-    exposure: "hidden",
+    exposure: "preparing",
     coreLessonIds: cultureLessonIds,
     continuationLessonIds: []
   },
