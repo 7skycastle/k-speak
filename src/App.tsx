@@ -19,6 +19,7 @@ import {
   Volume2
 } from "lucide-react";
 import { getCharacter, tutorCharacters } from "./data/characters";
+import { CultureCourseSetup } from "./components/courses/CultureCourseSetup";
 import { countryPacks, getCountryPack } from "./data/countryPacks";
 import { getContinuationTrack, type ContinuationModule } from "./data/continuationProgram";
 import { getLesson, lessons } from "./data/lessons";
@@ -29,6 +30,7 @@ import { buildReviewItems, getDueReviewItems } from "./engine/reviewEngine";
 import {
   getCourseLesson,
   getCourseLessonIds,
+  getCourseRouteLessonIds,
   getDerivedCourseStatus,
   getLessonCourseId,
   getNextCourseLesson,
@@ -52,6 +54,7 @@ import {
   markSavedPhrasePlayed,
   mergeGuestIntoAccount,
   removeSavedPhrase,
+  saveCultureRouteSelection,
   updateOnboarding,
   updateActiveCourse,
   upsertLessonProgress,
@@ -172,7 +175,9 @@ const staticAudioSlots = audioCatalog.filter((slot) => slot.naturalUrl && slot.s
 const fallbackAudioSlots = totalAudioSlots - staticAudioSlots;
 const primaryCourseLessons = lessons.filter((lesson) => lesson.day <= 14);
 const hasRemainingLessons = (state: UserState) =>
-  getCourseLessonIds(state.activeCourseId).some((lessonId) => state.lessonProgress[lessonId]?.status !== "completed");
+  getCourseRouteLessonIds(state, state.activeCourseId).some(
+    (lessonId) => state.lessonProgress[lessonId]?.status !== "completed"
+  );
 
 const isPrimaryCourseCompleted = (state: UserState) =>
   primaryCourseLessons.every((lesson) => state.lessonProgress[lesson.id]?.status === "completed");
@@ -351,15 +356,24 @@ export const App = () => {
             />
           )}
           {tab === "lesson" && (
-            <LessonScreen
-              state={state}
-              lessonId={currentLesson.id}
-              progress={progress}
-              onPersist={updateState}
-              onError={setError}
-              onPause={() => setTab("home")}
-              onComplete={() => setTab("home")}
-            />
+            state.activeCourseId === "k-culture" && !state.courseEnrollments["k-culture"]?.routeSlots?.length ? (
+              <CultureCourseSetup
+                enrollment={state.courseEnrollments["k-culture"]}
+                progress={state.lessonProgress}
+                packId={countryPack.id}
+                onSave={(selection) => setState((current) => saveCultureRouteSelection(current, selection))}
+              />
+            ) : (
+              <LessonScreen
+                state={state}
+                lessonId={currentLesson.id}
+                progress={progress}
+                onPersist={updateState}
+                onError={setError}
+                onPause={() => setTab("home")}
+                onComplete={() => setTab("home")}
+              />
+            )
           )}
           {tab === "review" && (
             <ReviewScreen state={state} onPersist={updateState} onStartLesson={startLesson} onReturnHome={() => setTab("home")} />

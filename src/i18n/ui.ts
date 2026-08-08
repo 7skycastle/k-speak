@@ -178,6 +178,50 @@ export const uiCatalog = {
   "course.action.resume": localized("Resume", "再開", "继续", "Tiếp tục", "Continuar"),
   "course.action.switch": localized("Switch", "切替", "切换", "Chuyển", "Cambiar"),
 
+  // K-Culture route setup
+  "culture.setup.kicker": localized("Original K-Culture route", "オリジナルKカルチャールート", "原创韩流文化路线", "Lộ trình K-Culture gốc", "Ruta K-Culture original"),
+  "culture.setup.title": localized("Choose your K-Culture route", "Kカルチャールートを選ぶ", "选择你的韩流文化路线", "Chọn lộ trình K-Culture", "Elige tu ruta K-Culture"),
+  "culture.setup.notice": localized(
+    "K-Speak original learning scenes only. No real lyrics, drama dialogue, celebrities, characters, logos, or voices are used.",
+    "K-Speak独自の学習場面のみです。実在の歌詞、ドラマ台詞、有名人、キャラクター、ロゴ、声は使いません。",
+    "仅使用 K-Speak 原创学习场景。不使用真实歌词、剧集台词、名人、角色、标志或声音。",
+    "Chỉ dùng cảnh học tập gốc của K-Speak. Không dùng lời bài hát, thoại phim, người nổi tiếng, nhân vật, logo hoặc giọng thật.",
+    "Solo escenas de aprendizaje originales de K-Speak. No se usan letras, diálogos, celebridades, personajes, logos ni voces reales."
+  ),
+  "culture.setup.primaryLabel": localized("Primary pack", "メインパック", "主学习包", "Gói chính", "Paquete principal"),
+  "culture.setup.samplerLabel": localized("Sampler pack", "お試しパック", "体验包", "Gói thử", "Paquete de muestra"),
+  "culture.setup.validation": localized(
+    "Choose two different packs.",
+    "異なる2つのパックを選んでください。",
+    "请选择两个不同的学习包。",
+    "Chọn hai gói khác nhau.",
+    "Elige dos paquetes diferentes."
+  ),
+  "culture.setup.locked": localized(
+    "This route is locked because a pack lesson has already started.",
+    "パックレッスンを開始済みのため、このルートは固定されています。",
+    "因为已经开始了学习包课程，此路线已锁定。",
+    "Lộ trình này đã khóa vì bạn đã bắt đầu một bài trong gói.",
+    "Esta ruta está bloqueada porque ya empezaste una lección del paquete."
+  ),
+  "culture.setup.createRoute": localized("Create my route", "ルートを作成", "创建我的路线", "Tạo lộ trình của tôi", "Crear mi ruta"),
+  "culture.setup.changeRoute": localized("Change route", "ルートを変更", "更改路线", "Đổi lộ trình", "Cambiar ruta"),
+  "culture.pack.kPop": localized("K-Pop", "K-Pop", "K-Pop", "K-Pop", "K-Pop"),
+  "culture.pack.kDrama": localized("K-Drama", "Kドラマ", "韩剧", "K-Drama", "K-Drama"),
+  "culture.pack.kBeauty": localized("K-Beauty", "Kビューティー", "韩妆", "K-Beauty", "K-Beauty"),
+  "culture.pack.kWebtoon": localized("K-Webtoon", "Kウェブトゥーン", "韩漫", "K-Webtoon", "K-Webtoon"),
+  "culture.route.summaryAriaLabel": localized("K-Culture route summary", "Kカルチャールート概要", "韩流文化路线摘要", "Tóm tắt lộ trình K-Culture", "Resumen de ruta K-Culture"),
+  "culture.route.position": localized("Route position", "ルート位置", "路线位置", "Vị trí lộ trình", "Posición de ruta"),
+  "culture.route.notCreated": localized("Not created yet", "未作成", "尚未创建", "Chưa tạo", "Aún no creada"),
+  "culture.route.completionLabel": localized("Completion", "完了条件", "完成条件", "Hoàn thành", "Finalización"),
+  "culture.route.firstComplete": localized(
+    "First 14-day route completed",
+    "最初の14日ルート完了",
+    "首个14天路线已完成",
+    "Đã hoàn thành lộ trình 14 ngày đầu tiên",
+    "Primera ruta de 14 días completada"
+  ),
+
   // Travel mission
   "travel.mission.title": localized(
     "Travel mission",
