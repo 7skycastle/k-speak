@@ -9,9 +9,11 @@ import {
   mergeGuestIntoAccount,
   mergeUserStates,
   removeSavedPhrase,
+  saveCultureRouteSelection,
   saveKFoodMissionResult,
   saveTravelMissionResult,
   upsertEpsAssessmentAttempt,
+  upsertLessonProgress,
   upsertSavedPhrase
 } from "./storage";
 
@@ -515,6 +517,59 @@ describe("storage sync persistence", () => {
         operation: "upsert"
       })
     ]);
+  });
+
+  it("saves a K-Culture route selection through the persistent outbox", () => {
+    const selectedAt = "2026-08-08T12:00:00.000Z";
+    const next = saveCultureRouteSelection(
+      buildState(),
+      { primaryPackId: "k-pop", samplerPackId: "k-drama" },
+      selectedAt
+    );
+
+    expect(next.courseEnrollments["k-culture"]?.routeSlots).toHaveLength(14);
+    expect(next.courseEnrollments["k-culture"]?.fieldUpdatedAt?.routeSlots).toBe(selectedAt);
+    expect(next.sync.pendingChanges).toEqual([
+      expect.objectContaining({
+        entity: "course-enrollment",
+        entityId: "k-culture",
+        operation: "upsert",
+        changedAt: selectedAt
+      })
+    ]);
+  });
+
+  it("locks K-Culture route once a primary or sampler lesson starts", () => {
+    const selectedAt = "2026-08-08T12:00:00.000Z";
+    const startedAt = "2026-08-08T12:05:00.000Z";
+    const selected = saveCultureRouteSelection(
+      buildState(),
+      { primaryPackId: "k-pop", samplerPackId: "k-drama" },
+      selectedAt
+    );
+
+    const next = upsertLessonProgress(selected, "k-culture-k-pop-1", {
+      lessonId: "k-culture-k-pop-1",
+      courseId: "k-culture",
+      status: "in-progress",
+      currentStepId: "situation",
+      completedStepIds: [],
+      startedAt,
+      metrics: {}
+    });
+
+    expect(next.courseEnrollments["k-culture"]?.routeLockedAt).toBe(startedAt);
+    expect(next.courseEnrollments["k-culture"]?.fieldUpdatedAt?.routeLockedAt).toBe(startedAt);
+    expect(next.sync.pendingChanges).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          entity: "course-enrollment",
+          entityId: "k-culture",
+          operation: "upsert",
+          changedAt: startedAt
+        })
+      ])
+    );
   });
 
   it("stores Travel route completion separately from Day 14 behavior checks", () => {

@@ -2,11 +2,13 @@ import { describe, expect, it } from "vitest";
 import { COURSE_IDS, FOUNDATION_COURSE_ID, courseRegistry, getCourseRegistryEntry } from "../data/courses/courseRegistry";
 import { createInitialState } from "../services/storage";
 import type { UserState } from "../types";
+import { createCultureRoute } from "./culturePathEngine";
 import {
   LEGACY_INFERRED_AT,
   getDerivedCourseStatus,
   getCourseLesson,
   getCourseLessonIds,
+  getCourseRouteLessonIds,
   getLessonCourseId,
   getNextCourseLesson,
   getReviewItemsForCourse,
@@ -257,5 +259,59 @@ describe("course lesson lookup", () => {
     );
 
     expect(isCourseRouteCompleted(state, "travel")).toBe(true);
+  });
+
+  it("uses stored K-Culture route slots as the learner route", () => {
+    const routeSlots = createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" });
+    const state = normalizeUserCourses(
+      baseState({
+        activeCourseId: "k-culture",
+        courseEnrollments: {
+          "k-culture": {
+            courseId: "k-culture",
+            routeVersion: "k-culture-v1",
+            routeSlots,
+            completions: []
+          }
+        }
+      })
+    );
+
+    expect(getCourseRouteLessonIds(state, "k-culture")).toEqual(routeSlots.map((slot) => slot.lessonId));
+    expect(getNextCourseLesson(state, "k-culture").id).toBe("k-culture-common-1");
+  });
+
+  it("completes a stored 14-slot K-Culture route instead of every inventory lesson", () => {
+    const routeSlots = createCultureRoute({ primaryPackId: "k-pop", samplerPackId: "k-drama" });
+    const state = normalizeUserCourses(
+      baseState({
+        activeCourseId: "k-culture",
+        courseEnrollments: {
+          "k-culture": {
+            courseId: "k-culture",
+            routeVersion: "k-culture-v1",
+            routeSlots,
+            completions: []
+          }
+        },
+        lessonProgress: Object.fromEntries(
+          routeSlots.map((slot) => [
+            slot.lessonId,
+            {
+              lessonId: slot.lessonId,
+              courseId: "k-culture",
+              status: "completed" as const,
+              currentStepId: "summary",
+              completedStepIds: ["summary"],
+              metrics: {}
+            }
+          ])
+        )
+      })
+    );
+
+    expect(getCourseLessonIds("k-culture")).toHaveLength(18);
+    expect(getCourseRouteLessonIds(state, "k-culture")).toHaveLength(14);
+    expect(isCourseRouteCompleted(state, "k-culture")).toBe(true);
   });
 });

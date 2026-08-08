@@ -6,15 +6,18 @@ import type {
   SavedPhraseTombstone,
   SyncChange,
   CourseId,
+  CultureRouteSelection,
   KFoodMissionResult,
   TravelMissionResult,
   UserState
 } from "../types";
 import { courseRegistry, FOUNDATION_COURSE_ID } from "../data/courses/courseRegistry";
+import { isCultureRouteLocked, updateCultureRouteSelection } from "../engine/culturePathEngine";
 import { mergeEpsAssessmentAttempts } from "../engine/epsAssessmentEngine";
 import {
   LEGACY_INFERRED_AT,
   getCourseLessonIds,
+  getCourseRouteLessonIds,
   mergeActiveCoursePreference,
   mergeCourseEnrollments,
   normalizeUserCourses
@@ -254,7 +257,7 @@ export const completeCourseRoute = (state: UserState, courseId: CourseId, comple
     courseId,
     routeVersion: entry.routeVersion,
     completedAt,
-    completedLessonIds: getCourseLessonIds(courseId)
+    completedLessonIds: getCourseRouteLessonIds(normalized, courseId)
   };
   const completions = [
     ...(current?.completions ?? []).filter((item) => item.routeVersion !== entry.routeVersion),
@@ -272,6 +275,7 @@ export const completeCourseRoute = (state: UserState, courseId: CourseId, comple
             routeVersion: entry.routeVersion,
             startedAt: current?.startedAt ?? completedAt,
             lastOpenedAt: completedAt,
+            routeLockedAt: current?.routeLockedAt,
             routeSlots: current?.routeSlots,
             completions,
             fieldUpdatedAt: {
@@ -284,6 +288,32 @@ export const completeCourseRoute = (state: UserState, courseId: CourseId, comple
       },
       [{ entity: "course-enrollment", entityId: courseId, operation: "upsert", changedAt: completedAt }]
     )
+  );
+};
+
+export const saveCultureRouteSelection = (
+  state: UserState,
+  selection: CultureRouteSelection,
+  changedAt = now()
+): UserState => {
+  const normalized = normalizeUserCourses(state);
+  const current = normalized.courseEnrollments["k-culture"];
+  const updatedEnrollment = updateCultureRouteSelection(current, normalized.lessonProgress, selection, changedAt);
+  const unchanged = current === updatedEnrollment;
+
+  return saveState(
+    unchanged
+      ? normalized
+      : withPendingChanges(
+          {
+            ...normalized,
+            courseEnrollments: {
+              ...normalized.courseEnrollments,
+              "k-culture": updatedEnrollment
+            }
+          },
+          [{ entity: "course-enrollment", entityId: "k-culture", operation: "upsert", changedAt }]
+        )
   );
 };
 
@@ -333,14 +363,46 @@ export const upsertLessonProgress = (
   state: UserState,
   lessonId: string,
   progress: LessonProgress
-): UserState =>
-  saveState({
-    ...state,
+): UserState => {
+  const changedAt = progress.startedAt ?? now();
+  const normalized = normalizeUserCourses(state);
+  const currentEnrollment = normalized.courseEnrollments["k-culture"];
+  const cultureRouteShouldLock =
+    progress.courseId === "k-culture" &&
+    !isCultureRouteLocked(currentEnrollment, normalized.lessonProgress) &&
+    (currentEnrollment?.routeSlots ?? []).some(
+      (slot) => slot.lessonId === lessonId && (slot.kind === "primary" || slot.kind === "sampler")
+    );
+  const nextState = {
+    ...normalized,
     lessonProgress: {
-      ...state.lessonProgress,
+      ...normalized.lessonProgress,
       [lessonId]: progress
+    },
+    courseEnrollments: {
+      ...normalized.courseEnrollments,
+      "k-culture":
+        cultureRouteShouldLock && currentEnrollment
+          ? {
+              ...currentEnrollment,
+              routeLockedAt: changedAt,
+              fieldUpdatedAt: {
+                ...currentEnrollment.fieldUpdatedAt,
+                routeLockedAt: changedAt
+              }
+            }
+          : currentEnrollment
     }
-  });
+  };
+
+  return saveState(
+    cultureRouteShouldLock
+      ? withPendingChanges(nextState, [
+          { entity: "course-enrollment", entityId: "k-culture", operation: "upsert", changedAt }
+        ])
+      : nextState
+  );
+};
 
 export const upsertReviewItems = (state: UserState, items: ReviewItem[]): UserState => {
   const existing = new Map(state.reviewItems.map((item) => [item.id, normalizeReviewItem(item)]));

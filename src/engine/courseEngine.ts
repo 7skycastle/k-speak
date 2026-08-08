@@ -117,6 +117,12 @@ const courseLessons: Record<CourseId, Lesson[]> = {
 
 export const getCourseLessonIds = (courseId: CourseId) => courseLessons[courseId].map((lesson) => lesson.id);
 
+export const getCourseRouteLessonIds = (state: UserState, courseId: CourseId): string[] => {
+  const routeSlots = normalizeUserCourses(state).courseEnrollments[courseId]?.routeSlots;
+  if (courseId === "k-culture" && routeSlots?.length) return routeSlots.map((slot) => slot.lessonId);
+  return getCourseLessonIds(courseId);
+};
+
 export const getCourseLesson = (courseId: CourseId, lessonId: string) =>
   courseLessons[courseId].find((lesson) => lesson.id === lessonId);
 
@@ -124,13 +130,14 @@ export const getNextCourseLesson = (
   state: UserState,
   courseId: CourseId = state.activeCourseId ?? FOUNDATION_COURSE_ID
 ) => {
-  const lessonsForCourse = courseLessons[courseId];
-  const next = lessonsForCourse.find((lesson) => state.lessonProgress[lesson.id]?.status !== "completed");
-  return next ?? lessonsForCourse[lessonsForCourse.length - 1] ?? foundationLessons[0];
+  const routeLessonIds = getCourseRouteLessonIds(state, courseId);
+  const nextLessonId = routeLessonIds.find((lessonId) => state.lessonProgress[lessonId]?.status !== "completed");
+  const fallbackLessonId = routeLessonIds[routeLessonIds.length - 1];
+  return getCourseLesson(courseId, nextLessonId ?? fallbackLessonId) ?? foundationLessons[0];
 };
 
 export const isCourseRouteCompleted = (state: UserState, courseId: CourseId) => {
-  const ids = getCourseLessonIds(courseId);
+  const ids = getCourseRouteLessonIds(state, courseId);
   return ids.length > 0 && ids.every((lessonId) => state.lessonProgress[lessonId]?.status === "completed");
 };
 
